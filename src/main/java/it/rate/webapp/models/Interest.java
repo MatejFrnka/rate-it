@@ -19,4 +19,6 @@ public class Interest {
     private String description;
     @OneToMany(mappedBy = "interest")
     private List<Place> places;
+    @OneToMany(mappedBy = "interest")
+    private List<Criterion> criteria;
 }
