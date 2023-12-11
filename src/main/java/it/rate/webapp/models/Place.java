@@ -23,4 +23,6 @@ public class Place {
     private double longitude;
     @ManyToOne
     private User creator;
+    @ManyToOne
+    private Interest interest;
 }
