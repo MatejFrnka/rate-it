@@ -1,16 +1,15 @@
 package it.rate.webapp.models;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "places")
@@ -26,6 +25,7 @@ public class Place {
     private double longitude;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User creator;
 
     @ManyToOne
