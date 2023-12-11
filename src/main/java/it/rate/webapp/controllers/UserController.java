@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String newUser(){
+    public String newUser() {
         //todo:RequestBody of object account
         //todo: Create logic to verify valid email, email being non existent, valid password, valid username
         //todo: return to page where user accessed signup form
@@ -39,8 +39,6 @@ public class UserController {
         //todo: return to page where user accessed signup form
         return "todo";
     }
-
-
 
 
 }
