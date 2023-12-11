@@ -44,20 +44,10 @@ public class WebappApplication implements CommandLineRunner {
                 .build();
         interestRepository.save(i1);
 
-        Role r1 = Role.builder()
-                .id(new RoleId(u1.getId(), i1.getId()))
-                .user(u1)
-                .interest(i1)
-                .role(Role.RoleType.ADMIN)
-                .build();
+        Role r1 = new Role(u1, i1, Role.RoleType.ADMIN);
         roleRepository.save(r1);
 
-        Role r2 = Role.builder()
-                .id(new RoleId(u2.getId(), i1.getId()))
-                .user(u2)
-                .interest(i1)
-                .role(Role.RoleType.USER)
-                .build();
+        Role r2 = new Role(u2, i1, Role.RoleType.USER);
         roleRepository.save(r2);
 
         Vote v1 = new Vote(u1, i1, 1);

@@ -5,8 +5,6 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
@@ -22,6 +20,13 @@ public class Role {
     @ManyToOne
     @MapsId("interestId")
     private Interest interest;
+
+    public Role(User user, Interest interest, RoleType role) {
+        this.id = new RoleId(user.getId(), interest.getId());
+        this.user = user;
+        this.interest = interest;
+        this.role = role;
+    }
 
     public enum RoleType {
         USER, ADMIN
