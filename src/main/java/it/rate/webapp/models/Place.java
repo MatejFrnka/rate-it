@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,8 +24,13 @@ public class Place {
     private String address;
     private double latitude;
     private double longitude;
+
     @ManyToOne
     private User creator;
+
     @ManyToOne
     private Interest interest;
+
+    @OneToMany(mappedBy = "place")
+    private List<Rating> ratings = new ArrayList<>();
 }

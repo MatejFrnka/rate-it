@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,8 +18,16 @@ public class Interest {
     private Long id;
     private String name;
     private String description;
+
     @OneToMany(mappedBy = "interest")
-    private List<Place> places;
+    private List<Place> places = new ArrayList<>();
+
     @OneToMany(mappedBy = "interest")
-    private List<Criterion> criteria;
+    private List<Criterion> criteria = new ArrayList<>();
+
+    @OneToMany(mappedBy = "interest")
+    private List<Vote> votes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "interest")
+    private List<Role> roles = new ArrayList<>();
 }
