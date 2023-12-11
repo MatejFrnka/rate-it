@@ -37,39 +37,6 @@ public class InterestController {
         return "todo";
     }
 
-    @GetMapping("/{interestId}/newplace")
-    public String newPlacePage(@PathVariable Long interestId) {
-        //todo: return view for new place creation
-        return "todo";
-    }
-
-    @PostMapping("/{interestId}/newplace")
-    public String createNewPlace(@PathVariable Long interestId) {
-        //todo: RequestBody - place
-        //todo: connect user that created new place with this place and Interest. Save to db.
-        return "todo";
-    }
-
-    @GetMapping("/{interestId}/places/{placeId}")
-    public String placeDetails(@PathVariable Long interestId,@PathVariable Long placeId) {
-        //todo: find place by placeId, possibly no need to use interestId
-        //todo: load view according to placeId
-        return "todo";
-    }
-
-    @GetMapping("/{interestId}/places/{placeId}/edit")
-    public String editPlacePage(@PathVariable Long interestId,@PathVariable Long placeId, Model model) {
-        //todo: return edit form
-        return "todo";
-    }
-
-    @PutMapping("/{interestId}/places/{placeId}/edit")
-    public String editPlace() {
-        //todo: accept Place object, save(overwrite) with new values
-        //todo: redirect to GET of edited place
-
-        return "todo";
-    }
 
 
 
