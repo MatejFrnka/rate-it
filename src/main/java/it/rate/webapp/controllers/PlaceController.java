@@ -11,39 +11,39 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/{interestId}/places")
 public class PlaceController {
 
-    @GetMapping("/newplace")
+    @GetMapping("/new-place")
     public String newPlacePage(@PathVariable Long interestId) {
         //todo: return view for new place creation
-        return "todo";
+        return "placeForm";
     }
 
-    @PostMapping("/newplace")
+    @PostMapping("/new-place")
     public String createNewPlace(@PathVariable Long interestId) {
         //todo: RequestBody - place
         //todo: connect user that created new place with this place and Interest. Save to db.
-        return "todo";
+        return "redirect:/places/{placeId}";
     }
 
-    @GetMapping("/places/{placeId}")
+    @GetMapping("/{placeId}")
     public String placeDetails(@PathVariable Long interestId, @PathVariable Long placeId) {
         //todo: find place by placeId, possibly no need to use interestId
         //todo: load view according to placeId
         //todo: load list of criteria
-        return "todo";
+        return "place";
     }
 
-    @PostMapping("/places/{placeId}")
+    @PostMapping("/{placeId}")
     public String placeVote(@PathVariable Long interestId, @PathVariable Long placeId) {
         //todo: accept updated list of ratings
         // todo: save new/updated ratings
         // todo: redirect to GET of place
-        return "todo";
+        return "redirect:/places/{placeId}";
     }
 
     @GetMapping("/places/{placeId}/edit")
     public String editPlacePage(@PathVariable Long interestId, @PathVariable Long placeId, Model model) {
         //todo: return edit form
-        return "todo";
+        return "placeForm";
     }
 
     @PutMapping("/places/{placeId}/edit")
@@ -51,6 +51,6 @@ public class PlaceController {
         //todo: accept Place object, save(overwrite) with new values
         //todo: redirect to GET of edited place
 
-        return "todo";
+        return "redirect:/places/{placeId}";
     }
 }

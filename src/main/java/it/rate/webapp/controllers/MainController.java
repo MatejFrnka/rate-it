@@ -14,7 +14,7 @@ public class MainController {
     public String index(Model model, String query) {
         //todo: load database and send to view
         //todo: if query null, load whole database ordered by rating. Otherwise load according to query param
-        return "todo";
+        return "index";
     }
 
 
