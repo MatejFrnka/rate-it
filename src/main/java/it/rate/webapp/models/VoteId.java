@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 @Embeddable
 public class VoteId implements Serializable {
     private Long userId;
