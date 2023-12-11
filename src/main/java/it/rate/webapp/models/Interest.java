@@ -7,11 +7,11 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Entity
-@Table(name = "interests")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(name = "interests")
 public class Interest {
     @Id @GeneratedValue
     private Long id;

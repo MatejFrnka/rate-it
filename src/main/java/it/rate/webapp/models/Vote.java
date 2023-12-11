@@ -8,10 +8,10 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 @Table(name = "votes")
 public class Vote {
 

@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 @Embeddable
 public class RoleId implements Serializable {
     private Long userId;
