@@ -1,12 +1,11 @@
 package it.rate.webapp.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "interests")
@@ -18,4 +17,6 @@ public class Interest {
     private Long id;
     private String name;
     private String description;
+    @OneToMany(mappedBy = "interest")
+    private List<Place> places;
 }
