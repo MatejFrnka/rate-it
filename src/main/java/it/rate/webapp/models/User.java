@@ -20,5 +20,6 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "creator")
     private List<Place> createdPlaces;
-//    private Role role;
+    @OneToMany(mappedBy = "user")
+    private List<Role> role;
 }
