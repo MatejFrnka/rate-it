@@ -13,13 +13,16 @@ import lombok.Setter;
 public class Rating {
     @EmbeddedId
     private RatingId id;
-    private int value;
+    private int score;
+
     @ManyToOne
     @MapsId("userId")
     private User user;
+
     @ManyToOne
     @MapsId("placeId")
     private Place place;
+
     @ManyToOne
     @MapsId("criterionId")
     private Criterion criterion;

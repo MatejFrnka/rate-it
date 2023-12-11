@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,8 +19,16 @@ public class User {
     private String username;
     private String email;
     private String password;
+
     @OneToMany(mappedBy = "creator")
-    private List<Place> createdPlaces;
+    private List<Place> createdPlaces = new ArrayList<>();
+
     @OneToMany(mappedBy = "user")
-    private List<Role> role;
+    private List<Role> role = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Vote> votes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Rating> ratings = new ArrayList<>();
 }
