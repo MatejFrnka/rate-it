@@ -1,9 +1,7 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -22,4 +20,11 @@ public class Vote {
     @ManyToOne
     @MapsId("interestId")
     private Interest interest;
+
+    public Vote(User user, Interest interest, int voteValue) {
+        this.id = new VoteId(user.getId(), interest.getId());
+        this.user = user;
+        this.interest = interest;
+        this.voteValue = voteValue;
+    }
 }
