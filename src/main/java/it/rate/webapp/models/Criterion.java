@@ -14,14 +14,11 @@ import java.util.List;
 @Entity
 @Table(name = "criteria")
 public class Criterion {
-    @Id
-    @GeneratedValue
-    private Long id;
-    private String name;
+  @Id @GeneratedValue private Long id;
+  private String name;
 
-    @ManyToOne
-    private Interest interest;
+  @ManyToOne private Interest interest;
 
-    @OneToMany(mappedBy = "criterion")
-    private List<Rating> ratings = new ArrayList<>();
+  @OneToMany(mappedBy = "criterion")
+  private List<Rating> ratings = new ArrayList<>();
 }

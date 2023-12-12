@@ -10,11 +10,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Embeddable
 public class RoleId implements Serializable {
-    private Long userId;
-    private Long interestId;
+  private Long userId;
+  private Long interestId;
 
-    public RoleId(Long userId, Long interestId) {
-        this.userId = userId;
-        this.interestId = interestId;
-    }
+  public RoleId(Long userId, Long interestId) {
+    this.userId = userId;
+    this.interestId = interestId;
+  }
 }
