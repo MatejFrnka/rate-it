@@ -2,9 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search with Suggestions</title>
+    <link rel="stylesheet" type="text/css" href="/styles/index.css">
 </head>
 <body>
+<label for="search">Search:</label>
+<input type="text" id="search" oninput="getSuggestions(this.value)" autocomplete="off">
 
+<div id="suggestions">
+    <ul id="suggestionList"></ul>
+</div>
+
+<script src="/scripts/index.js"></script>
 </body>
 </html>
