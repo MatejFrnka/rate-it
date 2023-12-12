@@ -6,15 +6,16 @@
 </head>
 <body th:object="${interest}">
 
-    <button th:action="@{/interests/{id}(id=*{id})/voterauthorityrequest}" th:method="post">Gimme My Rights</button>
-    <a th:href="@{/interests/{id}(id=*{id})/admin/edit}">Edit Page</a>
-    <a th:href="@{/interests/{id}(id=*{id})/admin/users}">Manage Users</a>
+    <button th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}" th:method="post">Gimme My Rights</button>
+    <a th:href="@{/interests/{id}/admin/edit(id=*{id})}">Edit Page</a>
+    <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
 
     <h1 th:text="*{name}"></h1>
 
     <p th:text="*{description}"></p>
 
-    <button th:action="@{/interests/{id}(id=*{id})/vote}" th:method="post">Rating placeholder</button>
+    <button th:action="@{/interests/{id}/vote(id=*{id})}" th:method="post">+ vote placeholder</button>
+    <button th:action="@{/interests/{id}/vote(id=*{id})}" th:method="post">- vote placeholder</button>
 
     <p>Map placeholder</p>
 
