@@ -1,14 +1,12 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Place;
+import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
-import it.rate.webapp.repositories.PlaceRepository;
-import it.rate.webapp.repositories.VoteRepository;
+import it.rate.webapp.repositories.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,7 +14,7 @@ import java.util.Optional;
 public class InterestService {
 
   private InterestRepository interestRepository;
-  private PlaceRepository placeRepository;
+  private RoleRepository roleRepository;
 
   public Optional<Interest> findInterestById(Long id) {
     return interestRepository.findById(id);
@@ -26,7 +24,8 @@ public class InterestService {
     // todo: add logic based on what will be received from html
   }
 
-  public void addApplicant() {
-    // todo: add list of applicants to Interest model and add logged user into it
+  public void setApplicantRole(Long interestId) {
+    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/));
+    // todo: add logged user to method logic
   }
 }

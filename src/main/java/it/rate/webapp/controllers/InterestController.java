@@ -51,9 +51,10 @@ public class InterestController {
   }
 
   @PostMapping("/{id}/voterauthorityrequest")
-  public String applyForVoterAuthority() {
-    // todo: add logged in user to list of request of interest
-    // todo: redirect to interest page by id
+  public String applyForVoterAuthority(@PathVariable Long id) {
+    service.setApplicantRole(id);
+    // todo: add logged user to the method
+    // todo: redirect might not be necessary with the use of js?
     return "redirect:/interests/{id}";
   }
 }
