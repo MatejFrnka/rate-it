@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/{interestId}/admin")
+@RequestMapping("/interests/{interestId}/admin")
 public class InterestAdminController {
 
   @GetMapping("/edit")
@@ -37,13 +37,13 @@ public class InterestAdminController {
     return "redirect:/{interestId}/users";
   }
 
-  @DeleteMapping("/users/applicant/{userId}")
+  @DeleteMapping("/users/applicants/{userId}")
   public String rejectApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
     // todo: delete user from List of applicants
     return "redirect:/{interestId}/users";
   }
 
-  @PutMapping("/users/applicant/{userId}")
+  @PutMapping("/users/applicants/{userId}")
   public String acceptApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
     // todo: create new Role(User/Interest)
     // todo: delete from List of applicants
