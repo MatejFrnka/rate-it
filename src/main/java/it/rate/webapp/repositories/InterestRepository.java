@@ -25,4 +25,7 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
           + "GROUP BY i.id, i.name "
           + "ORDER BY totalValue DESC")
   List<Interest> findAllByNameSortByVoteValueDesc(@Param("substring") String substring);
+
+  List<Interest> findAllByNameContaining(String query);
+
 }
