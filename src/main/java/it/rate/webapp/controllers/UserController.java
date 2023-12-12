@@ -30,7 +30,7 @@ public class UserController {
     } catch (Exception e) {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("userDTO", new SignupUserOutDTO(userDTO));
-      return "signupForm" ;
+      return "signupForm";
     }
     return "redirect:/";
   }
