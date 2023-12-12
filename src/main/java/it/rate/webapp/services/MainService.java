@@ -17,17 +17,11 @@ public class MainService {
     private final InterestRepository interestRepository;
 
     public List<Interest> findAllInterests() {
-        return interestRepository.findAll();
-    }
-
-    public List<Interest> sortInterestsByVoteValue(List<Interest> interests) {
-        return interests.stream()
-                .sorted(Comparator.comparingInt(Interest::getVoteValue))
-                .collect(Collectors.toList());
+        return interestRepository.findAllSortByVoteValueDesc();
     }
 
     public List<Interest> findInterestsByName(String query) {
-        return interestRepository.findAllByNameContains(query);
+        return interestRepository.findAllByNameSortByVoteValueDesc(query);
     }
 
     public List<InterestSuggestionDto> getAllSuggestionDtos() {

@@ -15,7 +15,7 @@
 </form>
 
 <div id="interests" th:each="interest : ${interests}">
-    <a th:href="@{|/interests/${interest.id}|}" th:text="${interest.name}"></a>
+    <a th:href="@{|/interests/${interest.id}|}" th:text="${interest.name} + ' ' + ${interest.getVoteValue()}"></a>
 </div>
 
 
