@@ -36,9 +36,6 @@ public class Interest {
 
   public int getVoteValue() {
 
-    return votes.stream()
-            .mapToInt(Vote::getVoteValue)
-            .sum();
-
+    return votes.stream().mapToInt(Vote::getVoteValue).sum();
   }
 }

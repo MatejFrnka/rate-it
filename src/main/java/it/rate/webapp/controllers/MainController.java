@@ -21,13 +21,12 @@ public class MainController {
   public ResponseEntity<?> getAllSuggestions() {
 
     return ResponseEntity.ok().body(mainService.getAllSuggestionDtos());
-
   }
 
   @GetMapping({"/", "/index"})
   public String index(Model model, String query) {
 
-    if(query == null) {
+    if (query == null) {
       model.addAttribute("interests", mainService.findAllInterests());
     } else {
       model.addAttribute("interests", mainService.findInterestsByName(query));

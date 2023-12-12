@@ -4,7 +4,7 @@ import it.rate.webapp.models.Interest;
 
 public record InterestSuggestionDto(Long id, String name, Long rating) {
 
-    public InterestSuggestionDto(Interest interest) {
-        this(interest.getId(), interest.getName(), (long) interest.getVoteValue());
-    }
+  public InterestSuggestionDto(Interest interest) {
+    this(interest.getId(), interest.getName(), (long) interest.getVoteValue());
+  }
 }
