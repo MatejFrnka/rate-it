@@ -16,7 +16,7 @@ public class Rating {
 
   @ManyToOne
   @MapsId("userId")
-  private User user;
+  private AppUser appUser;
 
   @ManyToOne
   @MapsId("placeId")
@@ -26,9 +26,9 @@ public class Rating {
   @MapsId("criterionId")
   private Criterion criterion;
 
-  public Rating(User user, Place place, Criterion criterion, int score) {
-    this.id = new RatingId(user.getId(), place.getId(), criterion.getId());
-    this.user = user;
+  public Rating(AppUser appUser, Place place, Criterion criterion, int score) {
+    this.id = new RatingId(appUser.getId(), place.getId(), criterion.getId());
+    this.appUser = appUser;
     this.place = place;
     this.criterion = criterion;
     this.score = score;

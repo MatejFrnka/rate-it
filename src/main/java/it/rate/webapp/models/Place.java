@@ -27,7 +27,7 @@ public class Place {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private User creator;
+  private AppUser creator;
 
   @ManyToOne private Interest interest;
 

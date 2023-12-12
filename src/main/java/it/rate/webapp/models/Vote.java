@@ -14,15 +14,15 @@ public class Vote {
 
   @ManyToOne
   @MapsId("userId")
-  private User user;
+  private AppUser appUser;
 
   @ManyToOne
   @MapsId("interestId")
   private Interest interest;
 
-  public Vote(User user, Interest interest, int voteValue) {
-    this.id = new VoteId(user.getId(), interest.getId());
-    this.user = user;
+  public Vote(AppUser appUser, Interest interest, int voteValue) {
+    this.id = new VoteId(appUser.getId(), interest.getId());
+    this.appUser = appUser;
     this.interest = interest;
     this.voteValue = voteValue;
   }
