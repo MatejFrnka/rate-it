@@ -10,13 +10,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Embeddable
 public class RatingId implements Serializable {
-    private Long userId;
-    private Long placeId;
-    private Long criterionId;
+  private Long userId;
+  private Long placeId;
+  private Long criterionId;
 
-    public RatingId(Long userId, Long placeId, Long criterionId) {
-        this.userId = userId;
-        this.placeId = placeId;
-        this.criterionId = criterionId;
-    }
+  public RatingId(Long userId, Long placeId, Long criterionId) {
+    this.userId = userId;
+    this.placeId = placeId;
+    this.criterionId = criterionId;
+  }
 }

@@ -15,22 +15,20 @@ import java.util.List;
 @Entity
 @Table(name = "places")
 public class Place {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @Column(nullable = false)
-    private String name;
-    private String description;
-    private String address;
-    private double latitude;
-    private double longitude;
+  @Id @GeneratedValue private Long id;
 
-    @ManyToOne
-    private User creator;
+  @Column(nullable = false)
+  private String name;
 
-    @ManyToOne
-    private Interest interest;
+  private String description;
+  private String address;
+  private double latitude;
+  private double longitude;
 
-    @OneToMany(mappedBy = "place")
-    private List<Rating> ratings = new ArrayList<>();
+  @ManyToOne private User creator;
+
+  @ManyToOne private Interest interest;
+
+  @OneToMany(mappedBy = "place")
+  private List<Rating> ratings = new ArrayList<>();
 }

@@ -10,11 +10,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Embeddable
 public class VoteId implements Serializable {
-    private Long userId;
-    private Long interestId;
+  private Long userId;
+  private Long interestId;
 
-    public VoteId(Long userId, Long interestId) {
-        this.userId = userId;
-        this.interestId = interestId;
-    }
+  public VoteId(Long userId, Long interestId) {
+    this.userId = userId;
+    this.interestId = interestId;
+  }
 }

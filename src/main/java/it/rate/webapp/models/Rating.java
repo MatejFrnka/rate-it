@@ -11,19 +11,18 @@ import lombok.Setter;
 @Entity
 @Table(name = "ratings")
 public class Rating {
-    @EmbeddedId
-    private RatingId id;
-    private int score;
+  @EmbeddedId private RatingId id;
+  private int score;
 
-    @ManyToOne
-    @MapsId("userId")
-    private User user;
+  @ManyToOne
+  @MapsId("userId")
+  private User user;
 
-    @ManyToOne
-    @MapsId("placeId")
-    private Place place;
+  @ManyToOne
+  @MapsId("placeId")
+  private Place place;
 
-    @ManyToOne
-    @MapsId("criterionId")
-    private Criterion criterion;
+  @ManyToOne
+  @MapsId("criterionId")
+  private Criterion criterion;
 }

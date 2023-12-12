@@ -11,19 +11,19 @@ import lombok.Setter;
 @Entity
 @Table(name = "roles")
 public class Role {
-    @EmbeddedId
-    private RoleId id;
-    private RoleType role;
+  @EmbeddedId private RoleId id;
+  private RoleType role;
 
-    @ManyToOne
-    @MapsId("userId")
-    private User user;
+  @ManyToOne
+  @MapsId("userId")
+  private User user;
 
-    @ManyToOne
-    @MapsId("interestId")
-    private Interest interest;
+  @ManyToOne
+  @MapsId("interestId")
+  private Interest interest;
 
-    private enum RoleType {
-        USER, ADMIN
-    }
+  private enum RoleType {
+    USER,
+    ADMIN
+  }
 }

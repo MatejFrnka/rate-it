@@ -11,15 +11,14 @@ import lombok.Setter;
 @Entity
 @Table(name = "votes")
 public class Vote {
-    @EmbeddedId
-    private VoteId id;
-    private int voteValue;
+  @EmbeddedId private VoteId id;
+  private int voteValue;
 
-    @ManyToOne
-    @MapsId("userId")
-    private User user;
+  @ManyToOne
+  @MapsId("userId")
+  private User user;
 
-    @ManyToOne
-    @MapsId("interestId")
-    private Interest interest;
+  @ManyToOne
+  @MapsId("interestId")
+  private Interest interest;
 }
