@@ -17,7 +17,7 @@ public class InterestService {
   private InterestRepository interestRepository;
   private VoteRepository voteRepository;
 
-  public List<Interest> getAll(String query) {
+  public List<Interest> findAll(String query) {
     //todo: sort by total rating
     if (query == null || query.isBlank()) {
       return interestRepository.findAll();
@@ -25,7 +25,7 @@ public class InterestService {
     return interestRepository.findAllByNameContaining(query);
   }
 
-  public List<String> getAllNames() { //placeholder for javascript
+  public List<String> findAllNames() { //placeholder for javascript
     return interestRepository.findAll().stream()
             .map(Interest::getName)
             .toList();
@@ -35,7 +35,7 @@ public class InterestService {
     return interestRepository.save(interest);
   }
 
-  public Optional<Interest> getById(Long id) {
+  public Optional<Interest> findById(Long id) {
     return interestRepository.findById(id);
   }
 

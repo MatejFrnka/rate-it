@@ -17,9 +17,9 @@ public class PlaceService {
     return placeRepository.save(place);
   }
 
-  public Optional<Place> getById(Long id) {
+  public Optional<Place> findById(Long id) {
       return placeRepository.findById(id);
   }
 
-  
+
 }
