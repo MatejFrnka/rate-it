@@ -23,9 +23,9 @@
         - : `canAddPermissionsToUsers()`
     - Endpoints: always start with `/api/v1/`
     - Endpoints: use all lowercase letters and '-' for spaces
-        - : `/api/v1/appUser/vouchers`
+        - : `/api/v1/user/vouchers`
         - : `/api/v1/forgot-password`
-    - Create descriptive branch names, e.g. feature-appUser-registration
+    - Create descriptive branch names, e.g. feature-user-registration
 - All error handling should be done via exceptions (and `@ControllerAdvice`)
 - Use the object wrapper for primitive types, e.g. `Long` instead of `long`
 - Use `this` keyword only to avoid variable name conflicts

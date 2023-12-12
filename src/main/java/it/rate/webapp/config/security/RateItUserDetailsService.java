@@ -26,7 +26,7 @@ public class RateItUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     String username;
     String password;
-    List<GrantedAuthority> authorities;
+    List<GrantedAuthority> authorities = new ArrayList<>();
     Optional<AppUser> optAppUser = users.findByEmail(email);
 
     if (optAppUser.isEmpty()) {
@@ -35,7 +35,6 @@ public class RateItUserDetailsService implements UserDetailsService {
       AppUser appUser = optAppUser.get();
       username = appUser.getEmail();
       password = appUser.getPassword();
-      authorities = new ArrayList<>();
       authorities.add(new SimpleGrantedAuthority(appUser.getServerRole().name()));
     }
     return new User(username, password, authorities);
