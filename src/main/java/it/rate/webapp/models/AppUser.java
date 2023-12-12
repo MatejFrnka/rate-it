@@ -1,5 +1,6 @@
 package it.rate.webapp.models;
 
+import it.rate.webapp.config.security.ServerRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,10 @@ public class AppUser {
 
   @Column(nullable = false)
   private String password;
+
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private ServerRole serverRole;
 
   @OneToMany(mappedBy = "creator")
   private List<Place> createdPlaces = new ArrayList<>();

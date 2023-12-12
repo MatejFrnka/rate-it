@@ -1,5 +1,6 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.exceptions.UserAlreadyExistsException;
 import it.rate.webapp.models.AppUser;
@@ -27,10 +28,12 @@ public class UserService {
       throw new IllegalArgumentException("Invalid registration data");
     }
     if (userRepository.existsByEmail(userDTO.email())) {
-      throw new UserAlreadyExistsException("User with email " + userDTO.email() + " already exists");
+      throw new UserAlreadyExistsException(
+          "User with email " + userDTO.email() + " already exists");
     }
     if (userRepository.existsByUsername(userDTO.username())) {
-      throw new UserAlreadyExistsException("User with username " + userDTO.username() + " already exists");
+      throw new UserAlreadyExistsException(
+          "User with username " + userDTO.username() + " already exists");
     }
 
     String hashPassword = passwordEncoder.encode(userDTO.password());
@@ -39,6 +42,7 @@ public class UserService {
             .username(userDTO.username())
             .email(userDTO.email())
             .password(hashPassword)
+            .serverRole(ServerRole.USER)
             .build();
     return userRepository.save(user);
   }
