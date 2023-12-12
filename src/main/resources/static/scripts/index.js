@@ -15,6 +15,12 @@ function getSuggestions(query) {
     const suggestionList = document.getElementById('suggestionList');
     suggestionList.innerHTML = '';
 
+    // Check if the query is empty
+    if (!query.trim()) {
+        document.getElementById('suggestions').style.display = 'none';
+        return;
+    }
+
     const filteredSuggestions = suggestionsData.filter(suggestion =>
         suggestion.toLowerCase().includes(query.toLowerCase())
     );
@@ -38,3 +44,5 @@ document.addEventListener('click', function (e) {
         suggestions.style.display = 'none';
     }
 });
+
+
