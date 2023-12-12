@@ -18,17 +18,15 @@ public class InterestService {
   private VoteRepository voteRepository;
 
   public List<Interest> findAll(String query) {
-    //todo: sort by total rating
+    // todo: sort by total rating
     if (query == null || query.isBlank()) {
       return interestRepository.findAll();
     }
     return interestRepository.findAllByNameContaining(query);
   }
 
-  public List<String> findAllNames() { //placeholder for javascript
-    return interestRepository.findAll().stream()
-            .map(Interest::getName)
-            .toList();
+  public List<String> findAllNames() { // placeholder for javascript
+    return interestRepository.findAll().stream().map(Interest::getName).toList();
   }
 
   public Interest save(Interest interest) {
@@ -40,10 +38,10 @@ public class InterestService {
   }
 
   public void vote() {
-    //todo: add logic based on what will be received from html
+    // todo: add logic based on what will be received from html
   }
 
   public void addApplicant() {
-    //todo: add list of applicants to Interest model and add logged user into it
+    // todo: add list of applicants to Interest model and add logged user into it
   }
 }
