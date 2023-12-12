@@ -1,13 +1,15 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -18,13 +20,14 @@ public class InterestController {
   private InterestService service;
 
   @GetMapping("/create")
-  public String createPage() {
-    // todo: send empty arraylist as an attribute. For criteria.
+  public String createPage(Model model) {
+    List<Criterion> criteria = new ArrayList<>();
+    model.addAttribute("criteria", criteria);
     return "interestForm";
   }
 
   @PostMapping("/create")
-  public String createNew() {
+  public String createNew(Interest interest, List<Criterion> criteria) {
     // todo: accept model of Interest(subsite), accept list of criteria (if possible?)
     // todo: add business logic to connect criteria with new subject and save them into DB
     // todo: redirect to /{id}
