@@ -1,5 +1,6 @@
 package it.rate.webapp;
 
+import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class WebappApplication implements CommandLineRunner {
             .username("Lojza")
             .email("lozja@lojza.cz")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.USER)
             .build();
 
     AppUser u2 =
@@ -38,6 +40,7 @@ public class WebappApplication implements CommandLineRunner {
             .username("Alfonz")
             .email("alfonz@alfonz.cz")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.USER)
             .build();
 
     AppUser u3 =
@@ -45,6 +48,7 @@ public class WebappApplication implements CommandLineRunner {
             .username("Karel")
             .email("karel@karel.cz")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.ADMIN)
             .build();
     userRepository.saveAll(List.of(u1, u2, u3));
 
