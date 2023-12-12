@@ -22,21 +22,21 @@ function getSuggestions(query) {
     }
 
     const filteredSuggestions = suggestionsData.filter(suggestion =>
-        suggestion.toLowerCase().includes(query.toLowerCase())
+        suggestion.name.toLowerCase().includes(query.toLowerCase())
     );
 
     filteredSuggestions.forEach(suggestion => {
         const li = document.createElement('li');
-        li.textContent = suggestion;
+        li.textContent = `${suggestion.name} (Rating: ${suggestion.rating})`;
         li.addEventListener('click', () => {
-            document.getElementById('search').value = suggestion;
-            document.getElementById('suggestions').style.display = 'none';
+            window.location.href = `/interests/${suggestion.id}`;
         });
         suggestionList.appendChild(li);
     });
 
     document.getElementById('suggestions').style.display = 'block';
 }
+
 
 document.addEventListener('click', function (e) {
     const suggestions = document.getElementById('suggestions');
