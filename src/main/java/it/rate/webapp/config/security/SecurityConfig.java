@@ -15,9 +15,13 @@ public class SecurityConfig {
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
-    http.authorizeHttpRequests(authRequests -> authRequests
-                    .requestMatchers("/users/signup").permitAll()
-                    .anyRequest().authenticated())
+    http.authorizeHttpRequests(
+            authRequests ->
+                authRequests
+                    .requestMatchers("/users/signup")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
         .formLogin(Customizer.withDefaults())
         .httpBasic(Customizer.withDefaults());
     return http.build();
@@ -25,7 +29,6 @@ public class SecurityConfig {
 
   @Bean
   public PasswordEncoder passwordEncoder() {
-//    return new BCryptPasswordEncoder();
-  return NoOpPasswordEncoder.getInstance();
+    return new BCryptPasswordEncoder();
   }
 }

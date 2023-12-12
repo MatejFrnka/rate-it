@@ -26,12 +26,26 @@ public class WebappApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    AppUser u1 = AppUser.builder().username("Lojza").email("lozja@lojza.cz").password("password").build();
+    AppUser u1 =
+        AppUser.builder()
+            .username("Lojza")
+            .email("lozja@lojza.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .build();
 
     AppUser u2 =
-        AppUser.builder().username("Alfonz").email("alfonz@alfonz.cz").password("password").build();
+        AppUser.builder()
+            .username("Alfonz")
+            .email("alfonz@alfonz.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .build();
 
-    AppUser u3 = AppUser.builder().username("Karel").email("karel@karel.cz").password("password").build();
+    AppUser u3 =
+        AppUser.builder()
+            .username("Karel")
+            .email("karel@karel.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .build();
     userRepository.saveAll(List.of(u1, u2, u3));
 
     Interest i1 =
