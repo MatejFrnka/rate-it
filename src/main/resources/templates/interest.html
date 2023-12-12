@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:utext="'Rate-It: ' + ${interest.name}"></title>
 </head>
-<body>
+<body th:object="${interest}">
+
+    <button th:action="@{/interests/{id}(id=*{id})/voterauthorityrequest}" th:method="post">Gimme My Rights</button>
+    <a th:href="@{/interests/{id}(id=*{id})/admin/edit}">Edit Page</a>
+    <a th:href="@{/interests/{id}(id=*{id})/admin/users}">Manage Users</a>
+
+    <h1 th:text="*{name}"></h1>
+
+    <p th:text="*{description}"></p>
+
+    <button th:action="@{/interests/{id}(id=*{id})/vote}" th:method="post">Rating placeholder</button>
+
+    <p>Map placeholder</p>
+
+    <a th:href="@{/interests/create}">Add Place</a>
+
+    <ul>
+        <li th:each="place : *{places}">
+            <a th:href="@{{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+               th:text="${place.name}"></a>
+        </li>
+    </ul>
 
 </body>
 </html>

@@ -1,14 +1,21 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.services.InterestService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/interests")
 public class InterestController {
+
+  private InterestService service;
 
   @GetMapping("/create")
   public String createPage() {
@@ -27,7 +34,11 @@ public class InterestController {
 
   @GetMapping("/{id}")
   public String interestView(Model model, @PathVariable Long id) {
-    // todo: find interest object by id and send it as an attribute to view
+    Optional<Interest> interest = service.findInterestById(id);
+    if (interest.isEmpty()) {
+      return "nullInterest";
+    }
+    model.addAttribute("interest", interest.get());
     return "interest";
   }
 
