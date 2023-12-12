@@ -10,6 +10,8 @@ import lombok.*;
 @Table(name = "roles")
 public class Role {
   @EmbeddedId private RoleId id;
+
+  @Enumerated(EnumType.STRING)
   private RoleType role;
 
   @ManyToOne
@@ -28,7 +30,7 @@ public class Role {
   }
 
   public enum RoleType {
-    USER,
-    ADMIN
+    ADMIN,
+    VOTER
   }
 }

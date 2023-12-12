@@ -45,10 +45,10 @@ public class WebappApplication implements CommandLineRunner {
     interestRepository.saveAll(List.of(i1, i2));
 
     Role r1 = new Role(u1, i1, Role.RoleType.ADMIN);
-    Role r2 = new Role(u2, i1, Role.RoleType.USER);
+    Role r2 = new Role(u2, i1, Role.RoleType.VOTER);
     Role r3 = new Role(u3, i2, Role.RoleType.ADMIN);
-    Role r4 = new Role(u3, i1, Role.RoleType.USER);
-    Role r5 = new Role(u1, i2, Role.RoleType.USER);
+    Role r4 = new Role(u3, i1, Role.RoleType.VOTER);
+    Role r5 = new Role(u1, i2, Role.RoleType.VOTER);
     roleRepository.saveAll(List.of(r1, r2, r3, r4, r5));
 
     Vote v1 = new Vote(u1, i1, 1);

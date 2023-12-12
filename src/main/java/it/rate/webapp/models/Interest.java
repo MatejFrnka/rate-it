@@ -15,8 +15,12 @@ import java.util.List;
 @Table(name = "interests")
 public class Interest {
   @Id @GeneratedValue private Long id;
+
+  @Column(nullable = false)
   private String name;
+
   private String description;
+  private boolean deleted = false;
 
   @OneToMany(mappedBy = "interest")
   private List<Place> places = new ArrayList<>();

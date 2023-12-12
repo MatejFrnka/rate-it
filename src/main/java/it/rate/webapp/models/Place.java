@@ -23,6 +23,7 @@ public class Place {
   private String address;
   private double latitude;
   private double longitude;
+  private boolean deleted = false;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

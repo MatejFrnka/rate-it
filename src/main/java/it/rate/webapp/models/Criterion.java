@@ -16,6 +16,7 @@ import java.util.List;
 public class Criterion {
   @Id @GeneratedValue private Long id;
   private String name;
+  private boolean deleted = false;
 
   @ManyToOne private Interest interest;
 

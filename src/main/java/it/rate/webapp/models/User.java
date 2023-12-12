@@ -15,15 +15,21 @@ import java.util.List;
 @Table(name = "users")
 public class User {
   @Id @GeneratedValue private Long id;
+
+  @Column(nullable = false)
   private String username;
+
+  @Column(nullable = false)
   private String email;
+
+  @Column(nullable = false)
   private String password;
 
   @OneToMany(mappedBy = "creator")
   private List<Place> createdPlaces = new ArrayList<>();
 
   @OneToMany(mappedBy = "user")
-  private List<Role> role = new ArrayList<>();
+  private List<Role> roles = new ArrayList<>();
 
   @OneToMany(mappedBy = "user")
   private List<Vote> votes = new ArrayList<>();
