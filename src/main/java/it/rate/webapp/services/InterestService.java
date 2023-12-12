@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +23,12 @@ public class InterestService {
       return interestRepository.findAll();
     }
     return interestRepository.findAllByNameContaining(query);
+  }
+
+  public List<String> getAllNames() { //placeholder for javascript
+    return interestRepository.findAll().stream()
+            .map(Interest::getName)
+            .toList();
   }
 
   public Interest save(Interest interest) {
