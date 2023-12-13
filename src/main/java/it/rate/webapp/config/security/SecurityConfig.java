@@ -21,7 +21,10 @@ public class SecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-        .formLogin(Customizer.withDefaults())
+        .formLogin(form -> form
+                .loginPage("/users/login")
+                .defaultSuccessUrl("/")
+                .permitAll())
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }

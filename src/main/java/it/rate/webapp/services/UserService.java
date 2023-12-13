@@ -57,4 +57,5 @@ public class UserService {
         && !userDTO.username().isBlank();
     // todo check if email is valid and password is strong
   }
+
 }

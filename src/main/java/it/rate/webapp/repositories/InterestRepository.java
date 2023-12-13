@@ -10,21 +10,21 @@ import java.util.List;
 public interface InterestRepository extends JpaRepository<Interest, Long> {
 
   @Query(
-      "SELECT i, COALESCE(SUM(v.voteValue), 0) AS totalValue "
+      "SELECT i, COUNT(l) AS likesCount "
           + "FROM Interest i "
-          + "LEFT JOIN i.votes v "
-          + "GROUP BY i.id, i.name "
-          + "ORDER BY totalValue DESC")
-  List<Interest> findAllSortByVoteValueDesc();
+          + "LEFT JOIN i.likes l "
+          + "GROUP BY i.id "
+          + "ORDER BY likesCount DESC")
+  List<Interest> findAllSortByLikes();
 
   @Query(
-      "SELECT i, COALESCE(SUM(v.voteValue), 0) AS totalValue "
+      "SELECT i, COUNT(l) AS likesCount "
           + "FROM Interest i "
-          + "LEFT JOIN i.votes v "
+          + "LEFT JOIN i.likes l "
           + "WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :substring, '%')) "
-          + "GROUP BY i.id, i.name "
-          + "ORDER BY totalValue DESC")
-  List<Interest> findAllByNameSortByVoteValueDesc(@Param("substring") String substring);
+          + "GROUP BY i.id "
+          + "ORDER BY likesCount DESC")
+  List<Interest> findAllByNameSortByLikes(@Param("substring") String substring);
 
   List<Interest> findAllByNameContaining(String query);
 

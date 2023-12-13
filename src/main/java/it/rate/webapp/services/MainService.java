@@ -15,11 +15,11 @@ public class MainService {
   private final InterestRepository interestRepository;
 
   public List<Interest> findAllInterests() {
-    return interestRepository.findAllSortByVoteValueDesc();
+    return interestRepository.findAllSortByLikes();
   }
 
   public List<Interest> findInterestsByName(String query) {
-    return interestRepository.findAllByNameSortByVoteValueDesc(query);
+    return interestRepository.findAllByNameSortByLikes(query);
   }
 
   public List<InterestSuggestionDto> getAllSuggestionDtos() {
