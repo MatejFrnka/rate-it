@@ -2,11 +2,13 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class InterestController {
 
   private InterestService service;
+  private CreateInterestService interestCreationService;
 
   @GetMapping("/create")
   public String createPage(Model model) {
@@ -27,11 +30,13 @@ public class InterestController {
   }
 
   @PostMapping("/create")
-  public String createNew(Interest interest, List<Criterion> criteria) {
-    // todo: accept model of Interest(subsite), accept list of criteria (if possible?)
-    // todo: add business logic to connect criteria with new subject and save them into DB
-    // todo: redirect to /{id}
-
+  public String createNew(@RequestParam String name,
+                          @RequestParam String description,
+                          @RequestParam List<String> criteria,
+                          RedirectAttributes ra) {
+    Interest savedInterest = interestCreationService.save(name, description, criteria);
+    ra.addAttribute("id", savedInterest.getId());
+    // todo: assign user
     return "redirect:/interests/{id}";
   }
 
