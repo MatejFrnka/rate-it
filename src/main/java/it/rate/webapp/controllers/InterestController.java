@@ -36,7 +36,6 @@ public class InterestController {
                           RedirectAttributes ra) {
     Interest savedInterest = interestCreationService.save(name, description, criteria);
     ra.addAttribute("id", savedInterest.getId());
-    // todo: assign user
     return "redirect:/interests/{id}";
   }
 
