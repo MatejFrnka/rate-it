@@ -8,6 +8,9 @@
 </head>
 <body>
 
+<!--test-->
+<h1 th:text="'Hello ' + ${#authentication.getName()}"></h1>
+
 <form method="get" th:href="@{/interests/}">
     <label for="search">Search:</label>
     <input type="text" id="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off">
