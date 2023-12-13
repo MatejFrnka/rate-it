@@ -39,7 +39,8 @@ public class InterestController {
   public String interestView(Model model, @PathVariable Long id) {
     Optional<Interest> interest = service.findInterestById(id);
     if (interest.isEmpty()) {
-      return "nullInterest";
+      model.addAttribute("message", "This interest doesn't exist");
+      return "errorPage";
     }
     model.addAttribute("interest", interest.get());
     return "interest";

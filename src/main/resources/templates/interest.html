@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:utext="'Rate-It: ' + ${interest.name}"></title>
+    <title th:text="'Rate-It: ' + ${interest.name}"></title>
 </head>
 <body th:object="${interest}">
 
-    <button th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}" th:method="post">Gimme My Rights</button>
+    <form th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}" th:method="post">
+        <button type="submit">Gimme My Rights</button>
+    </form>
     <a th:href="@{/interests/{id}/admin/edit(id=*{id})}">Edit Page</a>
     <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
 
@@ -14,8 +16,10 @@
 
     <p th:text="*{description}"></p>
 
-    <button th:action="@{/interests/{id}/vote(id=*{id})}" th:method="post">+ vote placeholder</button>
-    <button th:action="@{/interests/{id}/vote(id=*{id})}" th:method="post">- vote placeholder</button>
+    <form th:action="@{/interests/{id}/vote(id=*{id})}" th:method="post">
+        <button type="submit" value="plus">+ vote placeholder</button>
+        <button type="submit" value="minus">- vote placeholder</button>
+    </form>
 
     <p>Map placeholder</p>
 
