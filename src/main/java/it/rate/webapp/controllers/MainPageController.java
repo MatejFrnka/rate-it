@@ -7,6 +7,7 @@ import it.rate.webapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,13 +33,10 @@ public class MainPageController {
   }
 
   @GetMapping({"/", "/index"})
-  public String index(Model model, Optional<Principal> principal) {
+  public String index(Model model, Principal principal) {
 
-
-    //todo: Get user using spring security and test after pull
-    if(principal.isPresent()) {
-      AppUser loggedUser = userService.findByEmail(principal.get().getName()).get(); //Principal without name cannot exist
-      model.addAttribute("likedInterests", interestService.getLikedInterests(loggedUser));
+    if(principal != null) {
+      model.addAttribute("likedInterests", interestService.getLikedInterests(principal.getName()));
     }
 
     return "index";

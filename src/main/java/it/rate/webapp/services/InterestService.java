@@ -34,20 +34,20 @@ public class InterestService {
   }
 
   public List<Interest> findAllInterests() {
-    return interestRepository.findAllSortByVoteValueDesc();
+    return interestRepository.findAllSortByLikes();
   }
 
   public List<Interest> findInterestsByName(String query) {
-    return interestRepository.findAllByNameSortByVoteValueDesc(query);
+    return interestRepository.findAllByNameSortByLikes(query);
   }
 
   public List<InterestSuggestionDto> getAllSuggestionDtos() {
 
     return findAllInterests().stream().map(InterestSuggestionDto::new).collect(Collectors.toList());
   }
-//todo:
-//  public List<Interest> getLikedInterests(AppUser loggedUser) {
-//    interestRepository.
-//
-//  }
+
+  public List<Interest> getLikedInterests(String loggedUser) {
+    return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
+
+  }
 }
