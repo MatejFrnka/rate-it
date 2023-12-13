@@ -1,10 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+
+<form th:action="@{/interests/create}" th:method="post">
+    <label>Name:
+        <input type="text" name="name" required>
+    </label>
+    <br>
+
+    <label>Description:
+        <input type="text" name="description">
+    </label>
+    <br>
+
+    <label>Criteria:
+        <input type="text" name="criteria" required>
+    </label>
+    <br>
+    <!-- Container to hold dynamically added criteria -->
+    <div id="criteriaContainer" class="criteria-container">
+        <!-- Criteria will be added here dynamically -->
+    </div>
+
+    <!-- Button to add criteria dynamically -->
+    <button type="button" onclick="addCriteria()">More Criteria</button>
+
+    <br>
+    <button type="submit">Create Interest</button>
+</form>
+
+<script>
+    function addCriteria() {
+        var criteriaContainer = document.getElementById('criteriaContainer');
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'criteria';
+        criteriaContainer.appendChild(input);
+        criteriaContainer.appendChild(document.createElement('br'));
+    }
+</script>
 
 </body>
 </html>
