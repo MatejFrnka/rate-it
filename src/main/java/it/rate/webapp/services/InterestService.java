@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDto;
+import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
@@ -44,4 +45,9 @@ public class InterestService {
 
     return findAllInterests().stream().map(InterestSuggestionDto::new).collect(Collectors.toList());
   }
+//todo:
+//  public List<Interest> getLikedInterests(AppUser loggedUser) {
+//    interestRepository.
+//
+//  }
 }

@@ -11,19 +11,22 @@
 <!--test-->
 <h1 th:text="'Hello ' + ${#authentication.getName()}"></h1>
 
+
+<div id="likedInterests" th:each="interest : ${likedInterests}">
+    <a th:href="@{|/interests/${likedInterests.id}|}" th:text="${likedInterests.name} + ' ' + ${likedInterests.getVoteValue()}"></a>
+</div>
+
+
 <form method="get" th:href="@{/interests/}">
     <label for="search">Search:</label>
     <input type="text" id="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off">
-    <button>filter</button>
 </form>
 
 <div id="suggestions">
     <ul id="suggestionList"></ul>
 </div>
 
-<div id="interests" th:each="interest : ${interests}">
-    <a th:href="@{|/interests/${interest.id}|}" th:text="${interest.name} + ' ' + ${interest.getVoteValue()}"></a>
-</div>
+
 
 
 <script src="/scripts/index.js"></script>
