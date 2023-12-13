@@ -33,4 +33,9 @@ public class Interest {
 
   @OneToMany(mappedBy = "interest")
   private List<Role> roles = new ArrayList<>();
+
+  public int getVoteValue() {
+
+    return votes.stream().mapToInt(Vote::getVoteValue).sum();
+  }
 }
