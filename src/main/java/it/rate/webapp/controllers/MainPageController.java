@@ -1,23 +1,13 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.UserService;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 @Controller
 @RequiredArgsConstructor
