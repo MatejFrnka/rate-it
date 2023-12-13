@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class VoteId implements Serializable {
+public class LikeId implements Serializable {
   private Long userId;
   private Long interestId;
 }

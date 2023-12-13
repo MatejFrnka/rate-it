@@ -30,7 +30,7 @@ public class Role {
   }
 
   public enum RoleType {
-    ADMIN,
+    CREATOR,
     VOTER,
     APPLICANT
   }
