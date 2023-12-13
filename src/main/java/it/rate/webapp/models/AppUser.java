@@ -1,5 +1,6 @@
 package it.rate.webapp.models;
 
+import it.rate.webapp.config.security.ServerRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class AppUser {
   @Id @GeneratedValue private Long id;
 
   @Column(nullable = false)
@@ -25,15 +26,19 @@ public class User {
   @Column(nullable = false)
   private String password;
 
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private ServerRole serverRole;
+
   @OneToMany(mappedBy = "creator")
   private List<Place> createdPlaces = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "appUser")
   private List<Role> roles = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "appUser")
   private List<Vote> votes = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "appUser")
   private List<Rating> ratings = new ArrayList<>();
 }

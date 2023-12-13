@@ -1,5 +1,6 @@
 package it.rate.webapp;
 
+import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,29 @@ public class WebappApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    User u1 = User.builder().username("Lojza").email("lozja@lojza.cz").password("password").build();
+    AppUser u1 =
+        AppUser.builder()
+            .username("Lojza")
+            .email("lozja@lojza.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.USER)
+            .build();
 
-    User u2 =
-        User.builder().username("Alfonz").email("alfonz@alfonz.cz").password("password").build();
+    AppUser u2 =
+        AppUser.builder()
+            .username("Alfonz")
+            .email("alfonz@alfonz.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.USER)
+            .build();
 
-    User u3 = User.builder().username("Karel").email("karel@karel.cz").password("password").build();
+    AppUser u3 =
+        AppUser.builder()
+            .username("Karel")
+            .email("karel@karel.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.ADMIN)
+            .build();
     userRepository.saveAll(List.of(u1, u2, u3));
 
     Interest i1 =

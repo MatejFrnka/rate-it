@@ -5,6 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-
+<form th:action="@{/users/signup}" method="post">
+    <p th:if="${error}" th:text="${error}"></p>
+    <label for="username">Username</label>
+    <input type="text" name="username" th:value="${userDTO?.username}" id="username"/>
+    <label for="email">Email</label>
+    <input type="text" name="email" th:value="${userDTO?.email}" id="email"/>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password"/>
+    <button type="submit">Submit</button>
+</form>
 </body>
 </html>

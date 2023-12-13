@@ -16,15 +16,15 @@ public class Role {
 
   @ManyToOne
   @MapsId("userId")
-  private User user;
+  private AppUser appUser;
 
   @ManyToOne
   @MapsId("interestId")
   private Interest interest;
 
-  public Role(User user, Interest interest, RoleType role) {
-    this.id = new RoleId(user.getId(), interest.getId());
-    this.user = user;
+  public Role(AppUser appUser, Interest interest, RoleType role) {
+    this.id = new RoleId(appUser.getId(), interest.getId());
+    this.appUser = appUser;
     this.interest = interest;
     this.role = role;
   }
