@@ -1,13 +1,16 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.services.PlaceService;
+import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class PlaceController {
 
   private final PlaceService placeService;
+  private final UserService userService;
 
   @GetMapping("/new-place")
   public String newPlacePage(@PathVariable Long interestId) {
@@ -32,7 +36,7 @@ public class PlaceController {
 
   @GetMapping("/{placeId}")
   public String placeDetails(
-      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
+          @PathVariable Long interestId, @PathVariable Long placeId, Model model, Principal principal) {
     Optional<Place> optPlace = placeService.findById(placeId);
     if (optPlace.isEmpty()) {
       model.addAttribute("message", "This place doesn't exist");
@@ -41,11 +45,16 @@ public class PlaceController {
     Place place = optPlace.get();
     model.addAttribute("place", place);
     model.addAttribute("criteria", place.getInterest().getCriteria());
+    if (principal != null) {
+      AppUser loggedUser = userService
+              .findByEmail(principal.getName())
+              .orElseThrow(() -> new RuntimeException("Email not found in the database"));
+      model.addAttribute("loggedUserRatings", loggedUser.getRatings());}
     return "place";
   }
 
   @PostMapping("/{placeId}")
-  public String placeVote(@PathVariable Long interestId, @PathVariable Long placeId) {
+  public String ratePlace(@PathVariable Long interestId, @PathVariable Long placeId) {
     // todo: accept updated list of ratings
     // todo: save new/updated ratings
     // todo: redirect to GET of place

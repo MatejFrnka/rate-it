@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Rate-It: ' + ${place.getInterest().name} + ' - ' + ${place.name}"></title>
+    <title th:text="'Rate-It: ' + ${place.interest.name} + ' - ' + ${place.name}"></title>
 </head>
 <body th:object="${place}">
 <a th:href="@{/places/{id}/edit(id=*{id})}">Edit Place</a>
@@ -13,13 +13,25 @@
 <p th:text="'Address: ' + *{address}"></p>
 <p th:text="'Latitude: ' + *{latitude}"></p>
 <p th:text="'Longitude: ' + *{longitude}"></p>
-
-<h2>Rating criteria</h2>
-<ul>
-    <li th:each="criterion : ${criteria}">
-        <span th:text="${criterion.name}"></span>
-        <span th:text="${criterion.getAverageRating()}"></span>
-    </li>
-</ul>
+<section th:unless="${criteria.isEmpty()}">
+    <h2>Rating criteria</h2>
+    <form th:action="@{/{interestId}/places/{placeId}(intId=${place.interest.id}, placeId=${place.id})}" th:method="post">
+        <table>
+            <tr>
+                <th>Criterion</th>
+                <th>Avg Rating</th>
+                <th>My Rating</th>
+            </tr>
+            <tr th:each="criterion : ${criteria}">
+                <td th:text="${criterion.name}"></td>
+                <td th:text="${#numbers.formatDecimal(criterion.getAverageRating, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td><label>
+                    <input type="number" name="rating" th:value="${loggedUserRatings}">
+                </label></td>
+            </tr>
+        </table>
+        <button type="submit">Rate</button>
+    </form>
+</section>
 </body>
 </html>
