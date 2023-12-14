@@ -8,7 +8,6 @@ import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
