@@ -27,14 +27,16 @@ public class InterestController {
   public String createPage(Model model) {
     List<Criterion> criteria = new ArrayList<>();
     model.addAttribute("criteria", criteria);
+    model.addAttribute("interest", new Interest());
     return "interestForm";
   }
 
   @PostMapping("/create")
-  public String createNew(@RequestParam String name,
-                          @RequestParam String description,
-                          @RequestParam List<String> criteria,
-                          RedirectAttributes ra) {
+  public String createNew(
+      @RequestParam String name,
+      @RequestParam String description,
+      @RequestParam List<String> criteria,
+      RedirectAttributes ra) {
     Interest savedInterest = interestCreationService.save(name, description, criteria);
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
