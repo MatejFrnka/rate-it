@@ -4,6 +4,7 @@ import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.models.Role;
+import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.PlaceRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,11 @@ import java.util.Optional;
 @Service
 public class PermissionService {
   private PlaceRepository placeRepository;
+  private InterestRepository interestRepository;
 
-  public PermissionService(PlaceRepository placeRepository) {
+  public PermissionService(PlaceRepository placeRepository, InterestRepository interestRepository) {
     this.placeRepository = placeRepository;
+    this.interestRepository = interestRepository;
   }
 
   public String[] ratePlace(Long placeId) {
@@ -34,5 +37,15 @@ public class PermissionService {
     } else {
       return new String[] {ServerRole.USER.toString()};
     }
+  }
+
+  public String[] manageCommunity(Long interestId) {
+    if (!interestRepository.existsById(interestId)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
+    }
+    return new String[] {
+      ServerRole.ADMIN.name(),
+      String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), interestId)
+    };
   }
 }

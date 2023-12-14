@@ -1,10 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+
+<div th:with="creator=${usersByRoles.get('CREATOR')}">
+    <h2> Creator :</h2>
+    <ul>
+        <li th:each="user : ${creator}" th:text="${user.email}"></li>
+    </ul>
+</div>
+
+
+<div th:with="applicants=${usersByRoles.get('APPLICANT')}">
+    <h2> List of applicants:</h2>
+    <ul>
+        <li th:if="${applicants != null}" th:each="user : ${applicants}" th:text="${user.email}"></li>
+    </ul>
+    <p th:unless="${applicants != null}">No applicants yet</p>
+</div>
+
+<div th:with="voters=${usersByRoles.get('VOTER')}">
+    <h2> List of voters:</h2>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+        <tr th:each="user : ${voters}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td>
+                <form th:action="@{/interests/{interestId}/admin/users/{userId}(userId=${user.id}, interestId=${interest.id})}"
+                      th:method="delete">
+                    <button type="submit">KICK</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h2>List of users of interest and their role</h2>
+<div th:each="entry : ${usersByRoles.entrySet()}">
+    <p th:text="'Role :' + ${entry.getKey()}"></p>
+    <ul>
+        <li th:each="user, iterStat : ${entry.getValue()}" th:text="'Email : ' + ${user.email}"></li>
+    </ul>
+</div>
 
 </body>
 </html>
