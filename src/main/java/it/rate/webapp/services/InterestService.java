@@ -1,8 +1,10 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDto;
+import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
+import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
 import java.util.List;
@@ -17,6 +19,7 @@ public class InterestService {
 
   private InterestRepository interestRepository;
   private RoleRepository roleRepository;
+  private CriterionRepository criterionRepository;
 
   public Optional<Interest> findInterestById(Long id) {
     return interestRepository.findById(id);
@@ -27,7 +30,7 @@ public class InterestService {
   }
 
   public void setApplicantRole(Long interestId) {
-    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/));
+    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/ ));
     // todo: add logged user to method logic
   }
 
@@ -46,5 +49,23 @@ public class InterestService {
 
   public List<Interest> getLikedInterests(String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
+  }
+
+  public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
+    // todo: porovnat soucasnej list z prichozim a vymazat ty co nesouhlasi
+    List<Criterion> oldCriteria = interestRepository.getReferenceById(interest.getId()).getCriteria();
+// todo: CHANGE BELOW CODE, CANNOT DELETE EVERYTHING, ONLY THOSE THAT WERE DELETED
+// oldCriteria
+//    .forEach(c -> criterionRepository.deleteByNameAndInterestId(c.getName(), interest.getId()));
+// criterionRepository.deleteByNameAndInterestId(s, interest.getId());
+
+    List<Criterion> criteria =
+        criteriaNames.stream().map(name -> Criterion.builder().name(name).build()).toList();
+
+    interest.setCriteria(criteria);
+
+    criterionRepository.saveAll(criteria);
+    criteria.forEach(c -> c.setInterest(interest));
+    return interestRepository.save(interest);
   }
 }

@@ -84,8 +84,12 @@ public class InterestController {
   }
 
   @PutMapping("/{id}/edit")
-  public String editInterest(@PathVariable Long id, @ModelAttribute Interest interest, RedirectAttributes ra) {
-    // todo: save edited interest
+  public String editInterest(
+          @PathVariable Long id,
+          @ModelAttribute Interest interest,
+          @RequestParam List<String> criteriaNames,
+          RedirectAttributes ra) {
+    service.saveEditedInterest(interest, criteriaNames);
     ra.addAttribute("id", id);
     return "redirect:/interests/{id}";
   }

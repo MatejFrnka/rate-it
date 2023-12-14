@@ -34,5 +34,10 @@
 
 <a th:href="@{/interests/{id}/edit(id=${interest.id})}">Edit</a>
 
+<p>TEST</p>
+<ul th:each="c : *{criteria}">
+    <li th:text="${c.name}"></li>
+</ul>
+
 </body>
 </html>

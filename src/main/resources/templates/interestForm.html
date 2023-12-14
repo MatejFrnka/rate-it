@@ -24,7 +24,7 @@
         <th:block th:if="*{id != null}">
             <div th:each="criterion : ${interest.criteria}">
                 <div>
-                        <input type="text" name="criteria" th:value="${criterion.name}" />
+                        <input type="text" name="criteriaNames" th:value="${criterion.name}" />
                         <button type="button" onclick="removeCriteria(this)">Remove</button>
                 </div>
             </div>
@@ -62,7 +62,7 @@
         var removeButton = document.createElement('button');
 
         input.type = 'text';
-        input.name = 'criteria';
+        input.name = 'criteriaNames';
 
         removeButton.type = 'button';
         removeButton.textContent = 'Remove';
