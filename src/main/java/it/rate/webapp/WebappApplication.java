@@ -56,10 +56,15 @@ public class WebappApplication implements CommandLineRunner {
         Interest.builder()
             .name("Makové koláčky")
             .description("Makové koláčky jako od babičky")
+            .exclusive(true)
             .build();
 
     Interest i2 =
-        Interest.builder().name("Quiet spots").description("Výjimečně klidná místa").build();
+        Interest.builder()
+            .name("Quiet spots")
+            .description("Výjimečně klidná místa")
+            .exclusive(false)
+            .build();
     interestRepository.saveAll(List.of(i1, i2));
 
     Role r1 = new Role(u1, i1, Role.RoleType.CREATOR);
