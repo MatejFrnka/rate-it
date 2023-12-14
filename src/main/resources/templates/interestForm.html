@@ -33,8 +33,8 @@
             <!-- Iterate over existing criteria and add them to the container -->
             <div th:each="criterion : ${interest.criteria}">
                 <div>
-                    <input type="text" name="criteria" th:value="${criterion.name}" />
-                    <button type="button" onclick="removeCriteria(this)">Remove</button>
+                        <input type="text" name="criteria" th:value="${criterion.name}" />
+                        <button type="button" onclick="removeCriteria(this)">Remove</button>
                 </div>
             </div>
         </th:block>
@@ -62,17 +62,32 @@
         }
         return true;
     }
+
     function addCriteria() {
         var criteriaContainer = document.getElementById('criteriaContainer');
+        var div = document.createElement('div');
         var input = document.createElement('input');
+        var removeButton = document.createElement('button');
+
         input.type = 'text';
         input.name = 'criteria';
-        criteriaContainer.appendChild(input);
-        criteriaContainer.appendChild(document.createElement('br'));
+
+        removeButton.type = 'button';
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = function () {
+            criteriaContainer.removeChild(div);
+        };
+
+        div.appendChild(input);
+        div.appendChild(removeButton);
+        criteriaContainer.appendChild(div);
     }
+
     function removeCriteria(button) {
-        var criteriaContainer = document.getElementById('criteriaContainer');
-        criteriaContainer.removeChild(button.parentNode);
+        var parentDiv = button.closest('div');
+        if (parentDiv) {
+            parentDiv.remove();
+        }
     }
 </script>
 
