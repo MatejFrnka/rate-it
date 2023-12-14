@@ -89,7 +89,7 @@ public class InterestController {
   }
 
   @GetMapping("/{id}/bothandadmin")
-  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id, 'ROLE_ADMIN')")
+  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id, 'ADMIN')")
   public String adminAndVoterCreatorPage(@PathVariable Long id) {
     return "test-role-base-access";
   }
