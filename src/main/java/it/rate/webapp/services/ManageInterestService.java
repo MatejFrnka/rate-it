@@ -39,7 +39,7 @@ public class ManageInterestService {
     return map;
   }
 
-  public void removeVoter(Long interestId, Long userId) {
+  public void removeRole(Long interestId, Long userId) {
     if (userId == null || interestId == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
     }

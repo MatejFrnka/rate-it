@@ -50,7 +50,14 @@ public class WebappApplication implements CommandLineRunner {
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.ADMIN)
             .build();
-    userRepository.saveAll(List.of(u1, u2, u3));
+    AppUser u4 =
+            AppUser.builder()
+                    .username("Franta")
+                    .email("franta@franta.cz")
+                    .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+                    .serverRole(ServerRole.USER)
+                    .build();
+    userRepository.saveAll(List.of(u1, u2, u3, u4));
 
     Interest i1 =
         Interest.builder()
@@ -72,14 +79,16 @@ public class WebappApplication implements CommandLineRunner {
     Role r3 = new Role(u3, i2, Role.RoleType.CREATOR);
     Role r4 = new Role(u3, i1, Role.RoleType.VOTER);
     Role r5 = new Role(u1, i2, Role.RoleType.VOTER);
-    roleRepository.saveAll(List.of(r1, r2, r3, r4, r5));
+    Role r6 = new Role(u4, i1, Role.RoleType.APPLICANT);
+    roleRepository.saveAll(List.of(r1, r2, r3, r4, r5, r6));
 
     Like v1 = new Like(u1, i1);
     Like v2 = new Like(u2, i1);
     Like v3 = new Like(u3, i1);
     Like v4 = new Like(u1, i2);
     Like v5 = new Like(u2, i2);
-    voteRepository.saveAll(List.of(v1, v2, v3, v4, v5));
+    Like v6 = new Like(u4, i1);
+    voteRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
 
     Place p1 =
         Place.builder()

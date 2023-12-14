@@ -3,7 +3,6 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.ManageInterestService;
-import it.rate.webapp.services.PermissionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -54,14 +53,16 @@ public class InterestAdminController {
   @DeleteMapping("/users/{userId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String removeVoter(@PathVariable Long interestId, @PathVariable Long userId) {
-    manageInterestService.removeVoter(interestId, userId);
+    manageInterestService.removeRole(interestId, userId);
     return "redirect:../users";
   }
 
   @DeleteMapping("/users/applicants/{userId}")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String rejectApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
-    // todo: delete user from List of applicants
-    return "redirect:/{interestId}/users";
+    manageInterestService.removeRole(interestId, userId);
+    // todo: // Same method as above (endpoint kept for eventual logging of rejected users)
+    return "redirect:../users";
   }
 
   @PutMapping("/users/applicants/{userId}")
