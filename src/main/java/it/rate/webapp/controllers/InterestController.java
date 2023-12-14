@@ -76,13 +76,13 @@ public class InterestController {
       model.addAttribute("message", "This interest doesn't exist");
       return "errorPage";
     }
-    model.addAttribute("interest", interest);
+    model.addAttribute("interest", interest.get());
     return "interestForm";
   }
   @PutMapping("/{id}/edit")
   public String editInterest(@PathVariable Long id, RedirectAttributes ra) {
-
-
+    // todo: save edited interest
+    ra.addAttribute("id", id);
     return "redirect:/interests/{id}";
   }
 
