@@ -14,14 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class InterestServiceTest {
 
-  @Autowired
-  MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-  @MockBean
-  InterestRepository interestRepository;
+  @MockBean InterestRepository interestRepository;
+
   @Test
-  void getAllSuggestionDtos() {
-    
-
-  }
+  void getAllSuggestionDtos() {}
 }
