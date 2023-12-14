@@ -7,11 +7,9 @@
 </head>
 <body>
 
-<form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" onsubmit="return onSubmitForm();">
-<!--<form name="myform" th:if="${interest.id == null}" th:action="@{/interests/create}" th:method="post">-->
-<!--<form th:unless="${interest.id == null}" th:action="@{/interests/{id}/edit(id=${interest.id})}" th:method="put">-->
+<form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" onsubmit="return onSubmitForm()">
     <label>Name:
-        <input type="text" name="name" th:value="*{name}" th:frequired>
+        <input type="text" name="name" th:value="*{name}" required>
     </label>
     <br>
 
@@ -22,15 +20,8 @@
 
     <!--todo: add checkbox for exclusivity-->
 
-<!--    <label>Criteria:-->
-<!--        <input type="text" name="criteria" required>-->
-<!--    </label>-->
-<!--    <br>-->
-
     <div id="criteriaContainer" class="criteria-container">Criteria:
-        <!-- Check if the form is in editing mode -->
         <th:block th:if="*{id != null}">
-            <!-- Iterate over existing criteria and add them to the container -->
             <div th:each="criterion : ${interest.criteria}">
                 <div>
                         <input type="text" name="criteria" th:value="${criterion.name}" />
@@ -49,18 +40,19 @@
 <script th:inline="javascript">
     function onSubmitForm()
     {
-        var interestId = document.myForm.getAttribute('id');
+        var interestId = document.myForm.getAttribute('data-interest-id');
         if(interestId == null)
         {
-            document.myForm.action = "@{/interests/create}";
-            document.myForm.method = "post";
+            document.myForm.action = '/interests/create';
+            document.myForm.method = 'post';
         }
         else
         {
-            document.myForm.action = "@{/interests/{id}/edit(id=${interest.id})}";
-            document.myForm.method = "put";
+            document.myForm.action = '/interests/' + interestId + '/edit';
+            document.myForm.method = 'put';
         }
-        return true;
+        document.myForm.submit()
+        return false;
     }
 
     function addCriteria() {
