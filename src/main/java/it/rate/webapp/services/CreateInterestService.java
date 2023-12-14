@@ -30,17 +30,17 @@ public class CreateInterestService {
     criterionRepository.saveAll(criteria);
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    Optional<AppUser> currentUser = userRepository.findByEmail(authentication.getName());
+    AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
-    if (currentUser.isEmpty()) {
-      throw new RuntimeException(); // todo: probably something more specific
-    }
+    Interest newInterest = Interest.builder()
+            .name(name)
+            .description(description)
+            .criteria(criteria)
+            .build();
 
-    Interest i = Interest.builder().name(name).description(description).criteria(criteria).build();
-
-    i.getRoles().add(new Role(currentUser.get(), i, Role.RoleType.ADMIN));
+    newInterest.getRoles().add(new Role(currentUser, newInterest, Role.RoleType.ADMIN));
     // todo: ADMIN to be changed to CREATOR after merge
 
-    return interestRepository.save(i);
+    return interestRepository.save(newInterest);
   }
 }
