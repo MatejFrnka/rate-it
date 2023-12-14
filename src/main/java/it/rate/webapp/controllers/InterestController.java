@@ -97,4 +97,10 @@ public class InterestController {
   public String adminAndVoterCreatorPage(@PathVariable Long id) {
     return "test-role-base-access";
   }
+
+  @GetMapping("/{id}/ex")
+  @PreAuthorize("hasAnyAuthority(@interestService.evaluatePermission(#id))")
+  public String hasAccessByInterest(@PathVariable Long id) {
+    return "test-role-base-access";
+  }
 }
