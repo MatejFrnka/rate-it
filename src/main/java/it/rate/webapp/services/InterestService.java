@@ -7,6 +7,7 @@ import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,20 +53,26 @@ public class InterestService {
   }
 
   public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
-    // todo: porovnat soucasnej list z prichozim a vymazat ty co nesouhlasi
-    List<Criterion> oldCriteria = interestRepository.getReferenceById(interest.getId()).getCriteria();
-// todo: CHANGE BELOW CODE, CANNOT DELETE EVERYTHING, ONLY THOSE THAT WERE DELETED
-// oldCriteria
-//    .forEach(c -> criterionRepository.deleteByNameAndInterestId(c.getName(), interest.getId()));
-// criterionRepository.deleteByNameAndInterestId(s, interest.getId());
+    List<String> oldCriteriaNames =
+        interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
+            .map(Criterion::getName)
+            .toList();
 
-    List<Criterion> criteria =
-        criteriaNames.stream().map(name -> Criterion.builder().name(name).build()).toList();
+    List<Criterion> newCriteria =
+        criteriaNames.stream()
+            .filter(name -> !oldCriteriaNames.contains(name))
+            .map(name -> Criterion.builder().name(name).build())
+            .toList();
 
-    interest.setCriteria(criteria);
+    for (String name : oldCriteriaNames) {
+      if (!criteriaNames.contains(name)) {
+        criterionRepository.deleteByNameAndInterestId(name, interest.getId());
+      }
+    }
 
-    criterionRepository.saveAll(criteria);
-    criteria.forEach(c -> c.setInterest(interest));
+    criterionRepository.saveAll(newCriteria);
+    newCriteria.forEach(c -> c.setInterest(interest));
+
     return interestRepository.save(interest);
   }
 }
