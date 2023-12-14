@@ -20,13 +20,20 @@
 
     <!--todo: add checkbox for exclusivity-->
 
-    <div id="criteriaContainer" class="criteria-container">Criteria:
+    <div id="criteriaContainer" class="criteria-container">
+        Criteria:
+        <div>
+            <input th:if="*{id == null}" type="text" name="criteriaNames" required/>
+        </div>
         <th:block th:if="*{id != null}">
-            <div th:each="criterion, iterStat : ${interest.criteria}">
+            <div>
+                <input type="text" name="criteriaNames" th:value="${interest.criteria[0]?.name}" required/>
+            </div>
+
+            <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
                 <div>
                     <input type="text" name="criteriaNames" th:value="${criterion.name}" required/>
-                    <button type="button" onclick="removeCriteria(this)"
-                            th:if="${iterStat.index > 0}">Remove</button>
+                    <button type="button" onclick="removeCriteria(this, ${iterStat.index})">Remove</button>
                 </div>
             </div>
         </th:block>
@@ -53,6 +60,12 @@
         removeButton.onclick = function () {
             criteriaContainer.removeChild(div);
         };
+
+        if (criteriaContainer.children.length === 0) {
+            removeButton.style.display = 'none';
+        } else {
+            removeButton.style.display = 'inline-block';
+        }
 
         div.appendChild(input);
         div.appendChild(removeButton);
