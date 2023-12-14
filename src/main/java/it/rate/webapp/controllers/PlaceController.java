@@ -65,18 +65,18 @@ public class PlaceController {
     }
 
     model.addAttribute("method", "PUT");
-    model.addAttribute("action", "/" + interestId + "places/" + placeId + "/edit");
+    model.addAttribute("action", "/" + interestId + "/places/" + placeId + "/edit");
     model.addAttribute("title", "Edit page");
-    model.addAttribute("place", placeService.findById(placeId));
+    model.addAttribute("place", placeService.findById(placeId).get());
 
     return "placeForm";
   }
 
   @PutMapping("/{placeId}/edit")
-  public String editPlace() {
-    // todo: accept Place object, save(overwrite) with new values
-    // todo: redirect to GET of edited place
+  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place ) {
 
-    return "redirect:/places/{placeId}";
+    Place editedPlace = placeService.saveNewPlace(place, interestId);
+
+    return "redirect:/" + interestId + "/places/" + editedPlace.getId();
   }
 }
