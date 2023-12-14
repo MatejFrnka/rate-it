@@ -8,6 +8,8 @@ import it.rate.webapp.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
   private final UserRepository userRepository;
@@ -56,5 +58,9 @@ public class UserService {
         && !userDTO.password().isBlank()
         && !userDTO.username().isBlank();
     // todo check if email is valid and password is strong
+  }
+
+  public Optional<AppUser> findByEmail(String email) {
+    return userRepository.findByEmail(email);
   }
 }

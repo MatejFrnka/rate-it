@@ -40,12 +40,4 @@ public class UserController {
     return "loginForm";
   }
 
-  @PostMapping("/login")
-  public String login() {
-    // todo:RequestBody of object account
-    // todo: find user by username(otherwise return bad username/password), validate password,
-    // redirect to main page
-    // todo: return to page where user accessed signup form
-    return "todo";
-  }
 }

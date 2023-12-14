@@ -21,6 +21,7 @@ public class Interest {
 
   private String description;
   private boolean deleted = false;
+  private boolean exclusive;
 
   @OneToMany(mappedBy = "interest")
   private List<Place> places = new ArrayList<>();
@@ -29,13 +30,12 @@ public class Interest {
   private List<Criterion> criteria = new ArrayList<>();
 
   @OneToMany(mappedBy = "interest")
-  private List<Vote> votes = new ArrayList<>();
+  private List<Like> likes = new ArrayList<>();
 
   @OneToMany(mappedBy = "interest")
   private List<Role> roles = new ArrayList<>();
 
-  public int getVoteValue() {
-
-    return votes.stream().mapToInt(Vote::getVoteValue).sum();
+  public int countLikes() {
+    return likes.size();
   }
 }

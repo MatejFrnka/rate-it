@@ -1,13 +1,15 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.dtos.InterestSuggestionDto;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,5 +29,22 @@ public class InterestService {
   public void setApplicantRole(Long interestId) {
     roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/));
     // todo: add logged user to method logic
+  }
+
+  public List<Interest> findAllInterests() {
+    return interestRepository.findAllSortByLikes();
+  }
+
+  public List<Interest> findInterestsByName(String query) {
+    return interestRepository.findAllByNameSortByLikes(query);
+  }
+
+  public List<InterestSuggestionDto> getAllSuggestionDtos() {
+
+    return findAllInterests().stream().map(InterestSuggestionDto::new).collect(Collectors.toList());
+  }
+
+  public List<Interest> getLikedInterests(String loggedUser) {
+    return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
   }
 }

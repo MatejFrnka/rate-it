@@ -37,7 +37,7 @@ public class AppUser {
   private List<Role> roles = new ArrayList<>();
 
   @OneToMany(mappedBy = "appUser")
-  private List<Vote> votes = new ArrayList<>();
+  private List<Like> likes = new ArrayList<>();
 
   @OneToMany(mappedBy = "appUser")
   private List<Rating> ratings = new ArrayList<>();

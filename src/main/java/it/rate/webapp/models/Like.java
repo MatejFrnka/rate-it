@@ -7,10 +7,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "votes")
-public class Vote {
-  @EmbeddedId private VoteId id;
-  private int voteValue;
+@Table(name = "likes")
+public class Like {
+  @EmbeddedId private LikeId id;
 
   @ManyToOne
   @MapsId("userId")
@@ -20,10 +19,9 @@ public class Vote {
   @MapsId("interestId")
   private Interest interest;
 
-  public Vote(AppUser appUser, Interest interest, int voteValue) {
-    this.id = new VoteId(appUser.getId(), interest.getId());
+  public Like(AppUser appUser, Interest interest) {
+    this.id = new LikeId(appUser.getId(), interest.getId());
     this.appUser = appUser;
     this.interest = interest;
-    this.voteValue = voteValue;
   }
 }
