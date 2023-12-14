@@ -4,4 +4,8 @@ import it.rate.webapp.models.Role;
 import it.rate.webapp.models.RoleId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoleRepository extends JpaRepository<Role, RoleId> {}
+import java.util.Optional;
+
+public interface RoleRepository extends JpaRepository<Role, RoleId> {
+    Optional<Role> findByAppUserIdAndInterestId(Long userId, Long interestId);
+}

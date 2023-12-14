@@ -17,7 +17,7 @@ public class ManageInterestService {
 
   public ManageInterestService(InterestService interestService, RoleService roleService) {
     this.interestService = interestService;
-      this.roleService = roleService;
+    this.roleService = roleService;
   }
 
   public Map<String, List<AppUser>> getUsersByRole(Long interestId) {
@@ -40,17 +40,15 @@ public class ManageInterestService {
   }
 
   public void removeVoter(Long interestId, Long userId) {
-      Optional<Interest> optInterest = interestService.findInterestById(interestId);
-      if (optInterest.isEmpty()) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
-      }
-      Interest interest = optInterest.get();
-      RoleId roleIdToDelete = interest.getRoles().stream()
-              .filter(r -> r.getAppUser().getId().equals(userId))
-              .filter(r -> r.getInterest().getId().equals(interestId))
-              .map(Role::getId)
-              .findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role id not found"));
+    if (userId == null || interestId == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
+    }
 
-      roleService.deleteByRoleId(roleIdToDelete);
+    Optional<Role> optRole = roleService.findByAppUserIdAndInterestId(userId, interestId);
+    if (optRole.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
+    }
+    Role role = optRole.get();
+    roleService.deleteByRoleId(new RoleId(role.getId().getUserId(), role.getId().getInterestId()));
   }
 }
