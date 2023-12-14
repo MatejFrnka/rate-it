@@ -1,7 +1,6 @@
 package it.rate.webapp.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 import it.rate.webapp.repositories.InterestRepository;
 import org.junit.jupiter.api.Test;
@@ -22,8 +21,7 @@ class InterestServiceTest {
   InterestRepository interestRepository;
   @Test
   void getAllSuggestionDtos() {
-
-    when(interestRepository.findAll().thanReturn())
+    
 
   }
 }
