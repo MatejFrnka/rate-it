@@ -14,10 +14,13 @@ import java.util.*;
 public class ManageInterestService {
   private InterestService interestService;
   private RoleService roleService;
+  private UserService userService;
 
-  public ManageInterestService(InterestService interestService, RoleService roleService) {
+  public ManageInterestService(
+      InterestService interestService, RoleService roleService, UserService userService) {
     this.interestService = interestService;
     this.roleService = roleService;
+    this.userService = userService;
   }
 
   public Map<String, List<AppUser>> getUsersByRole(Long interestId) {
@@ -50,5 +53,36 @@ public class ManageInterestService {
     }
     Role role = optRole.get();
     roleService.deleteByRoleId(new RoleId(role.getId().getUserId(), role.getId().getInterestId()));
+  }
+
+  public Role adjustRole(Long interestId, Long userId, Role.RoleType roleType) {
+    if (userId == null || interestId == null || roleType == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
+    }
+    Optional<Role> optRole = roleService.findByAppUserIdAndInterestId(userId, interestId);
+    if (optRole.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
+    }
+    Role role = optRole.get();
+    role.setRole(roleType);
+    return roleService.save(role);
+  }
+
+  public Role createNewRole(Long interestId, Long userId, Role.RoleType roleType) {
+    if (userId == null || interestId == null || roleType == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
+    }
+    Optional<Interest> optInterest = interestService.findInterestById(interestId);
+    Optional<AppUser> optUser = userService.findById(userId);
+    if (optInterest.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
+    }
+    if (optUser.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+    }
+    AppUser user = optUser.get();
+    Interest interest = optInterest.get();
+    Role role = new Role(user, interest, roleType);
+    return roleService.save(role);
   }
 }

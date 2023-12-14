@@ -1,6 +1,7 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.ManageInterestService;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,8 @@ public class InterestAdminController {
   private InterestService interestService;
   private ManageInterestService manageInterestService;
 
-  public InterestAdminController(InterestService interestService, ManageInterestService manageInterestService) {
+  public InterestAdminController(
+      InterestService interestService, ManageInterestService manageInterestService) {
     this.interestService = interestService;
     this.manageInterestService = manageInterestService;
   }
@@ -37,12 +39,13 @@ public class InterestAdminController {
     // todo: redirect to GET interest page
     return "redirect:/interests/{interestId}/";
   }
+
   @GetMapping("/users")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String editUsersPage(@PathVariable Long interestId, Model model) {
     Optional<Interest> optInterest = interestService.findInterestById(interestId);
     if (optInterest.isEmpty()) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
     }
     model.addAttribute("usersByRoles", manageInterestService.getUsersByRole(interestId));
     model.addAttribute("interest", optInterest.get());
@@ -62,13 +65,13 @@ public class InterestAdminController {
   public String rejectApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.removeRole(interestId, userId);
     // todo: // Same method as above (endpoint kept for eventual logging of rejected users)
-    return "redirect:../users";
+    return "redirect:../../users";
   }
 
   @PutMapping("/users/applicants/{userId}")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String acceptApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
-    // todo: create new Role(User/Interest)
-
-    return "redirect:/{interestId}/users";
+    manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
+    return "redirect:../../users";
   }
 }

@@ -22,4 +22,8 @@ public class RoleService {
     public Optional<Role> findByAppUserIdAndInterestId(Long userId, Long interestId) {
         return roleRepository.findByAppUserIdAndInterestId(userId, interestId);
     }
+
+    public Role save(Role role) {
+        return roleRepository.save(role);
+    }
 }
