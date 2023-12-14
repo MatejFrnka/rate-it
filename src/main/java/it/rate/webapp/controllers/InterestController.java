@@ -5,7 +5,6 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +27,8 @@ public class InterestController {
     List<Criterion> criteria = new ArrayList<>();
     model.addAttribute("criteria", criteria);
     model.addAttribute("interest", new Interest());
+    model.addAttribute("action", "/interests/create");
+    model.addAttribute("method", "post");
     return "interestForm";
   }
 
@@ -77,43 +78,15 @@ public class InterestController {
       return "errorPage";
     }
     model.addAttribute("interest", interest.get());
+    model.addAttribute("action", "/interests/" + id + "/edit");
+    model.addAttribute("method", "put");
     return "interestForm";
   }
+
   @PutMapping("/{id}/edit")
-  public String editInterest(@PathVariable Long id, RedirectAttributes ra) {
+  public String editInterest(@PathVariable Long id, @ModelAttribute Interest interest, RedirectAttributes ra) {
     // todo: save edited interest
     ra.addAttribute("id", id);
     return "redirect:/interests/{id}";
-  }
-
-  /*
-  ONLY TESTING
-  ENDPOINTS
-  FOR ROLE BASED ACCESS
-  BELOW
-   */
-
-  @GetMapping("/{id}/creators")
-  @PreAuthorize("hasAuthority('ROLE_CREATOR_' + #id)")
-  public String creatorPage(@PathVariable Long id) {
-    return "test-role-base-access";
-  }
-
-  @GetMapping("/{id}/voters")
-  @PreAuthorize("hasAuthority('ROLE_VOTER_' + #id)")
-  public String voterPage(@PathVariable Long id) {
-    return "test-role-base-access";
-  }
-
-  @GetMapping("/{id}/both")
-  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id)")
-  public String voterAndCreatorPage(@PathVariable Long id) {
-    return "test-role-base-access";
-  }
-
-  @GetMapping("/{id}/bothandadmin")
-  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id, 'ADMIN')")
-  public String adminAndVoterCreatorPage(@PathVariable Long id) {
-    return "test-role-base-access";
   }
 }

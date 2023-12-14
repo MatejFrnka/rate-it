@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" onsubmit="return onSubmitForm()">
+<form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}" th:method="${method}">
     <label>Name:
         <input type="text" name="name" th:value="*{name}" required>
     </label>
@@ -38,22 +38,22 @@
 </form>
 
 <script th:inline="javascript">
-    function onSubmitForm()
-    {
-        var interestId = document.myForm.getAttribute('data-interest-id');
-        if(interestId == null)
-        {
-            document.myForm.action = '/interests/create';
-            document.myForm.method = 'post';
-        }
-        else
-        {
-            document.myForm.action = '/interests/' + interestId + '/edit';
-            document.myForm.method = 'put';
-        }
-        document.myForm.submit()
-        return false;
-    }
+    // function onSubmitForm()
+    // {
+    //     var interestId = document.myForm.getAttribute('data-interest-id');
+    //     if(interestId == null)
+    //     {
+    //         document.myForm.action = '/interests/create';
+    //         document.myForm.method = 'post';
+    //     }
+    //     else
+    //     {
+    //         document.myForm.action = '/interests/' + interestId + '/edit';
+    //         document.myForm.method = 'put';
+    //     }
+    //     document.myForm.submit()
+    //     return false;
+    // }
 
     function addCriteria() {
         var criteriaContainer = document.getElementById('criteriaContainer');
