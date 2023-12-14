@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'Rate-It: ' + ${place.getInterest().name} + ' - ' + ${place.name}"></title>
 </head>
-<body>
+<body th:object="${place}">
+<a th:href="@{/places/{id}/edit(id=*{id})}">Edit Place</a>
 
+<h1 th:text="*{name}"></h1>
+
+<p th:text="'Description: ' + *{description}"></p>
+<p th:text="'Address: ' + *{address}"></p>
+<p th:text="'Latitude: ' + *{latitude}"></p>
+<p th:text="'Longitude: ' + *{longitude}"></p>
+
+<h2>Rating criteria</h2>
+<ul>
+    <li th:each="criterion : ${criteria}">
+        <span th:text="${criterion.name}"></span>
+        <span th:text="${criterion.getAverageRating()}"></span>
+    </li>
+</ul>
 </body>
 </html>

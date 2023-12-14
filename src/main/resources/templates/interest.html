@@ -27,7 +27,7 @@
 
     <ul>
         <li th:each="place : *{places}">
-            <a th:href="@{{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+            <a th:href="@{/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
                th:text="${place.name}"></a>
         </li>
     </ul>

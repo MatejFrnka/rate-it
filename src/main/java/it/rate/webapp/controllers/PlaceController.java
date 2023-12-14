@@ -1,14 +1,21 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.Place;
+import it.rate.webapp.services.PlaceService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/{interestId}/places")
 public class PlaceController {
+
+  private final PlaceService placeService;
 
   @GetMapping("/new-place")
   public String newPlacePage(@PathVariable Long interestId) {
@@ -24,10 +31,16 @@ public class PlaceController {
   }
 
   @GetMapping("/{placeId}")
-  public String placeDetails(@PathVariable Long interestId, @PathVariable Long placeId) {
-    // todo: find place by placeId, possibly no need to use interestId
-    // todo: load view according to placeId
-    // todo: load list of criteria
+  public String placeDetails(
+      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
+    Optional<Place> optPlace = placeService.findById(placeId);
+    if (optPlace.isEmpty()) {
+      model.addAttribute("message", "This place doesn't exist");
+      return "errorPage";
+    }
+    Place place = optPlace.get();
+    model.addAttribute("place", place);
+    model.addAttribute("criteria", place.getInterest().getCriteria());
     return "place";
   }
 
