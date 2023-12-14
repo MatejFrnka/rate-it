@@ -1,5 +1,9 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.Place;
+import it.rate.webapp.services.PlaceService;
+import jakarta.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,17 +14,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/{interestId}/places")
 public class PlaceController {
 
+  private final PlaceService placeService;
+
   @GetMapping("/new-place")
-  public String newPlacePage(@PathVariable Long interestId) {
-    // todo: return view for new place creation
+  public String newPlacePage(@PathVariable Long interestId, Place place, Model model) {
+
+    model.addAttribute("newPlace", place);
+
     return "placeForm";
   }
 
   @PostMapping("/new-place")
-  public String createNewPlace(@PathVariable Long interestId) {
-    // todo: RequestBody - place
-    // todo: connect user that created new place with this place and Interest. Save to db.
-    return "redirect:/places/{placeId}";
+  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+
+    Place createdPlace = placeService.saveNewPlace(place, interestId);
+
+    return "redirect:/" + interestId + "/places/" + createdPlace.getId();
   }
 
   @GetMapping("/{placeId}")
@@ -39,14 +48,25 @@ public class PlaceController {
     return "redirect:/places/{placeId}";
   }
 
-  @GetMapping("/places/{placeId}/edit")
+  @GetMapping("/{placeId}/edit/")
   public String editPlacePage(
-      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
-    // todo: return edit form
+      @PathVariable Long interestId,
+      @PathVariable Long placeId,
+      Model model,
+      Principal principal,
+      HttpServletResponse response) {
+
+    if (!placeService.isCreator(principal.getName(), placeId)) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return "notAuthorized";
+    }
+
+    model.addAttribute("")
+
     return "placeForm";
   }
 
-  @PutMapping("/places/{placeId}/edit")
+  @PutMapping("/{placeId}/edit")
   public String editPlace() {
     // todo: accept Place object, save(overwrite) with new values
     // todo: redirect to GET of edited place
