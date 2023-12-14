@@ -4,7 +4,6 @@ import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.models.Role;
-import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.PlaceRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
