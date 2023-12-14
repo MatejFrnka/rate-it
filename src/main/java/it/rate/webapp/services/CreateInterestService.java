@@ -38,8 +38,7 @@ public class CreateInterestService {
             .criteria(criteria)
             .build();
 
-    newInterest.getRoles().add(new Role(currentUser, newInterest, Role.RoleType.ADMIN));
-    // todo: ADMIN to be changed to CREATOR after merge
+    newInterest.getRoles().add(new Role(currentUser, newInterest, Role.RoleType.CREATOR));
 
     return interestRepository.save(newInterest);
   }
