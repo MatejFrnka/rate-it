@@ -1,7 +1,6 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDto;
-import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
@@ -10,9 +9,7 @@ import it.rate.webapp.repositories.RoleRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -30,7 +27,7 @@ public class InterestService {
   }
 
   public void setApplicantRole(Long interestId) {
-    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/ ));
+    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/));
     // todo: add logged user to method logic
   }
 
@@ -50,5 +47,4 @@ public class InterestService {
   public List<Interest> getLikedInterests(String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
   }
-
 }
