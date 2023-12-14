@@ -13,7 +13,7 @@
 
 
 <section th:if="${#authentication.authenticated}"  id="usersInterests">
-    <div th:else="${likedInterests.isEmpty()}" id="likedInterests" th:each="interest : ${likedInterests}">
+    <div th:unless="${likedInterests.isEmpty()}" id="likedInterests" th:each="interest : ${likedInterests}">
         <a th:href="@{|/interests/${interest.id}|}" th:text="${interest.name} + ' ' + ${interest.countLikes()}"></a>
     </div>
     <div th:if="${likedInterests.isEmpty()}" id="noLikedInterests">
