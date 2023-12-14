@@ -27,7 +27,7 @@ public class InterestService {
   }
 
   public void setApplicantRole(Long interestId) {
-    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/));
+    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/ ));
     // todo: add logged user to method logic
   }
 
@@ -46,18 +46,5 @@ public class InterestService {
 
   public List<Interest> getLikedInterests(String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
-  }
-
-  public String[] evaluatePermission(Long interestId) {
-    Optional<Interest> interest = interestRepository.findById(interestId);
-    if (interest.isEmpty()) {
-      throw new RuntimeException();
-    }
-    Interest i = interest.get();
-    if (i.isExclusive()) {
-      return new String[]{"ROLE_VOTER_" + i.getId(), "ROLE_CREATOR_" + i.getId()};
-    } else {
-      return new String[] {"USER"};
-    }
   }
 }

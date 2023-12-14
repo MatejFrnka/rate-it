@@ -4,6 +4,7 @@ import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.PermissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ public class InterestController {
 
   private InterestService service;
   private CreateInterestService interestCreationService;
+  private PermissionService permissionService;
 
   @GetMapping("/create")
   public String createPage(Model model) {
@@ -31,10 +33,11 @@ public class InterestController {
   }
 
   @PostMapping("/create")
-  public String createNew(@RequestParam String name,
-                          @RequestParam String description,
-                          @RequestParam List<String> criteria,
-                          RedirectAttributes ra) {
+  public String createNew(
+      @RequestParam String name,
+      @RequestParam String description,
+      @RequestParam List<String> criteria,
+      RedirectAttributes ra) {
     Interest savedInterest = interestCreationService.save(name, description, criteria);
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
@@ -74,32 +77,8 @@ public class InterestController {
   BELOW
    */
 
-  @GetMapping("/{id}/creators")
-  @PreAuthorize("hasAuthority('ROLE_CREATOR_' + #id)")
-  public String creatorPage(@PathVariable Long id) {
-    return "test-role-base-access";
-  }
-
-  @GetMapping("/{id}/voters")
-  @PreAuthorize("hasAuthority('ROLE_VOTER_' + #id)")
-  public String voterPage(@PathVariable Long id) {
-    return "test-role-base-access";
-  }
-
-  @GetMapping("/{id}/both")
-  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id)")
-  public String voterAndCreatorPage(@PathVariable Long id) {
-    return "test-role-base-access";
-  }
-
-  @GetMapping("/{id}/bothandadmin")
-  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id, 'ADMIN')")
-  public String adminAndVoterCreatorPage(@PathVariable Long id) {
-    return "test-role-base-access";
-  }
-
   @GetMapping("/{id}/ex")
-  @PreAuthorize("hasAnyAuthority(@interestService.evaluatePermission(#id))")
+  @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#id))")
   public String hasAccessByInterest(@PathVariable Long id) {
     return "test-role-base-access";
   }
