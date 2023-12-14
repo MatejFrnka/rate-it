@@ -2,20 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:if="${interest.id == null}" th:text="'Rate-It: New Interest'"></title>
+    <title th:unless="${interest.id != null}" th:text="'Rate-It: ' ${interest.name} + ' Edit'"></title>
 </head>
 <body>
 
-<form th:action="@{/interests/create}" th:method="post">
+<form th:if="${interest.id == null}" th:action="@{/interests/create}" th:method="post">
+<form th:unless="${interest.id == null}" th:action="@{/interests/{id}/edit(id=${interest.id})}" th:method="put">
     <label>Name:
         <input type="text" name="name" required>
     </label>
     <br>
 
     <label>Description:
-        <input type="text" name="description">
+        <textarea name="description"></textarea>
     </label>
     <br>
+
+    <!--todo: add checkbox for exclusivity-->
 
     <label>Criteria:
         <input type="text" name="criteria" required>
