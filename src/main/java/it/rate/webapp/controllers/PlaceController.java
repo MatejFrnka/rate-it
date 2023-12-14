@@ -59,7 +59,7 @@ public class PlaceController {
       Principal principal,
       HttpServletResponse response) {
 
-    if(placeService.findById(placeId).isEmpty()) {
+    if (placeService.findById(placeId).isEmpty()) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       model.addAttribute("message", "This place doesn't exist");
     }
