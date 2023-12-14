@@ -1,8 +1,11 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Place;
+import it.rate.webapp.services.CriterionService;
 import it.rate.webapp.services.PlaceService;
+import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,6 +24,8 @@ public class PlaceController {
 
   private final PlaceService placeService;
   private final UserService userService;
+  private final RatingService ratingService;
+  private final CriterionService criterionService;
 
   @GetMapping("/new-place")
   public String newPlacePage(@PathVariable Long interestId) {
@@ -36,7 +42,10 @@ public class PlaceController {
 
   @GetMapping("/{placeId}")
   public String placeDetails(
-          @PathVariable Long interestId, @PathVariable Long placeId, Model model, Principal principal) {
+      @PathVariable String interestId,
+      @PathVariable Long placeId,
+      Model model,
+      Principal principal) {
     Optional<Place> optPlace = placeService.findById(placeId);
     if (optPlace.isEmpty()) {
       model.addAttribute("message", "This place doesn't exist");
@@ -44,12 +53,19 @@ public class PlaceController {
     }
     Place place = optPlace.get();
     model.addAttribute("place", place);
-    model.addAttribute("criteria", place.getInterest().getCriteria());
+    model.addAttribute("placeCriteria", place.getInterest().getCriteria());
     if (principal != null) {
-      AppUser loggedUser = userService
+      AppUser loggedUser =
+          userService
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database"));
-      model.addAttribute("loggedUserRatings", loggedUser.getRatings());}
+      List<Criterion> loggedUserRatedCriteria =
+          criterionService.findAllByInterestAndRatings_AppUserAndRatings_Place(
+              place.getInterest(), loggedUser, place);
+      model.addAttribute("loggedUser", loggedUser);
+      model.addAttribute("loggedUserRatedCriteria", loggedUserRatedCriteria);
+      model.addAttribute("ratingService", ratingService);
+    }
     return "place";
   }
 
