@@ -21,10 +21,14 @@ public class PlaceService {
 
     String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    AppUser loggedUser = userService.findByEmail(loggedInUserName)
+    AppUser loggedUser =
+        userService
+            .findByEmail(loggedInUserName)
             .orElseThrow(() -> new RuntimeException("User email not found in the database"));
-    Interest interest = interestService.findInterestById(interestId).
-            orElseThrow(() -> new RuntimeException("Interest ID not found in the database"));
+    Interest interest =
+        interestService
+            .findInterestById(interestId)
+            .orElseThrow(() -> new RuntimeException("Interest ID not found in the database"));
 
     loggedUser.getCreatedPlaces().add(place);
     interest.getPlaces().add(place);
@@ -40,5 +44,16 @@ public class PlaceService {
 
   public boolean isCreator(String loggedUserEmail, Long placeId) {
 
+    AppUser appUser =
+        userService
+            .findByEmail(loggedUserEmail)
+            .orElseThrow(() -> new RuntimeException("Email not found in database"));
+
+    Place place =
+        placeRepository
+            .findById(placeId)
+            .orElseThrow(() -> new RuntimeException("Place id not found in database"));
+
+    return place.getCreator().equals(appUser);
   }
 }

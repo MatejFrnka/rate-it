@@ -48,7 +48,7 @@ public class PlaceController {
     return "redirect:/places/{placeId}";
   }
 
-  @GetMapping("/{placeId}/edit/")
+  @GetMapping("/{placeId}/edit")
   public String editPlacePage(
       @PathVariable Long interestId,
       @PathVariable Long placeId,
@@ -61,7 +61,7 @@ public class PlaceController {
       return "notAuthorized";
     }
 
-    model.addAttribute("")
+    model.addAttribute("place", placeService.findById(placeId));
 
     return "placeForm";
   }
