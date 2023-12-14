@@ -19,7 +19,10 @@ public class PlaceController {
   @GetMapping("/new-place")
   public String newPlacePage(@PathVariable Long interestId, Place place, Model model) {
 
-    model.addAttribute("newPlace", place);
+    model.addAttribute("place", place);
+    model.addAttribute("method", "POST");
+    model.addAttribute("action", "/" + interestId + "/places/new-place");
+    model.addAttribute("title", "Edit page");
 
     return "placeForm";
   }
@@ -61,6 +64,9 @@ public class PlaceController {
       return "notAuthorized";
     }
 
+    model.addAttribute("method", "PUT");
+    model.addAttribute("action", "/" + interestId + "places/" + placeId + "/edit");
+    model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.findById(placeId));
 
     return "placeForm";

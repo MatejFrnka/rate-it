@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New place</title>
+    <title>New place/Edit existing</title>
 </head>
 <body>
 
-<h1>New place</h1>
-<form th:method="post" th:href="@{/new-place}" th:object="${newPlace}">
+<h1 th:text="${title}"></h1>
+<form th:method="${method}" th:action="${action}" th:object="${place}">
     <label for="name">Name: </label>
     <input type="text" id="name" name="name" th:field="*{name}" required autocomplete="off">
     <br>
