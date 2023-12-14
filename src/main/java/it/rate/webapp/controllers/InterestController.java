@@ -4,6 +4,7 @@ import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,5 +61,36 @@ public class InterestController {
     // todo: add logged user to the method
     // todo: redirect might not be necessary with the use of js?
     return "redirect:/interests/{id}";
+  }
+
+  /*
+  ONLY TESTING
+  ENDPOINTS
+  FOR ROLE BASED ACCESS
+  BELOW
+   */
+
+  @GetMapping("/{id}/creators")
+  @PreAuthorize("hasAuthority('ROLE_CREATOR_' + #id)")
+  public String creatorPage(@PathVariable Long id) {
+    return "test-role-base-access";
+  }
+
+  @GetMapping("/{id}/voters")
+  @PreAuthorize("hasAuthority('ROLE_VOTER_' + #id)")
+  public String voterPage(@PathVariable Long id) {
+    return "test-role-base-access";
+  }
+
+  @GetMapping("/{id}/both")
+  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id)")
+  public String voterAndCreatorPage(@PathVariable Long id) {
+    return "test-role-base-access";
+  }
+
+  @GetMapping("/{id}/bothandadmin")
+  @PreAuthorize("hasAnyAuthority('ROLE_VOTER_' + #id, 'ROLE_CREATOR_' + #id, 'ADMIN')")
+  public String adminAndVoterCreatorPage(@PathVariable Long id) {
+    return "test-role-base-access";
   }
 }

@@ -1,6 +1,7 @@
 package it.rate.webapp.config.security;
 
 import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,6 +37,11 @@ public class RateItUserDetailsService implements UserDetailsService {
       username = appUser.getEmail();
       password = appUser.getPassword();
       authorities.add(new SimpleGrantedAuthority(appUser.getServerRole().name()));
+      for (Role role : appUser.getRoles()) {
+        authorities.add(
+            new SimpleGrantedAuthority(
+                String.format("ROLE_%s_%d", role.getRole().name(), role.getId().getInterestId())));
+      }
     }
     return new User(username, password, authorities);
   }

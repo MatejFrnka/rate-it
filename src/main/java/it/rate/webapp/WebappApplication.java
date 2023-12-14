@@ -30,7 +30,7 @@ public class WebappApplication implements CommandLineRunner {
     AppUser u1 =
         AppUser.builder()
             .username("Lojza")
-            .email("lozja@lojza.cz")
+            .email("lojza@lojza.cz")
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.USER)
             .build();

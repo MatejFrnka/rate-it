@@ -33,7 +33,7 @@ public class AppUser {
   @OneToMany(mappedBy = "creator")
   private List<Place> createdPlaces = new ArrayList<>();
 
-  @OneToMany(mappedBy = "appUser")
+  @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
   private List<Role> roles = new ArrayList<>();
 
   @OneToMany(mappedBy = "appUser")
