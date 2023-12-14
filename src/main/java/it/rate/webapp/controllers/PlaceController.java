@@ -73,7 +73,7 @@ public class PlaceController {
   }
 
   @PutMapping("/{placeId}/edit")
-  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place ) {
+  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
 
     Place editedPlace = placeService.saveNewPlace(place, interestId);
 
