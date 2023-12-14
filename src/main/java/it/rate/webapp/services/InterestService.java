@@ -31,7 +31,7 @@ public class InterestService {
   }
 
   public void setApplicantRole(Long interestId) {
-    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/ ));
+    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/));
     // todo: add logged user to method logic
   }
 
