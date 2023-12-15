@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -66,8 +67,7 @@ public class PlaceController {
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database"));
       List<Criterion> loggedUserRatedCriteria =
-          criterionService.findAllByInterestAppUserPlace(
-              place.getInterest(), loggedUser, place);
+          criterionService.findAllByInterestAppUserPlace(place.getInterest(), loggedUser, place);
       model.addAttribute("loggedUser", loggedUser);
       model.addAttribute("loggedUserRatedCriteria", loggedUserRatedCriteria);
       model.addAttribute("ratingService", ratingService);
@@ -76,7 +76,11 @@ public class PlaceController {
   }
 
   @PostMapping("/{placeId}")
-  public String ratePlace(@PathVariable Long interestId, @PathVariable Long placeId) {
+  public String ratePlace(
+      @PathVariable Long interestId,
+      @PathVariable Long placeId,
+      @RequestParam Map<Long, Integer> rating) {
+    System.out.println(rating);
     // todo: accept updated list of ratings
     // todo: save new/updated ratings
     // todo: redirect to GET of place

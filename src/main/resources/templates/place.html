@@ -27,13 +27,13 @@
                 <th>Avg Rating</th>
                 <th>My Rating</th>
             </tr>
-            <tr th:each="criterion : ${placeCriteria}">
-                <td th:text="${criterion.name}"></td>
-                <td th:text="${#numbers.formatDecimal(criterion.getAverageRating, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+            <tr th:each="criterion : ${placeCriteria}" th:object="${criterion}">
+                <td th:text="*{name}"></td>
+                <td th:text="${#numbers.formatDecimal(criterion.getAverageRating(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                 <td><label>
-                    <input type="number" name="rating"
+                    <input type="number" th:name="'rating[' + *{id} + ']'"
                            th:value="${loggedUserRatedCriteria.contains(criterion)} ?
-                           ${ratingService.findByAppUserAndCriterionAndPlace(loggedUser, criterion, place).get().score} : ''">
+                           ${ratingService.findByAppUserAndCriterionAndPlace(loggedUser, criterion, place).get().score} : '0'">
                 </label></td>
             </tr>
         </table>
