@@ -3,7 +3,7 @@ package it.rate.webapp.services;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
-import it.rate.webapp.models.RoleId;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,17 +11,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class ManageInterestService {
-  private InterestService interestService;
-  private RoleService roleService;
-  private UserService userService;
+  private final InterestService interestService;
+  private final RoleService roleService;
+  private final UserService userService;
 
-  public ManageInterestService(
-      InterestService interestService, RoleService roleService, UserService userService) {
-    this.interestService = interestService;
-    this.roleService = roleService;
-    this.userService = userService;
-  }
 
   public Map<String, List<AppUser>> getUsersByRole(Long interestId) {
     Optional<Interest> optInterest = interestService.findInterestById(interestId);
@@ -52,7 +47,7 @@ public class ManageInterestService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
     }
     Role role = optRole.get();
-    roleService.deleteByRoleId(new RoleId(role.getId().getUserId(), role.getId().getInterestId()));
+    roleService.deleteByRoleId(role.getId());
   }
 
   public Role adjustRole(Long interestId, Long userId, Role.RoleType roleType) {

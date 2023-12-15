@@ -4,6 +4,7 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.ManageInterestService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,16 +15,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/interests/{interestId}/admin")
 public class InterestAdminController {
-  private InterestService interestService;
-  private ManageInterestService manageInterestService;
-
-  public InterestAdminController(
-      InterestService interestService, ManageInterestService manageInterestService) {
-    this.interestService = interestService;
-    this.manageInterestService = manageInterestService;
-  }
+  private final InterestService interestService;
+  private final ManageInterestService manageInterestService;
 
   @GetMapping("/edit")
   public String editPageView(Model model, @PathVariable Long interestId) {
@@ -57,7 +53,7 @@ public class InterestAdminController {
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String removeVoter(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.removeRole(interestId, userId);
-    return "redirect:../users";
+    return "redirect:/interests/{interestId}/admin/users";
   }
 
   @DeleteMapping("/users/applicants/{userId}")
@@ -65,13 +61,13 @@ public class InterestAdminController {
   public String rejectApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.removeRole(interestId, userId);
     // todo: // Same method as above (endpoint kept for eventual logging of rejected users)
-    return "redirect:../../users";
+    return "redirect:/interests/{interestId}/admin/users";
   }
 
   @PutMapping("/users/applicants/{userId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String acceptApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
-    return "redirect:../../users";
+    return "redirect:/interests/{interestId}/admin/users";
   }
 }
