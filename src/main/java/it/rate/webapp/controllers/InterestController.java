@@ -6,7 +6,6 @@ import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.PermissionService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +28,9 @@ public class InterestController {
   public String createPage(Model model) {
     List<Criterion> criteria = new ArrayList<>();
     model.addAttribute("criteria", criteria);
+    model.addAttribute("interest", new Interest());
+    model.addAttribute("action", "/interests/create");
+    model.addAttribute("method", "post");
     return "interestForm";
   }
 
@@ -70,16 +72,27 @@ public class InterestController {
     return "redirect:/interests/{id}";
   }
 
-  /*
-  ONLY TESTING
-  ENDPOINTS
-  FOR ROLE BASED ACCESS
-  BELOW
-   */
+  @GetMapping("/{id}/edit")
+  public String editInterestPage(@PathVariable Long id, Model model) {
+    Optional<Interest> interest = service.findInterestById(id);
+    if (interest.isEmpty()) {
+      model.addAttribute("message", "This interest doesn't exist");
+      return "errorPage";
+    }
+    model.addAttribute("interest", interest.get());
+    model.addAttribute("action", "/interests/" + id + "/edit");
+    model.addAttribute("method", "put");
+    return "interestForm";
+  }
 
-  @GetMapping("/{id}/ex")
-  @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#id))")
-  public String hasAccessByInterest(@PathVariable Long id) {
-    return "test-role-base-access";
+  @PutMapping("/{id}/edit")
+  public String editInterest(
+          @PathVariable Long id,
+          @ModelAttribute Interest interest,
+          @RequestParam List<String> criteriaNames,
+          RedirectAttributes ra) {
+    service.saveEditedInterest(interest, criteriaNames);
+    ra.addAttribute("id", id);
+    return "redirect:/interests/{id}";
   }
 }

@@ -20,7 +20,7 @@ public class Criterion {
 
   @ManyToOne private Interest interest;
 
-  @OneToMany(mappedBy = "criterion")
+  @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
   private List<Rating> ratings = new ArrayList<>();
 
   public double getAverageRating() {

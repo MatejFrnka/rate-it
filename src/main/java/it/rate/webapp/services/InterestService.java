@@ -1,8 +1,10 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDto;
+import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
+import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
 
@@ -17,6 +19,7 @@ public class InterestService {
 
   private InterestRepository interestRepository;
   private RoleRepository roleRepository;
+  private CriterionRepository criterionRepository;
 
   public Optional<Interest> findInterestById(Long id) {
     return interestRepository.findById(id);
@@ -46,5 +49,29 @@ public class InterestService {
 
   public List<Interest> getLikedInterests(String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
+  }
+
+  public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
+    List<String> oldCriteriaNames =
+        interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
+            .map(Criterion::getName)
+            .toList();
+
+    List<Criterion> newCriteria =
+        criteriaNames.stream()
+            .filter(name -> !oldCriteriaNames.contains(name))
+            .map(name -> Criterion.builder().name(name).build())
+            .toList();
+
+    for (String name : oldCriteriaNames) {
+      if (!criteriaNames.contains(name)) {
+        criterionRepository.deleteByNameAndInterestId(name, interest.getId());
+      }
+    }
+
+    criterionRepository.saveAll(newCriteria);
+    newCriteria.forEach(c -> c.setInterest(interest));
+
+    return interestRepository.save(interest);
   }
 }

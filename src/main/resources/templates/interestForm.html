@@ -2,45 +2,50 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:if="${interest.id == null}" th:text="'Rate-It: New Interest'"></title>
+    <title th:unless="${interest.id == null}" th:text="'Rate-It: Edit ' + ${interest.name}"></title>
 </head>
 <body>
 
-<form th:action="@{/interests/create}" th:method="post">
+<form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}" th:method="${method}">
     <label>Name:
-        <input type="text" name="name" required>
+        <input type="text" name="name" th:value="*{name}" required>
     </label>
     <br>
 
     <label>Description:
-        <input type="text" name="description">
+        <textarea name="description" th:field="*{description}"></textarea>
     </label>
     <br>
 
-    <label>Criteria:
-        <input type="text" name="criteria" required>
-    </label>
-    <br>
+    <!--todo: add checkbox for exclusivity-->
 
     <div id="criteriaContainer" class="criteria-container">
+        Criteria:
+        <div>
+            <input th:if="*{id == null}" type="text" name="criteriaNames" required/>
+        </div>
+        <th:block th:if="*{id != null}">
+            <div>
+                <input type="text" name="criteriaNames" th:value="${interest.criteria[0]?.name}" required/>
+            </div>
+
+            <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
+                <div>
+                    <input type="text" name="criteriaNames" th:value="${criterion.name}" required/>
+                    <button type="button" onclick="removeCriteria(this, ${iterStat.index})">Remove</button>
+                </div>
+            </div>
+        </th:block>
     </div>
 
     <button type="button" onclick="addCriteria()">More Criteria</button>
 
     <br>
-    <button type="submit">Create Interest</button>
+    <button type="submit">Save</button>
 </form>
 
-<script>
-    function addCriteria() {
-        var criteriaContainer = document.getElementById('criteriaContainer');
-        var input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'criteria';
-        criteriaContainer.appendChild(input);
-        criteriaContainer.appendChild(document.createElement('br'));
-    }
-</script>
+<script th:inline="javascript" src="/scripts/interestForm.js"></script>
 
 </body>
 </html>

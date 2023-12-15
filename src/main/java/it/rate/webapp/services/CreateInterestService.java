@@ -6,6 +6,7 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
+import it.rate.webapp.repositories.RoleRepository;
 import it.rate.webapp.repositories.UserRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class CreateInterestService {
   private InterestRepository interestRepository;
   private CriterionRepository criterionRepository;
   private UserRepository userRepository;
+  private RoleRepository roleRepository;
 
   public Interest save(String name, String description, List<String> receivedCriteria) {
     List<Criterion> criteria =
@@ -33,11 +35,18 @@ public class CreateInterestService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
-    Interest newInterest =
-        Interest.builder().name(name).description(description).criteria(criteria).build();
+    Interest newInterest = Interest.builder()
+            .name(name)
+            .description(description)
+            .build();
 
-    newInterest.getRoles().add(new Role(currentUser, newInterest, Role.RoleType.CREATOR));
+    interestRepository.save(newInterest);
+    criteria.forEach(c -> c.setInterest(newInterest));
 
-    return interestRepository.save(newInterest);
+    Role newRole = new Role(currentUser, newInterest, Role.RoleType.CREATOR);
+    newInterest.setRoles(List.of(newRole));
+    roleRepository.save(newRole);
+
+    return newInterest;
   }
 }
