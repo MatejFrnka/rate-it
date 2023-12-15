@@ -1,15 +1,18 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,7 @@ public class InterestController {
 
   private InterestService service;
   private CreateInterestService interestCreationService;
+  private UserService userService;
 
   @GetMapping("/create")
   public String createPage(Model model) {
@@ -34,39 +38,52 @@ public class InterestController {
 
   @PostMapping("/create")
   public String createNew(
-      @RequestParam String name,
-      @RequestParam String description,
-      @RequestParam List<String> criteriaNames,
-      RedirectAttributes ra) {
+          @RequestParam String name,
+          @RequestParam String description,
+          @RequestParam List<String> criteriaNames,
+          RedirectAttributes ra) {
     Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }
 
   @GetMapping("/{id}")
-  public String interestView(Model model, @PathVariable Long id) {
+  public String interestView(Model model, @PathVariable Long id, Principal principal) {
     Optional<Interest> interest = service.findInterestById(id);
     if (interest.isEmpty()) {
       model.addAttribute("message", "This interest doesn't exist");
       return "errorPage";
     }
+
+    if (principal != null) {
+      AppUser loggedUser =
+              userService
+                      .findByEmail(principal.getName())
+                      .orElseThrow(() -> new RuntimeException("Email not found in the database"));
+      model.addAttribute("loggedIn", true);
+      model.addAttribute("like", service.isLiked(loggedUser.getId(), id));
+    } else {
+      model.addAttribute("loggedIn", false);
+    }
+    // todo: add model if exclusive
     model.addAttribute("interest", interest.get());
     return "interest";
   }
 
-  @PostMapping("/{id}/vote")
-  public String vote(@PathVariable Long id) {
-    // todo: change vote value according to input (either delete vote, create new one or change vote
-    // value)
-    // todo: redirect to page where user voted
-    return "todo";
+  @PostMapping("/{id}/like")
+  public String vote(@PathVariable Long id, String vote) {
+    service.changeLikeValue(id, vote);
+    return "redirect:/interests/" + id;
   }
 
   @PostMapping("/{id}/voterauthorityrequest")
   public String applyForVoterAuthority(@PathVariable Long id) {
+    Optional<Interest> interest = service.findInterestById(id);
+    if (interest.isEmpty()) {
+
+    }
+
     service.setApplicantRole(id);
-    // todo: add logged user to the method
-    // todo: redirect might not be necessary with the use of js?
     return "redirect:/interests/{id}";
   }
 
@@ -85,10 +102,10 @@ public class InterestController {
 
   @PutMapping("/{id}/edit")
   public String editInterest(
-      @PathVariable Long id,
-      @ModelAttribute Interest interest,
-      @RequestParam List<String> criteriaNames,
-      RedirectAttributes ra) {
+          @PathVariable Long id,
+          @ModelAttribute Interest interest,
+          @RequestParam List<String> criteriaNames,
+          RedirectAttributes ra) {
     service.saveEditedInterest(interest, criteriaNames);
     ra.addAttribute("id", id);
     return "redirect:/interests/{id}";
