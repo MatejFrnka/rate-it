@@ -1,56 +1,119 @@
 package it.rate.webapp.controllers;
 
-import lombok.RequiredArgsConstructor;
+import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Criterion;
+import it.rate.webapp.models.Place;
+import it.rate.webapp.services.CriterionService;
+import it.rate.webapp.services.PlaceService;
+import it.rate.webapp.services.RatingService;
+import it.rate.webapp.services.UserService;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
+
 @Controller
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/{interestId}/places")
 public class PlaceController {
 
+  private final PlaceService placeService;
+  private final UserService userService;
+  private final RatingService ratingService;
+  private final CriterionService criterionService;
+
   @GetMapping("/new-place")
-  public String newPlacePage(@PathVariable Long interestId) {
-    // todo: return view for new place creation
+  public String newPlacePage(@PathVariable Long interestId, Place place, Model model) {
+
+    model.addAttribute("place", place);
+    model.addAttribute("method", "POST");
+    model.addAttribute("action", "/" + interestId + "/places/new-place");
+    model.addAttribute("title", "Edit page");
+
     return "placeForm";
   }
 
   @PostMapping("/new-place")
-  public String createNewPlace(@PathVariable Long interestId) {
-    // todo: RequestBody - place
-    // todo: connect user that created new place with this place and Interest. Save to db.
-    return "redirect:/places/{placeId}";
+  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+
+    Place createdPlace = placeService.saveNewPlace(place, interestId);
+
+    return "redirect:/" + interestId + "/places/" + createdPlace.getId();
   }
 
   @GetMapping("/{placeId}")
-  public String placeDetails(@PathVariable Long interestId, @PathVariable Long placeId) {
-    // todo: find place by placeId, possibly no need to use interestId
-    // todo: load view according to placeId
-    // todo: load list of criteria
+  public String placeDetails(
+      @PathVariable String interestId,
+      @PathVariable Long placeId,
+      Model model,
+      Principal principal) {
+    Optional<Place> optPlace = placeService.findById(placeId);
+    if (optPlace.isEmpty()) {
+      model.addAttribute("message", "This place doesn't exist");
+      return "errorPage";
+    }
+    Place place = optPlace.get();
+    model.addAttribute("place", place);
+    model.addAttribute("placeCriteria", place.getInterest().getCriteria());
+    if (principal != null) {
+      AppUser loggedUser =
+          userService
+              .findByEmail(principal.getName())
+              .orElseThrow(() -> new RuntimeException("Email not found in the database"));
+      List<Criterion> loggedUserRatedCriteria =
+          criterionService.findAllByInterestAppUserPlace(
+              place.getInterest(), loggedUser, place);
+      model.addAttribute("loggedUser", loggedUser);
+      model.addAttribute("loggedUserRatedCriteria", loggedUserRatedCriteria);
+      model.addAttribute("ratingService", ratingService);
+    }
     return "place";
   }
 
   @PostMapping("/{placeId}")
-  public String placeVote(@PathVariable Long interestId, @PathVariable Long placeId) {
+  public String ratePlace(@PathVariable Long interestId, @PathVariable Long placeId) {
     // todo: accept updated list of ratings
     // todo: save new/updated ratings
     // todo: redirect to GET of place
     return "redirect:/places/{placeId}";
   }
 
-  @GetMapping("/places/{placeId}/edit")
+  @GetMapping("/{placeId}/edit")
   public String editPlacePage(
-      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
-    // todo: return edit form
+      @PathVariable Long interestId,
+      @PathVariable Long placeId,
+      Model model,
+      Principal principal,
+      HttpServletResponse response) {
+
+    if (placeService.findById(placeId).isEmpty()) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      model.addAttribute("message", "This place doesn't exist");
+    }
+
+    if (!placeService.isCreator(principal.getName(), placeId)) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return "notAuthorized";
+    }
+
+    model.addAttribute("method", "PUT");
+    model.addAttribute("action", "/" + interestId + "/places/" + placeId + "/edit");
+    model.addAttribute("title", "Edit page");
+    model.addAttribute("place", placeService.findById(placeId).get());
+
     return "placeForm";
   }
 
-  @PutMapping("/places/{placeId}/edit")
-  public String editPlace() {
-    // todo: accept Place object, save(overwrite) with new values
-    // todo: redirect to GET of edited place
+  @PutMapping("/{placeId}/edit")
+  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
 
-    return "redirect:/places/{placeId}";
+    Place editedPlace = placeService.saveNewPlace(place, interestId);
+
+    return "redirect:/" + interestId + "/places/" + editedPlace.getId();
   }
 }

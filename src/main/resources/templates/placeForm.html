@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>New place/Edit existing</title>
 </head>
 <body>
+
+<h1 th:text="${title}"></h1>
+<form th:method="${method}" th:action="${action}" th:object="${place}">
+    <label for="name">Name: </label>
+    <input type="text" id="name" name="name" th:field="*{name}" required autocomplete="off">
+    <br>
+    <label for="lat">Latitude: (pin on map/get users location/manual)</label>
+    <input type="number" id="lat" name="lat" th:field="*{latitude}" required>
+    <br>
+    <label for="lng">Longitude: (pin on map/get users location/manual)</label>
+    <input type="number" id="lng" name="lng" th:field="*{longitude}" required>
+    <br>
+    <label for="address">Address</label>
+    <input type="text" id="address" name="address" th:field="*{address}" autocomplete="off">
+    <br>
+    <label for="description">Description</label>
+    <textarea id="description" name="description" th:field="*{description}"></textarea>
+    <br>
+    <button>Submit</button>
+</form>
+
 
 </body>
 </html>

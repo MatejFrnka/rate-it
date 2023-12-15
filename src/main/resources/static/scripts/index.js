@@ -21,7 +21,7 @@ function loadAllSuggestions() {
 
     suggestionsData.forEach(suggestion => {
         const li = document.createElement('li');
-        li.textContent = `${suggestion.name} (Rating: ${suggestion.rating})`;
+        li.textContent = `${suggestion.name} (Likes: ${suggestion.rating})`;
         li.addEventListener('click', () => {
             window.location.href = `/interests/${suggestion.id}`;
         });

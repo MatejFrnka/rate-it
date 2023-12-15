@@ -4,6 +4,7 @@ import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.PermissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ public class InterestController {
 
   private InterestService service;
   private CreateInterestService interestCreationService;
+  private PermissionService permissionService;
 
   @GetMapping("/create")
   public String createPage(Model model) {
