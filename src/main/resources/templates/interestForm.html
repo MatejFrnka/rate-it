@@ -45,43 +45,7 @@
     <button type="submit">Save</button>
 </form>
 
-<script th:inline="javascript">
-    function addCriteria() {
-        var criteriaContainer = document.getElementById('criteriaContainer');
-        var div = document.createElement('div');
-        var input = document.createElement('input');
-        var removeButton = document.createElement('button');
-
-        input.type = 'text';
-        input.name = 'criteriaNames';
-
-        removeButton.type = 'button';
-        removeButton.textContent = 'Remove';
-        removeButton.onclick = function () {
-            criteriaContainer.removeChild(div);
-        };
-
-        if (criteriaContainer.children.length === 0) {
-            removeButton.style.display = 'none';
-        } else {
-            removeButton.style.display = 'inline-block';
-        }
-
-        div.appendChild(input);
-        div.appendChild(removeButton);
-        criteriaContainer.appendChild(div);
-    }
-
-    function removeCriteria(button, index) {
-        var criteriaContainer = document.getElementById('criteriaContainer');
-        var parentDiv = button.closest('div');
-        if (parentDiv) {
-            if (index !== null || criteriaContainer.children.length > 1) {
-                parentDiv.remove();
-            }
-        }
-    }
-</script>
+<script th:inline="javascript" src="/scripts/interestForm.js"></script>
 
 </body>
 </html>
