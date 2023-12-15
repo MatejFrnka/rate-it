@@ -27,16 +27,22 @@ public class PlaceController {
   private final CriterionService criterionService;
 
   @GetMapping("/new-place")
-  public String newPlacePage(@PathVariable Long interestId) {
-    // todo: return view for new place creation
+  public String newPlacePage(@PathVariable Long interestId, Place place, Model model) {
+
+    model.addAttribute("place", place);
+    model.addAttribute("method", "POST");
+    model.addAttribute("action", "/" + interestId + "/places/new-place");
+    model.addAttribute("title", "Edit page");
+
     return "placeForm";
   }
 
   @PostMapping("/new-place")
-  public String createNewPlace(@PathVariable Long interestId) {
-    // todo: RequestBody - place
-    // todo: connect user that created new place with this place and Interest. Save to db.
-    return "redirect:/places/{placeId}";
+  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+
+    Place createdPlace = placeService.saveNewPlace(place, interestId);
+
+    return "redirect:/" + interestId + "/places/" + createdPlace.getId();
   }
 
   @GetMapping("/{placeId}")
@@ -76,18 +82,37 @@ public class PlaceController {
     return "redirect:/places/{placeId}";
   }
 
-  @GetMapping("/places/{placeId}/edit")
+  @GetMapping("/{placeId}/edit")
   public String editPlacePage(
-      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
-    // todo: return edit form
+      @PathVariable Long interestId,
+      @PathVariable Long placeId,
+      Model model,
+      Principal principal,
+      HttpServletResponse response) {
+
+    if (placeService.findById(placeId).isEmpty()) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      model.addAttribute("message", "This place doesn't exist");
+    }
+
+    if (!placeService.isCreator(principal.getName(), placeId)) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return "notAuthorized";
+    }
+
+    model.addAttribute("method", "PUT");
+    model.addAttribute("action", "/" + interestId + "/places/" + placeId + "/edit");
+    model.addAttribute("title", "Edit page");
+    model.addAttribute("place", placeService.findById(placeId).get());
+
     return "placeForm";
   }
 
-  @PutMapping("/places/{placeId}/edit")
-  public String editPlace() {
-    // todo: accept Place object, save(overwrite) with new values
-    // todo: redirect to GET of edited place
+  @PutMapping("/{placeId}/edit")
+  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
 
-    return "redirect:/places/{placeId}";
+    Place editedPlace = placeService.saveNewPlace(place, interestId);
+
+    return "redirect:/" + interestId + "/places/" + editedPlace.getId();
   }
 }

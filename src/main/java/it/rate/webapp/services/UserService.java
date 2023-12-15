@@ -5,10 +5,9 @@ import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.exceptions.UserAlreadyExistsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.repositories.UserRepository;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
