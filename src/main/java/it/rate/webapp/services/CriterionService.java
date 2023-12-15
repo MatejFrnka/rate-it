@@ -15,7 +15,7 @@ import java.util.List;
 public class CriterionService {
   private CriterionRepository criterionRepository;
 
-  public List<Criterion> findAllByInterestAndRatings_AppUserAndRatings_Place(
+  public List<Criterion> findAllByInterestAppUserPlace(
       Interest interest, AppUser appUser, Place place) {
     return criterionRepository.findAllByInterestAndRatings_AppUserAndRatings_Place(
         interest, appUser, place);

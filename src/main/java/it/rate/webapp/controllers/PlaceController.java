@@ -59,7 +59,7 @@ public class PlaceController {
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database"));
       List<Criterion> loggedUserRatedCriteria =
-          criterionService.findAllByInterestAndRatings_AppUserAndRatings_Place(
+          criterionService.findAllByInterestAppUserPlace(
               place.getInterest(), loggedUser, place);
       model.addAttribute("loggedUser", loggedUser);
       model.addAttribute("loggedUserRatedCriteria", loggedUserRatedCriteria);
