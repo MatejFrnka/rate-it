@@ -8,8 +8,7 @@ import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
