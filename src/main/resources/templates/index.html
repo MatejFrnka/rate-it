@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/styles/index.css">
 </head>
 <body>
+<a th:href="@{/interests/create}">Create new interest</a>
 
 <p th:if="${#authentication.authenticated}" th:text="${loggedUser.getUsername()}"></p>
 <p th:unless="${#authentication.authenticated}">Anonymous user</p>
