@@ -28,12 +28,12 @@ public class PlaceController {
   private final CriterionService criterionService;
 
   @GetMapping("/new-place")
-  public String newPlacePage(@PathVariable Long interestId, Place place, Model model) {
+  public String newPlacePage(@PathVariable Long interestId, Model model) {
 
-    model.addAttribute("place", place);
+    model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
     model.addAttribute("action", "/" + interestId + "/places/new-place");
-    model.addAttribute("title", "Edit page");
+    model.addAttribute("title", "New page");
 
     return "placeForm";
   }

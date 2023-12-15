@@ -7,23 +7,18 @@
 <body th:object="${interest}">
 
     <form th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}" th:method="post">
-        <button type="submit">Gimme My Rights</button>
+        <button type="submit">Request Vote Authority </button>
     </form>
-    <a th:href="@{/interests/{id}/admin/edit(id=*{id})}">Edit Page</a>
+    <a th:href="@{/interests/{id}/edit(id=${interest.id})}">Edit Page</a>
     <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
 
     <h1 th:text="*{name}"></h1>
 
     <p th:text="*{description}"></p>
 
-    <form th:action="@{/interests/{id}/vote(id=*{id})}" th:method="post">
-        <button type="submit" value="plus">+ vote placeholder</button>
-        <button type="submit" value="minus">- vote placeholder</button>
-    </form>
-
     <p>Map placeholder</p>
 
-    <a th:href="@{/interests/create}">Add Place</a>
+    <a th:href="@{/{id}/places/new-place(id=${interest.id})}">Add Place</a>
 
     <ul>
         <li th:each="place : *{places}">
@@ -31,13 +26,5 @@
                th:text="${place.name}"></a>
         </li>
     </ul>
-
-<a th:href="@{/interests/{id}/edit(id=${interest.id})}">Edit</a>
-
-<p>TEST</p>
-<ul th:each="c : *{criteria}">
-    <li th:text="${c.name}"></li>
-</ul>
-
 </body>
 </html>
