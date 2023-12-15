@@ -9,6 +9,7 @@ import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ public class PlaceController {
   private final CriterionService criterionService;
 
   @GetMapping("/new-place")
+  @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
   public String newPlacePage(@PathVariable Long interestId, Model model) {
 
     model.addAttribute("place", new Place());
