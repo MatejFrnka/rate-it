@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface VoteRepository extends JpaRepository<Like, LikeId> {
 
-    boolean existsByAppUserIdAndInterestId(Long userId, Long interestId);
+  boolean existsByAppUserIdAndInterestId(Long userId, Long interestId);
 
-    @Transactional
-    void deleteByAppUserAndInterestId(AppUser user,Long id);
+  @Transactional
+  void deleteByAppUserAndInterestId(AppUser user, Long id);
 }
