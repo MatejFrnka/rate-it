@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'Rate-It: ' + ${place.interest.name} + ' - ' + ${place.name}"></title>
 </head>
-<body>
+<body th:object="${place}">
 
+<p th:if="${#authentication.authenticated}" th:text="${loggedUser.getUsername()}"></p>
+<p th:unless="${#authentication.authenticated}">Anonymous user</p>
+
+<a th:href="@{/places/{id}/edit(id=*{id})}">Edit Place</a>
+
+<h1 th:text="*{name}"></h1>
+
+<p th:text="'Description: ' + *{description}"></p>
+<p th:text="'Address: ' + *{address}"></p>
+<p th:text="'Latitude: ' + *{latitude}"></p>
+<p th:text="'Longitude: ' + *{longitude}"></p>
+<section th:unless="${placeCriteria.isEmpty()}">
+    <h2>Rating criteria</h2>
+    <form th:action="@{/{interestId}/places/{placeId}(intId=${place.interest.id}, placeId=${place.id})}"
+          th:method="post">
+        <table>
+            <tr>
+                <th>Criterion</th>
+                <th>Avg Rating</th>
+                <th>My Rating</th>
+            </tr>
+            <tr th:each="criterion : ${placeCriteria}">
+                <td th:text="${criterion.name}"></td>
+                <td th:text="${#numbers.formatDecimal(criterion.getAverageRating, 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td><label>
+                    <input type="number" name="rating"
+                           th:value="${loggedUserRatedCriteria.contains(criterion)} ?
+                           ${ratingService.findByAppUserAndCriterionAndPlace(loggedUser, criterion, place).get().score} : ''">
+                </label></td>
+            </tr>
+        </table>
+        <button type="submit">Rate</button>
+    </form>
+</section>
 </body>
 </html>
