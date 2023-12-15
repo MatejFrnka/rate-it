@@ -4,7 +4,6 @@ import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.PermissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +21,6 @@ public class InterestController {
 
   private InterestService service;
   private CreateInterestService interestCreationService;
-  private PermissionService permissionService;
 
   @GetMapping("/create")
   public String createPage(Model model) {
@@ -38,9 +36,9 @@ public class InterestController {
   public String createNew(
       @RequestParam String name,
       @RequestParam String description,
-      @RequestParam List<String> criteria,
+      @RequestParam List<String> criteriaNames,
       RedirectAttributes ra) {
-    Interest savedInterest = interestCreationService.save(name, description, criteria);
+    Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }
@@ -87,10 +85,10 @@ public class InterestController {
 
   @PutMapping("/{id}/edit")
   public String editInterest(
-          @PathVariable Long id,
-          @ModelAttribute Interest interest,
-          @RequestParam List<String> criteriaNames,
-          RedirectAttributes ra) {
+      @PathVariable Long id,
+      @ModelAttribute Interest interest,
+      @RequestParam List<String> criteriaNames,
+      RedirectAttributes ra) {
     service.saveEditedInterest(interest, criteriaNames);
     ra.addAttribute("id", id);
     return "redirect:/interests/{id}";

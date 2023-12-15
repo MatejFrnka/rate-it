@@ -9,7 +9,7 @@
 <p th:if="${#authentication.authenticated}" th:text="${loggedUser.getUsername()}"></p>
 <p th:unless="${#authentication.authenticated}">Anonymous user</p>
 
-<a th:href="@{/places/{id}/edit(id=*{id})}">Edit Place</a>
+<a th:href="@{/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit Place</a>
 
 <h1 th:text="*{name}"></h1>
 
@@ -19,7 +19,7 @@
 <p th:text="'Longitude: ' + *{longitude}"></p>
 <section th:unless="${placeCriteria.isEmpty()}">
     <h2>Rating criteria</h2>
-    <form th:action="@{/{interestId}/places/{placeId}(intId=${place.interest.id}, placeId=${place.id})}"
+    <form th:action="@{/{intId}/places/{placeId}(intId=${place.interest.id}, placeId=${place.id})}"
           th:method="post">
         <table>
             <tr>

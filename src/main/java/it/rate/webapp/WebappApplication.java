@@ -50,13 +50,14 @@ public class WebappApplication implements CommandLineRunner {
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.ADMIN)
             .build();
+
     AppUser u4 =
-            AppUser.builder()
-                    .username("Franta")
-                    .email("franta@franta.cz")
-                    .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
-                    .serverRole(ServerRole.USER)
-                    .build();
+        AppUser.builder()
+            .username("Franta")
+            .email("franta@franta.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.USER)
+            .build();
     userRepository.saveAll(List.of(u1, u2, u3, u4));
 
     Interest i1 =
