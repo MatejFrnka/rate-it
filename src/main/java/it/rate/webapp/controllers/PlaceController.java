@@ -7,6 +7,7 @@ import it.rate.webapp.services.CriterionService;
 import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
