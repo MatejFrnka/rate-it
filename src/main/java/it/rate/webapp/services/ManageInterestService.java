@@ -50,12 +50,6 @@ public class ManageInterestService {
     Role role = optRole.get();
     RoleId roleId = new RoleId(role.getId().getUserId(), role.getId().getInterestId());
     roleService.deleteByRoleId(roleId);
-    AppUser user = role.getAppUser();
-    Interest interest = role.getInterest();
-    user.getRoles().removeIf(r -> r.getId().equals(roleId));
-    interest.getRoles().removeIf(r -> r.getId().equals(roleId));
-    userService.save(user);
-    interestService.save(interest);
     // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION
   }
 
