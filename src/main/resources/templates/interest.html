@@ -17,7 +17,9 @@
         </form>
     </section>
 
-    <form th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}" th:method="post">
+    <form th:if='${loggedUserRole == null}'
+          th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}"
+          th:method="post">
         <button type="submit">Request Vote Authority</button>
     </form>
     <a th:href="@{/interests/{id}/edit(id=${interest.id})}">Edit Page</a>

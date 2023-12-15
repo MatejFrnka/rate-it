@@ -3,8 +3,10 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Role;
 import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.RoleService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ public class InterestController {
   private InterestService service;
   private CreateInterestService interestCreationService;
   private UserService userService;
+  private RoleService roleService;
 
   @GetMapping("/create")
   public String createPage(Model model) {
@@ -60,12 +63,18 @@ public class InterestController {
               userService
                       .findByEmail(principal.getName())
                       .orElseThrow(() -> new RuntimeException("Email not found in the database"));
+
       model.addAttribute("loggedIn", true);
       model.addAttribute("like", service.isLiked(loggedUser.getId(), id));
+
+      Optional<Role> loggedUserRole = roleService.findByAppUserIdAndInterestId(loggedUser.getId(), id);
+      if (loggedUserRole.isPresent()) {
+        model.addAttribute("loggedUserRole", loggedUserRole.get());
+      }
+
     } else {
       model.addAttribute("loggedIn", false);
     }
-    // todo: add model if exclusive
     model.addAttribute("interest", interest.get());
     return "interest";
   }
@@ -77,13 +86,8 @@ public class InterestController {
   }
 
   @PostMapping("/{id}/voterauthorityrequest")
-  public String applyForVoterAuthority(@PathVariable Long id) {
-    Optional<Interest> interest = service.findInterestById(id);
-    if (interest.isEmpty()) {
-
-    }
-
-    service.setApplicantRole(id);
+  public String applyForVoterAuthority(Interest interest) {
+    service.setApplicantRole(interest);
     return "redirect:/interests/{id}";
   }
 
