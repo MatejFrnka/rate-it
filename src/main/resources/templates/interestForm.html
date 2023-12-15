@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title th:if="${interest.id == null}" th:text="'Rate-It: New Interest'"></title>
-    <title th:unless="${interest.id != null}" th:text="'Rate-It: Edit ' + ${interest.name}"></title>
+    <title th:unless="${interest.id == null}" th:text="'Rate-It: Edit ' + ${interest.name}"></title>
 </head>
 <body>
 
