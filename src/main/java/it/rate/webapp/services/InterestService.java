@@ -74,4 +74,8 @@ public class InterestService {
 
     return interestRepository.save(interest);
   }
+
+  public Interest save(Interest interest) {
+    return interestRepository.save(interest);
+  }
 }
