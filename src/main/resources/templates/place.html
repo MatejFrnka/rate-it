@@ -31,7 +31,7 @@
                 <td th:text="*{name}"></td>
                 <td th:text="${#numbers.formatDecimal(criterion.getAverageRating(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
                 <td><label>
-                    <input type="number" th:name="'rating[' + *{id} + ']'"
+                    <input type="number" th:name="*{id}"
                            th:value="${loggedUserRatedCriteria.contains(criterion)} ?
                            ${ratingService.findByAppUserAndCriterionAndPlace(loggedUser, criterion, place).get().score} : '0'">
                 </label></td>

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -77,14 +78,14 @@ public class PlaceController {
 
   @PostMapping("/{placeId}")
   public String ratePlace(
-      @PathVariable Long interestId,
-      @PathVariable Long placeId,
-      @RequestParam Map<Long, Integer> rating) {
+          @PathVariable Long interestId,
+          @PathVariable Long placeId,
+          @RequestParam HashMap<String, String> rating,
+          Principal principal) {
     System.out.println(rating);
-    // todo: accept updated list of ratings
-    // todo: save new/updated ratings
-    // todo: redirect to GET of place
-    return "redirect:/places/{placeId}";
+    ratingService.updateRating(rating, placeId, principal);
+    // todo Change MAP to <Long, Integer> as currently not working properly with datatype other than String
+    return "redirect:/{interestId}/places/{placeId}";
   }
 
   @GetMapping("/{placeId}/edit")
