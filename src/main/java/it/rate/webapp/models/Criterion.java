@@ -1,5 +1,7 @@
 package it.rate.webapp.models;
 
+import it.rate.webapp.config.SpringConfiguration;
+import it.rate.webapp.repositories.RatingRepository;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,13 +26,12 @@ public class Criterion {
   private List<Rating> ratings = new ArrayList<>();
 
   public double getAveragePlaceRating(Place place) {
-    return ratings.stream()
-        .filter(r -> r.getPlace().equals(place))
-        .mapToDouble(Rating::getScore)
-        .average()
-        .orElse(-1);
-    // todo: optimize - now filtering from all Ratings of given criterion,
-    // asking the database for ratings of given criterion for specific place would be much more
-    // efficient.
+    RatingRepository ratingRepository =
+        (RatingRepository)
+            SpringConfiguration.contextProvider()
+                .getApplicationContext()
+                .getBean("ratingRepository");
+    List<Rating> ratings = ratingRepository.findAllByCriterionAndPlace(this, place);
+    return ratings.stream().mapToDouble(Rating::getScore).average().orElse(-1);
   }
 }
