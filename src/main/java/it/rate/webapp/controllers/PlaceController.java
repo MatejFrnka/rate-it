@@ -49,6 +49,7 @@ public class PlaceController {
     if (placeService.findById(placeId).isEmpty()) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       model.addAttribute("message", "This place doesn't exist");
+      return "errorPage";
     }
 
     Place place = placeService.getReferenceById(placeId);
@@ -87,6 +88,7 @@ public class PlaceController {
     if (placeService.findById(placeId).isEmpty()) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       model.addAttribute("message", "This place doesn't exist");
+      return "errorPage";
     }
 
     if (!placeService.isCreator(principal.getName(), placeId)) {
