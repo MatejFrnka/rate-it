@@ -6,7 +6,7 @@
 </head>
 <body th:object="${place}">
 
-<p th:if="${#authentication.authenticated}" th:text="${loggedUser.getUsername()}"></p>
+<p th:if="${#authentication.authenticated}" th:text="${loggedUser}"></p>
 <p th:unless="${#authentication.authenticated}">Anonymous user</p>
 
 <a th:href="@{/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit Place</a>
