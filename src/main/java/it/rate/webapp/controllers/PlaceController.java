@@ -3,6 +3,7 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.dtos.RatingsDto;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;
+import it.rate.webapp.services.PermissionService;
 import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
@@ -22,6 +23,7 @@ public class PlaceController {
   private final PlaceService placeService;
   private final UserService userService;
   private final RatingService ratingService;
+  private final PermissionService permissionService;
 
   @GetMapping("/new-place")
   public String newPlacePage(@PathVariable Long interestId, Model model) {
@@ -59,7 +61,9 @@ public class PlaceController {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
-      model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(principal, placeId));
+      if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
+        model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(principal, placeId));
+      }
     }
     return "place";
   }
