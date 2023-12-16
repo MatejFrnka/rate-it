@@ -48,7 +48,7 @@ public class PermissionService {
         String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId())
       };
     } else {
-      return new String[] {ServerRole.USER.toString()};
+      return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
     }
   }
 
