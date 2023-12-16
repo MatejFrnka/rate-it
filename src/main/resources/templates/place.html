@@ -11,14 +11,16 @@
 
 <a th:href="@{/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit Place</a>
 
-<h1 th:text="*{name}"></h1>
+<h1 th:text="*{getInterest.name}"></h1>
+
+<h2 th:text="*{name}"></h2>
 
 <p th:text="'Description: ' + *{description}"></p>
 <p th:text="'Address: ' + *{address}"></p>
 <p th:text="'Latitude: ' + *{latitude}"></p>
 <p th:text="'Longitude: ' + *{longitude}"></p>
 <section th:unless="${placeCriteria.isEmpty()}">
-    <h2>Rating criteria</h2>
+    <h3>Rating criteria</h3>
     <form th:action="@{/{intId}/places/{placeId}(intId=${place.interest.id}, placeId=${place.id})}"
           th:method="post"
           th:object="${usersRatings}"
