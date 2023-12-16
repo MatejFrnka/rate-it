@@ -4,7 +4,6 @@ import it.rate.webapp.models.Criterion;
 import it.rate.webapp.repositories.CriterionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service

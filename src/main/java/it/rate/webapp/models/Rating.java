@@ -34,7 +34,7 @@ public class Rating {
     this.score = score;
   }
 
-    public Long getCriterionId() {
-      return criterion.getId();
-    }
+  public Long getCriterionId() {
+    return criterion.getId();
+  }
 }
