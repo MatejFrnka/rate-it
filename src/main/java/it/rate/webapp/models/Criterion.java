@@ -23,7 +23,12 @@ public class Criterion {
   @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
   private List<Rating> ratings = new ArrayList<>();
 
-  public double getAverageRating() {
-    return ratings.stream().mapToDouble(Rating::getScore).average().orElse(0.0);
+  public double getAveragePlaceRating(Place place) {
+    return ratings.stream()
+            .filter(r -> r.getPlace().equals(place))
+            .mapToDouble(Rating::getScore)
+            .average().orElse(0.0);
+    //todo: optimize - now filtering from all Ratings of given criterion,
+    // asking the database for ratings of given criterion for specific place would be much more efficient.
   }
 }

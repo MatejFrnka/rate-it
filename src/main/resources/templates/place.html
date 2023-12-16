@@ -20,20 +20,23 @@
 <section th:unless="${placeCriteria.isEmpty()}">
     <h2>Rating criteria</h2>
     <form th:action="@{/{intId}/places/{placeId}(intId=${place.interest.id}, placeId=${place.id})}"
-          th:method="post">
+          th:method="post"
+          th:object="${usersRatings}"
+          name="rating">
         <table>
             <tr>
                 <th>Criterion</th>
                 <th>Avg Rating</th>
-                <th>My Rating</th>
+                <th th:if="${usersRatings}">My Rating</th>
             </tr>
-            <tr th:each="criterion : ${placeCriteria}" th:object="${criterion}">
-                <td th:text="*{name}"></td>
-                <td th:text="${#numbers.formatDecimal(criterion.getAverageRating(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                <td><label>
-                    <input type="number" th:name="*{id}"
-                           th:value="${loggedUserRatedCriteria.contains(criterion)} ?
-                           ${ratingService.findByAppUserAndCriterionAndPlace(loggedUser, criterion, place).get().score} : '0'">
+            <tr th:each="criterion : ${placeCriteria}">
+                <td th:text="${criterion.name}"></td>
+                <td th:text="${#numbers.formatDecimal(criterion.getAveragePlaceRating(place), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td th:if="${usersRatings}"><label>
+                    <input type="number"
+                           th:value="${usersRatings.ratings.containsKey(criterion.id)} ?
+                           ${usersRatings.ratings.get(criterion.id)}"
+                           th:field="*{ratings[__${criterion.id}__]}">
                 </label></td>
             </tr>
         </table>

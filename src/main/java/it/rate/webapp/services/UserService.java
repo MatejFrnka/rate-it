@@ -66,4 +66,8 @@ public class UserService {
   public Optional<AppUser> findById(Long userId) {
     return userRepository.findById(userId);
   }
+
+  public AppUser getByEmail(String name) {
+    return userRepository.getByEmail(name);
+  }
 }

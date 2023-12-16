@@ -56,4 +56,8 @@ public class PlaceService {
 
     return place.getCreator().equals(appUser);
   }
+
+  public Place getReferenceById(Long placeId) {
+    return placeRepository.getReferenceById(placeId);
+  }
 }
