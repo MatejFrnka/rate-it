@@ -61,8 +61,7 @@ public class InterestController {
     if (principal != null) {
       AppUser loggedUser =
               userService
-                      .findByEmail(principal.getName())
-                      .orElseThrow(() -> new RuntimeException("Email not found in the database"));
+                      .getByEmail(principal.getName());
 
       model.addAttribute("loggedIn", true);
       model.addAttribute("like", service.isLiked(loggedUser.getId(), id));
@@ -80,8 +79,8 @@ public class InterestController {
   }
 
   @PostMapping("/{id}/like")
-  public String vote(@PathVariable Long id, String vote) {
-    service.changeLikeValue(id, vote);
+  public String like(@PathVariable Long id, String like) {
+    service.changeLikeValue(id, like);
     return "redirect:/interests/" + id;
   }
 

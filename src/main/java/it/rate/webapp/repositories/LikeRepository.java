@@ -6,7 +6,7 @@ import it.rate.webapp.models.LikeId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface VoteRepository extends JpaRepository<Like, LikeId> {
+public interface LikeRepository extends JpaRepository<Like, LikeId> {
 
   boolean existsByAppUserIdAndInterestId(Long userId, Long interestId);
 
