@@ -27,7 +27,7 @@ public class InterestService {
   }
 
   public boolean isLiked(Long userId, Long interestId) {
-    return likeRepository.existsByAppUserIdAndInterestId(userId, interestId);
+    return likeRepository.existsById(new LikeId(userId, interestId));
   }
 
   public void changeLikeValue(Long interestId, String vote) {
@@ -38,7 +38,7 @@ public class InterestService {
     if (vote.equals("like")) {
       likeRepository.save(new Like(currentUser, interestRepository.getReferenceById(interestId)));
     } else {
-      likeRepository.deleteByAppUserAndInterestId(currentUser, interestId);
+      likeRepository.deleteById(new LikeId(currentUser.getId(), interestId));
     }
   }
 
@@ -48,7 +48,6 @@ public class InterestService {
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
     roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
-    // todo: add logged user to method logic
   }
 
   public List<Interest> findAllInterests() {
