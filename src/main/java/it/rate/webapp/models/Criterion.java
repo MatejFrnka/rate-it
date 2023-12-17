@@ -25,7 +25,7 @@ public class Criterion {
   @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
   private List<Rating> ratings = new ArrayList<>();
 
-  public double getAveragePlaceRating(Place place) {
+  public double getAverageRating(Place place) {
     RatingRepository ratingRepository =
         (RatingRepository)
             SpringConfiguration.contextProvider()

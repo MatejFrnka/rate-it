@@ -32,8 +32,8 @@
                 <th th:if="${usersRatings}">My Rating</th>
             </tr>
             <tr th:each="criterion : ${placeCriteria}">
-                <td th:text="${criterion.name}"></td>
-                <td th:text="${#numbers.formatDecimal(criterion.getAveragePlaceRating(place), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td th:text="${criterion.name}"/>
+                <td th:text="${#numbers.formatDecimal(criterion.getAverageRating(place), 1, 'DEFAULT', 2, 'DEFAULT')}"/>
                 <td th:if="${usersRatings}"><label>
                     <input type="number"
                            th:value="${usersRatings.ratings.containsKey(criterion.id)} ?
