@@ -41,10 +41,10 @@ public class InterestController {
 
   @PostMapping("/create")
   public String createNew(
-          @RequestParam String name,
-          @RequestParam String description,
-          @RequestParam List<String> criteriaNames,
-          RedirectAttributes ra) {
+      @RequestParam String name,
+      @RequestParam String description,
+      @RequestParam List<String> criteriaNames,
+      RedirectAttributes ra) {
     Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
@@ -59,14 +59,13 @@ public class InterestController {
     }
 
     if (principal != null) {
-      AppUser loggedUser =
-              userService
-                      .getByEmail(principal.getName());
+      AppUser loggedUser = userService.getByEmail(principal.getName());
 
       model.addAttribute("loggedIn", true);
       model.addAttribute("like", service.isLiked(loggedUser.getId(), id));
 
-      Optional<Role> loggedUserRole = roleService.findByAppUserIdAndInterestId(loggedUser.getId(), id);
+      Optional<Role> loggedUserRole =
+          roleService.findByAppUserIdAndInterestId(loggedUser.getId(), id);
       if (loggedUserRole.isPresent()) {
         model.addAttribute("loggedUserRole", loggedUserRole.get());
       }
@@ -105,10 +104,10 @@ public class InterestController {
 
   @PutMapping("/{id}/edit")
   public String editInterest(
-          @PathVariable Long id,
-          @ModelAttribute Interest interest,
-          @RequestParam List<String> criteriaNames,
-          RedirectAttributes ra) {
+      @PathVariable Long id,
+      @ModelAttribute Interest interest,
+      @RequestParam List<String> criteriaNames,
+      RedirectAttributes ra) {
     service.saveEditedInterest(interest, criteriaNames);
     ra.addAttribute("id", id);
     return "redirect:/interests/{id}";
