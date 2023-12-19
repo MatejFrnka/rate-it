@@ -36,8 +36,8 @@ public class PlaceController {
 
   @PostMapping("/new-place")
   public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
-    Place createdPlace = placeService.saveNewPlace(place, interestId);
-    return "redirect:/" + interestId + "/places/" + createdPlace.getId();
+    Place createdPlace = placeService.savePlace(place, interestId);
+    return String.format("redirect:/%s/places/%s", interestId, createdPlace.getId());
   }
 
   @GetMapping("/{placeId}")
@@ -78,7 +78,7 @@ public class PlaceController {
 
     ratingService.updateRating(rating, placeId, principal);
 
-    return "redirect:/{interestId}/places/{placeId}";
+    return String.format("redirect:/%s/places/%s", interestId, placeId);
   }
 
   @GetMapping("/{placeId}/edit")
@@ -109,10 +109,20 @@ public class PlaceController {
   }
 
   @PutMapping("/{placeId}/edit")
-  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+  public String editPlace(
+      @PathVariable Long interestId,
+      @ModelAttribute Place place,
+      HttpServletResponse response,
+      Principal principal) {
 
-    Place editedPlace = placeService.saveNewPlace(place, interestId);
+    if (placeService.findById(place.getId()).isEmpty()
+        || !placeService.isCreator(principal.getName(), place.getId())) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return "notAuthorized";
+    }
 
-    return "redirect:/" + interestId + "/places/" + editedPlace.getId();
+    placeService.savePlace(place, interestId);
+
+    return String.format("redirect:/%s/places/%s", interestId, place.getId());
   }
 }

@@ -8,6 +8,7 @@
 
 <h1 th:text="${title}"></h1>
 <form th:method="${method}" th:action="${action}" th:object="${place}">
+    <input type="hidden" th:field="*{id}"/>
     <label for="name">Name: </label>
     <input type="text" id="name" name="name" th:field="*{name}" required autocomplete="off">
     <br>

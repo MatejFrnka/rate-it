@@ -17,7 +17,7 @@ public class PlaceService {
   private UserService userService;
   private InterestService interestService;
 
-  public Place saveNewPlace(Place place, Long interestId) {
+  public Place savePlace(Place place, Long interestId) {
 
     String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
