@@ -45,4 +45,21 @@ public class PermissionService {
       ServerRole.ADMIN.name(), String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), interestId)
     };
   }
+
+  public String[] createPlace(Long interestId) {
+    Optional<Interest> optInterest = interestRepository.findById(interestId);
+    if (optInterest.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
+    }
+    Interest i = optInterest.get();
+
+    if (i.isExclusive()) {
+      return new String[] {
+              String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
+              String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId())
+      };
+    } else {
+      return new String[] {ServerRole.USER.toString()};
+    }
+  }
 }

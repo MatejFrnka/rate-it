@@ -29,6 +29,7 @@ public class PlaceController {
   private final CriterionService criterionService;
 
   @GetMapping("/new-place")
+  @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
   public String newPlacePage(@PathVariable Long interestId, Model model) {
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
