@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Place;
@@ -39,7 +40,8 @@ public class PlaceController {
   }
 
   @PostMapping("/new-place")
-  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place)
+      throws BadRequestException {
 
     Place createdPlace = placeService.saveNewPlace(place, interestId);
 
@@ -66,8 +68,7 @@ public class PlaceController {
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database"));
       List<Criterion> loggedUserRatedCriteria =
-          criterionService.findAllByInterestAppUserPlace(
-              place.getInterest(), loggedUser, place);
+          criterionService.findAllByInterestAppUserPlace(place.getInterest(), loggedUser, place);
       model.addAttribute("loggedUser", loggedUser);
       model.addAttribute("loggedUserRatedCriteria", loggedUserRatedCriteria);
       model.addAttribute("ratingService", ratingService);
@@ -89,7 +90,7 @@ public class PlaceController {
       @PathVariable Long placeId,
       Model model,
       Principal principal,
-      HttpServletResponse response) {
+      HttpServletResponse response) throws BadRequestException {
 
     if (placeService.findById(placeId).isEmpty()) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -110,10 +111,10 @@ public class PlaceController {
   }
 
   @PutMapping("/{placeId}/edit")
-  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place)
+      throws BadRequestException {
 
     Place editedPlace = placeService.saveNewPlace(place, interestId);
-
     return "redirect:/" + interestId + "/places/" + editedPlace.getId();
   }
 }
