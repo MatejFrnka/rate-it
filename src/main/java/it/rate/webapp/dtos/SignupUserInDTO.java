@@ -1,4 +1,7 @@
 package it.rate.webapp.dtos;
 
-public record SignupUserInDTO(String email, String password, String username) {
-}
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record SignupUserInDTO(
+    @Email String email, @NotBlank String password, @NotBlank String username) {}
