@@ -10,11 +10,11 @@ import it.rate.webapp.models.Rating;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
+import it.rate.webapp.repositories.LikeRepository;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import it.rate.webapp.repositories.RoleRepository;
 import it.rate.webapp.repositories.UserRepository;
-import it.rate.webapp.repositories.VoteRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -29,7 +29,7 @@ public class BaseIntegrationTest extends BaseTest {
   @Autowired private RatingRepository ratingRepository;
   @Autowired private RoleRepository roleRepository;
   @Autowired private UserRepository userRepository;
-  @Autowired private VoteRepository voteRepository;
+  @Autowired private LikeRepository voteRepository;
 
   @BeforeAll
   void setupDatabase() {
