@@ -19,14 +19,14 @@ public class WebappApplication implements CommandLineRunner {
       RatingRepository ratingRepository,
       RoleRepository roleRepository,
       UserRepository userRepository,
-      VoteRepository voteRepository) {
+      LikeRepository likeRepository) {
     this.criterionRepository = criterionRepository;
     this.interestRepository = interestRepository;
     this.placeRepository = placeRepository;
     this.ratingRepository = ratingRepository;
     this.roleRepository = roleRepository;
     this.userRepository = userRepository;
-    this.voteRepository = voteRepository;
+    this.likeRepository = likeRepository;
   }
 
   private CriterionRepository criterionRepository;
