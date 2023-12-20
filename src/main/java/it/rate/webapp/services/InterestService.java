@@ -1,16 +1,15 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDto;
-import it.rate.webapp.models.Criterion;
-import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Role;
-import it.rate.webapp.repositories.CriterionRepository;
-import it.rate.webapp.repositories.InterestRepository;
-import it.rate.webapp.repositories.RoleRepository;
+import it.rate.webapp.models.*;
+import it.rate.webapp.repositories.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,18 +19,35 @@ public class InterestService {
   private InterestRepository interestRepository;
   private RoleRepository roleRepository;
   private CriterionRepository criterionRepository;
+  private LikeRepository likeRepository;
+  private UserRepository userRepository;
 
   public Optional<Interest> findInterestById(Long id) {
     return interestRepository.findById(id);
   }
 
-  public void vote() {
-    // todo: add logic based on what will be received from html
+  public boolean isLiked(Long userId, Long interestId) {
+    return likeRepository.existsById(new LikeId(userId, interestId));
   }
 
-  public void setApplicantRole(Long interestId) {
-    roleRepository.save(new Role(/*logged user, findInterestById(interestId), APPLICANT*/));
-    // todo: add logged user to method logic
+  public void changeLikeValue(Long interestId, String vote) {
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    AppUser currentUser = userRepository.getByEmail(authentication.getName());
+
+    if (vote.equals("like")) {
+      likeRepository.save(new Like(currentUser, interestRepository.getReferenceById(interestId)));
+    } else {
+      likeRepository.deleteById(new LikeId(currentUser.getId(), interestId));
+    }
+  }
+
+  public void setApplicantRole(Interest interest) {
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    AppUser currentUser = userRepository.getByEmail(authentication.getName());
+
+    roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
   }
 
   public List<Interest> findAllInterests() {
@@ -53,15 +69,15 @@ public class InterestService {
 
   public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
     List<String> oldCriteriaNames =
-        interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
-            .map(Criterion::getName)
-            .toList();
+            interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
+                    .map(Criterion::getName)
+                    .toList();
 
     List<Criterion> newCriteria =
-        criteriaNames.stream()
-            .filter(name -> !oldCriteriaNames.contains(name))
-            .map(name -> Criterion.builder().name(name).build())
-            .toList();
+            criteriaNames.stream()
+                    .filter(name -> !oldCriteriaNames.contains(name))
+                    .map(name -> Criterion.builder().name(name).build())
+                    .toList();
 
     for (String name : oldCriteriaNames) {
       if (!criteriaNames.contains(name)) {
