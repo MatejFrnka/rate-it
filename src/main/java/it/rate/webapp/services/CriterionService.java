@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,5 +20,9 @@ public class CriterionService {
       Interest interest, AppUser appUser, Place place) {
     return criterionRepository.findAllByInterestAndRatings_AppUserAndRatings_Place(
         interest, appUser, place);
+  }
+
+  public Optional<Criterion> findById(Long id) {
+    return criterionRepository.findById(id);
   }
 }

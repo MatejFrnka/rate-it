@@ -35,7 +35,7 @@ public class WebappApplication implements CommandLineRunner {
   private RatingRepository ratingRepository;
   private RoleRepository roleRepository;
   private UserRepository userRepository;
-  private VoteRepository voteRepository;
+  private LikeRepository likeRepository;
 
   // check the application.properties file for app.preload-data, default value is true
   @Value("${app.preload-data:true}")
@@ -112,7 +112,7 @@ public class WebappApplication implements CommandLineRunner {
     Like v4 = new Like(u1, i2);
     Like v5 = new Like(u2, i2);
     Like v6 = new Like(u4, i1);
-    voteRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
+    likeRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
 
     Place p1 =
         Place.builder()
