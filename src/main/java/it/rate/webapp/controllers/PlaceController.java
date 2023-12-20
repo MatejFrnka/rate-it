@@ -13,8 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,20 +31,16 @@ public class PlaceController {
   @GetMapping("/new-place")
   @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
   public String newPlacePage(@PathVariable Long interestId, Model model) {
-
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
     model.addAttribute("action", "/" + interestId + "/places/new-place");
     model.addAttribute("title", "New page");
-
     return "placeForm";
   }
 
   @PostMapping("/new-place")
   public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
-
     Place createdPlace = placeService.saveNewPlace(place, interestId);
-
     return "redirect:/" + interestId + "/places/" + createdPlace.getId();
   }
 
@@ -68,8 +64,7 @@ public class PlaceController {
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database"));
       List<Criterion> loggedUserRatedCriteria =
-          criterionService.findAllByInterestAppUserPlace(
-              place.getInterest(), loggedUser, place);
+          criterionService.findAllByInterestAppUserPlace(place.getInterest(), loggedUser, place);
       model.addAttribute("loggedUser", loggedUser);
       model.addAttribute("loggedUserRatedCriteria", loggedUserRatedCriteria);
       model.addAttribute("ratingService", ratingService);
@@ -78,11 +73,16 @@ public class PlaceController {
   }
 
   @PostMapping("/{placeId}")
-  public String ratePlace(@PathVariable Long interestId, @PathVariable Long placeId) {
-    // todo: accept updated list of ratings
-    // todo: save new/updated ratings
-    // todo: redirect to GET of place
-    return "redirect:/places/{placeId}";
+  @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#placeId))")
+  public String ratePlace(
+      @PathVariable Long interestId,
+      @PathVariable Long placeId,
+      @RequestParam HashMap<String, String> rating,
+      Principal principal) {
+    System.out.println(rating);
+    ratingService.updateRating(rating, placeId, principal);
+    // todo Change MAP to <Long, Integer> now not working properly with datatype other than String
+    return "redirect:/{interestId}/places/{placeId}";
   }
 
   @GetMapping("/{placeId}/edit")

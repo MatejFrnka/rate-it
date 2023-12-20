@@ -3,6 +3,7 @@ package it.rate.webapp.services;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
+import it.rate.webapp.models.RoleId;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,9 @@ public class ManageInterestService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
     }
     Role role = optRole.get();
-    roleService.deleteByRoleId(role.getId());
+    RoleId roleId = new RoleId(role.getId().getUserId(), role.getId().getInterestId());
+    roleService.deleteByRoleId(roleId);
+    // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION
   }
 
   public Role adjustRole(Long interestId, Long userId, Role.RoleType roleType) {
@@ -61,6 +64,7 @@ public class ManageInterestService {
     Role role = optRole.get();
     role.setRole(roleType);
     return roleService.save(role);
+    // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION
   }
 
   public Role createNewRole(Long interestId, Long userId, Role.RoleType roleType) {
@@ -79,5 +83,6 @@ public class ManageInterestService {
     Interest interest = optInterest.get();
     Role role = new Role(user, interest, roleType);
     return roleService.save(role);
+    // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION
   }
 }
