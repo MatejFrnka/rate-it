@@ -63,6 +63,10 @@ public class UserService {
     return userRepository.findByEmail(email);
   }
 
+  public AppUser getByEmail(String email) {
+    return userRepository.getByEmail(email);
+  }
+
   public Optional<AppUser> findById(Long userId) {
     return userRepository.findById(userId);
   }

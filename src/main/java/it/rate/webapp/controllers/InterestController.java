@@ -1,15 +1,20 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Role;
 import it.rate.webapp.services.CreateInterestService;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.RoleService;
+import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +26,8 @@ public class InterestController {
 
   private InterestService service;
   private CreateInterestService interestCreationService;
+  private UserService userService;
+  private RoleService roleService;
 
   @GetMapping("/create")
   public String createPage(Model model) {
@@ -44,29 +51,41 @@ public class InterestController {
   }
 
   @GetMapping("/{id}")
-  public String interestView(Model model, @PathVariable Long id) {
+  public String interestView(Model model, @PathVariable Long id, Principal principal) {
     Optional<Interest> interest = service.findInterestById(id);
     if (interest.isEmpty()) {
       model.addAttribute("message", "This interest doesn't exist");
       return "errorPage";
     }
+
+    if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+
+      model.addAttribute("loggedIn", true);
+      model.addAttribute("like", service.isLiked(loggedUser.getId(), id));
+
+      Optional<Role> loggedUserRole =
+          roleService.findByAppUserIdAndInterestId(loggedUser.getId(), id);
+      if (loggedUserRole.isPresent()) {
+        model.addAttribute("loggedUserRole", loggedUserRole.get());
+      }
+
+    } else {
+      model.addAttribute("loggedIn", false);
+    }
     model.addAttribute("interest", interest.get());
     return "interest";
   }
 
-  @PostMapping("/{id}/vote")
-  public String vote(@PathVariable Long id) {
-    // todo: change vote value according to input (either delete vote, create new one or change vote
-    // value)
-    // todo: redirect to page where user voted
-    return "todo";
+  @PostMapping("/{id}/like")
+  public String like(@PathVariable Long id, String like) {
+    service.changeLikeValue(id, like);
+    return "redirect:/interests/" + id;
   }
 
   @PostMapping("/{id}/voterauthorityrequest")
-  public String applyForVoterAuthority(@PathVariable Long id) {
-    service.setApplicantRole(id);
-    // todo: add logged user to the method
-    // todo: redirect might not be necessary with the use of js?
+  public String applyForVoterAuthority(Interest interest) {
+    service.setApplicantRole(interest);
     return "redirect:/interests/{id}";
   }
 
