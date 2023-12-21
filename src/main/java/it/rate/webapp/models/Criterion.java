@@ -1,7 +1,5 @@
 package it.rate.webapp.models;
 
-import it.rate.webapp.config.SpringConfiguration;
-import it.rate.webapp.repositories.RatingRepository;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,14 +22,4 @@ public class Criterion {
 
   @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
   private List<Rating> ratings = new ArrayList<>();
-
-  public double getAverageRating(Place place) {
-    RatingRepository ratingRepository =
-        (RatingRepository)
-            SpringConfiguration.contextProvider()
-                .getApplicationContext()
-                .getBean("ratingRepository");
-    List<Rating> ratings = ratingRepository.findAllByCriterionAndPlace(this, place);
-    return ratings.stream().mapToDouble(Rating::getScore).average().orElse(-1);
-  }
 }

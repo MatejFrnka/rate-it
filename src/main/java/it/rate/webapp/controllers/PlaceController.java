@@ -57,7 +57,7 @@ public class PlaceController {
 
     Place place = placeService.getReferenceById(placeId);
     model.addAttribute("place", place);
-    model.addAttribute("placeCriteria", place.getInterest().getCriteria());
+    model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
