@@ -1,6 +1,6 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.dtos.InterestSuggestionDto;
+import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 
@@ -58,9 +58,9 @@ public class InterestService {
     return interestRepository.findAllByNameSortByLikes(query);
   }
 
-  public List<InterestSuggestionDto> getAllSuggestionDtos() {
+  public List<InterestSuggestionDTO> getAllSuggestionDtos() {
 
-    return findAllInterests().stream().map(InterestSuggestionDto::new).collect(Collectors.toList());
+    return findAllInterests().stream().map(InterestSuggestionDTO::new).collect(Collectors.toList());
   }
 
   public List<Interest> getLikedInterests(String loggedUser) {

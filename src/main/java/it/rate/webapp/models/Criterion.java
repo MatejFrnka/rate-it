@@ -22,8 +22,4 @@ public class Criterion {
 
   @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
   private List<Rating> ratings = new ArrayList<>();
-
-  public double getAverageRating() {
-    return ratings.stream().mapToDouble(Rating::getScore).average().orElse(0.0);
-  }
 }
