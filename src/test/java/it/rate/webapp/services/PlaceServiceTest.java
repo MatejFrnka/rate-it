@@ -58,7 +58,7 @@ class PlaceServiceTest extends BaseTest {
     // Execute the test and verify that a BadRequestException is thrown
     // The assertThrows method checks that the specified exception is thrown when the lambda
     // expression is executed
-    assertThrows(BadRequestException.class, () -> placeService.saveNewPlace(place, interestId));
+    assertThrows(BadRequestException.class, () -> placeService.savePlace(place, interestId));
     // The lambda expression calls the saveNewPlace method with the test data, which should throw
     // the exception due to the invalid interest ID
   }
@@ -82,7 +82,7 @@ class PlaceServiceTest extends BaseTest {
     when(placeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
     // Call the method under test
-    Place res = placeService.saveNewPlace(place, interestId);
+    Place res = placeService.savePlace(place, interestId);
 
     // Assertions to verify the results
     assertSame(res.getCreator(), creator);

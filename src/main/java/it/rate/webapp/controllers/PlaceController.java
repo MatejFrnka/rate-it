@@ -39,7 +39,7 @@ public class PlaceController {
   @PostMapping("/new-place")
   public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place)
       throws BadRequestException {
-    Place createdPlace = placeService.saveNewPlace(place, interestId);
+    Place createdPlace = placeService.savePlace(place, interestId);
     return String.format("redirect:/%s/places/%s", interestId, createdPlace.getId());
   }
 
