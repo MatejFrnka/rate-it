@@ -1,5 +1,6 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
@@ -18,11 +19,10 @@ public class ManageInterestService {
   private final RoleService roleService;
   private final UserService userService;
 
-
-  public Map<String, List<AppUser>> getUsersByRole(Long interestId) {
+  public Map<String, List<AppUser>> getUsersByRole(Long interestId) throws BadRequestException {
     Optional<Interest> optInterest = interestService.findInterestById(interestId);
     if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
+      throw new BadRequestException("Interest not found");
     }
     Map<String, List<AppUser>> map = new HashMap<>();
     Interest interest = optInterest.get();
@@ -53,13 +53,14 @@ public class ManageInterestService {
     // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION
   }
 
-  public Role adjustRole(Long interestId, Long userId, Role.RoleType roleType) {
+  public Role adjustRole(Long interestId, Long userId, Role.RoleType roleType)
+      throws BadRequestException {
     if (userId == null || interestId == null || roleType == null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
+      throw new BadRequestException("Missing parameter");
     }
     Optional<Role> optRole = roleService.findByAppUserIdAndInterestId(userId, interestId);
     if (optRole.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
+      throw new BadRequestException("Role not found");
     }
     Role role = optRole.get();
     role.setRole(roleType);

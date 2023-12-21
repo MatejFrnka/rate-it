@@ -1,5 +1,9 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Place;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.models.*;
@@ -23,8 +27,8 @@ public class PlaceService {
   private InterestService interestService;
   private RatingRepository ratingRepository;
 
-  public Place savePlace(Place place, Long interestId) {
 
+  public Place savePlace(Place place, Long interestId) throws BadRequestException {
     String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
     AppUser loggedUser =
@@ -34,7 +38,7 @@ public class PlaceService {
     Interest interest =
         interestService
             .findInterestById(interestId)
-            .orElseThrow(() -> new RuntimeException("Interest ID not found in the database"));
+            .orElseThrow(() -> new BadRequestException("Interest ID not found in the database"));
 
     loggedUser.getCreatedPlaces().add(place);
     interest.getPlaces().add(place);
@@ -48,7 +52,7 @@ public class PlaceService {
     return placeRepository.findById(id);
   }
 
-  public boolean isCreator(String loggedUserEmail, Long placeId) {
+  public boolean isCreator(String loggedUserEmail, Long placeId) throws BadRequestException {
 
     AppUser appUser =
         userService
@@ -58,7 +62,7 @@ public class PlaceService {
     Place place =
         placeRepository
             .findById(placeId)
-            .orElseThrow(() -> new RuntimeException("Place id not found in database"));
+            .orElseThrow(() -> new BadRequestException("Place id not found in database"));
 
     return place.getCreator().equals(appUser);
   }

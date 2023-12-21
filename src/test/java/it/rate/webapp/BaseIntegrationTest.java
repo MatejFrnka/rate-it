@@ -1,55 +1,38 @@
 package it.rate.webapp;
 
 import it.rate.webapp.config.security.ServerRole;
-import it.rate.webapp.models.*;
-import it.rate.webapp.repositories.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Criterion;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Like;
+import it.rate.webapp.models.Place;
+import it.rate.webapp.models.Rating;
+import it.rate.webapp.models.Role;
+import it.rate.webapp.repositories.CriterionRepository;
+import it.rate.webapp.repositories.InterestRepository;
+import it.rate.webapp.repositories.LikeRepository;
+import it.rate.webapp.repositories.PlaceRepository;
+import it.rate.webapp.repositories.RatingRepository;
+import it.rate.webapp.repositories.RoleRepository;
+import it.rate.webapp.repositories.UserRepository;
 import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@SpringBootApplication
-public class WebappApplication implements CommandLineRunner {
-  public WebappApplication(
-      CriterionRepository criterionRepository,
-      InterestRepository interestRepository,
-      PlaceRepository placeRepository,
-      RatingRepository ratingRepository,
-      RoleRepository roleRepository,
-      UserRepository userRepository,
-      LikeRepository likeRepository) {
-    this.criterionRepository = criterionRepository;
-    this.interestRepository = interestRepository;
-    this.placeRepository = placeRepository;
-    this.ratingRepository = ratingRepository;
-    this.roleRepository = roleRepository;
-    this.userRepository = userRepository;
-    this.likeRepository = likeRepository;
-  }
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class BaseIntegrationTest extends BaseTest {
 
-  private CriterionRepository criterionRepository;
-  private InterestRepository interestRepository;
-  private PlaceRepository placeRepository;
-  private RatingRepository ratingRepository;
-  private RoleRepository roleRepository;
-  private UserRepository userRepository;
-  private LikeRepository likeRepository;
+  @Autowired private CriterionRepository criterionRepository;
+  @Autowired private InterestRepository interestRepository;
+  @Autowired private PlaceRepository placeRepository;
+  @Autowired private RatingRepository ratingRepository;
+  @Autowired private RoleRepository roleRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private LikeRepository voteRepository;
 
-  // check the application.properties file for app.preload-data, default value is true
-  @Value("${app.preload-data:true}")
-  private boolean preloadData;
-
-  public static void main(String[] args) {
-    SpringApplication.run(WebappApplication.class, args);
-  }
-
-  @Override
-  public void run(String... args) throws Exception {
-    if (!preloadData) {
-      return;
-    }
+  @BeforeAll
+  void setupDatabase() {
     AppUser u1 =
         AppUser.builder()
             .username("Lojza")
@@ -102,9 +85,9 @@ public class WebappApplication implements CommandLineRunner {
     Role r2 = new Role(u2, i1, Role.RoleType.VOTER);
     Role r3 = new Role(u3, i2, Role.RoleType.CREATOR);
     Role r4 = new Role(u3, i1, Role.RoleType.VOTER);
-    //    Role r5 = new Role(u1, i2, Role.RoleType.VOTER);
+    Role r5 = new Role(u1, i2, Role.RoleType.VOTER);
     Role r6 = new Role(u4, i1, Role.RoleType.APPLICANT);
-    roleRepository.saveAll(List.of(r1, r2, r3, r4, r6));
+    roleRepository.saveAll(List.of(r1, r2, r3, r4, r5, r6));
 
     Like v1 = new Like(u1, i1);
     Like v2 = new Like(u2, i1);
@@ -112,7 +95,7 @@ public class WebappApplication implements CommandLineRunner {
     Like v4 = new Like(u1, i2);
     Like v5 = new Like(u2, i2);
     Like v6 = new Like(u4, i1);
-    likeRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
+    voteRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
 
     Place p1 =
         Place.builder()

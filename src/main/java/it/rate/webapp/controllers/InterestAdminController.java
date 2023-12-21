@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
@@ -38,7 +39,8 @@ public class InterestAdminController {
 
   @GetMapping("/users")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String editUsersPage(@PathVariable Long interestId, Model model) {
+  public String editUsersPage(@PathVariable Long interestId, Model model)
+      throws BadRequestException {
     Optional<Interest> optInterest = interestService.findInterestById(interestId);
     if (optInterest.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
@@ -66,7 +68,8 @@ public class InterestAdminController {
 
   @PutMapping("/users/applicants/{userId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String acceptApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
+  public String acceptApplicant(@PathVariable Long interestId, @PathVariable Long userId)
+      throws BadRequestException {
     manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
     return "redirect:/interests/{interestId}/admin/users";
   }

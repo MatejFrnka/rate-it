@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;
@@ -36,7 +37,8 @@ public class PlaceController {
   }
 
   @PostMapping("/new-place")
-  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place)
+      throws BadRequestException {
     Place createdPlace = placeService.savePlace(place, interestId);
     return String.format("redirect:/%s/places/%s", interestId, createdPlace.getId());
   }
@@ -88,7 +90,7 @@ public class PlaceController {
       @PathVariable Long placeId,
       Model model,
       Principal principal,
-      HttpServletResponse response) {
+      HttpServletResponse response) throws BadRequestException {
 
     if (placeService.findById(placeId).isEmpty()) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -114,8 +116,7 @@ public class PlaceController {
       @PathVariable Long interestId,
       @ModelAttribute Place place,
       HttpServletResponse response,
-      Principal principal) {
-
+      Principal principal) throws BadRequestException {
     if (placeService.findById(place.getId()).isEmpty()
         || !placeService.isCreator(principal.getName(), place.getId())) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
