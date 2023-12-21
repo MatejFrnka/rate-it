@@ -1,6 +1,6 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.dtos.RatingsDto;
+import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.RatingRepository;
 import lombok.AllArgsConstructor;
@@ -20,14 +20,14 @@ public class RatingService {
   private final UserService userService;
   private final CriterionService criterionService;
 
-  public RatingsDto getUsersRatingsDto(Principal principal, Long placeId) {
+  public RatingsDTO getUsersRatingsDto(Principal principal, Long placeId) {
     AppUser loggedUser = getLoggedUser(principal);
     Place place = getPlace(placeId);
     List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(loggedUser, place);
-    return new RatingsDto(ratings);
+    return new RatingsDTO(ratings);
   }
 
-  public void updateRating(RatingsDto rating, Long placeId, Principal principal) {
+  public void updateRating(RatingsDTO rating, Long placeId, Principal principal) {
     AppUser loggedUser = getLoggedUser(principal);
     Place place = getPlace(placeId);
     rating

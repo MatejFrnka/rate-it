@@ -1,6 +1,6 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.dtos.RatingsDto;
+import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.services.PermissionService;
@@ -74,7 +74,7 @@ public class PlaceController {
   public String ratePlace(
       @PathVariable Long interestId,
       @PathVariable Long placeId,
-      @ModelAttribute RatingsDto rating,
+      @ModelAttribute RatingsDTO rating,
       Principal principal) {
 
     ratingService.updateRating(rating, placeId, principal);

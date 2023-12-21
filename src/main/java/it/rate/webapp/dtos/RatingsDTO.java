@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public record RatingsDto(Map<Long, Integer> ratings) {
-  public RatingsDto(List<Rating> ratings) {
+public record RatingsDTO(Map<Long, Integer> ratings) {
+  public RatingsDTO(List<Rating> ratings) {
     this(ratings.stream().collect(Collectors.toMap(Rating::getCriterionId, Rating::getScore)));
   }
 
-  public RatingsDto() {
+  public RatingsDTO() {
     this(new HashMap<>());
   }
   // thymeleaf does not like when this constructor is missing
