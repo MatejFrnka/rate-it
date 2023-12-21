@@ -1,10 +1,15 @@
 package it.rate.webapp.services;
 
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Place;
+import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
+import it.rate.webapp.dtos.CriterionAvgRatingDTO;
+import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import it.rate.webapp.repositories.RatingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,6 +21,7 @@ public class PlaceService {
   private PlaceRepository placeRepository;
   private UserService userService;
   private InterestService interestService;
+  private RatingRepository ratingRepository;
 
   public Place saveNewPlace(Place place, Long interestId) {
 
@@ -59,5 +65,19 @@ public class PlaceService {
 
   public Place getReferenceById(Long placeId) {
     return placeRepository.getReferenceById(placeId);
+  }
+
+  public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(Place place) {
+    List<Criterion> criteria = place.getInterest().getCriteria();
+    List<CriterionAvgRatingDTO> criteriaAvgRatingDTOs = new ArrayList<>();
+    criteria.forEach(criterion -> {
+      double avgRating = ratingRepository.findAllByCriterionAndPlace(criterion, place)
+              .stream()
+              .mapToDouble(Rating::getScore)
+              .average()
+              .orElse(-1);
+      criteriaAvgRatingDTOs.add(new CriterionAvgRatingDTO(criterion, avgRating));
+    });
+    return new CriteriaOfPlaceDTO(criteriaAvgRatingDTOs);
   }
 }
