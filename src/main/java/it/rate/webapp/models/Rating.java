@@ -33,4 +33,8 @@ public class Rating {
     this.criterion = criterion;
     this.score = score;
   }
+
+  public Long getCriterionId() {
+    return criterion.getId();
+  }
 }

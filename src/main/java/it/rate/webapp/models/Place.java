@@ -33,4 +33,8 @@ public class Place {
 
   @OneToMany(mappedBy = "place")
   private List<Rating> ratings = new ArrayList<>();
+
+  public double getAverageRating() {
+    return ratings.stream().mapToDouble(Rating::getScore).average().orElse(-1);
+  }
 }

@@ -1,9 +1,9 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Place;
-import it.rate.webapp.services.CriterionService;
+import it.rate.webapp.services.PermissionService;
 import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.RatingService;
 import it.rate.webapp.services.UserService;
@@ -14,9 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -26,7 +23,7 @@ public class PlaceController {
   private final PlaceService placeService;
   private final UserService userService;
   private final RatingService ratingService;
-  private final CriterionService criterionService;
+  private final PermissionService permissionService;
 
   @GetMapping("/new-place")
   @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
@@ -40,8 +37,8 @@ public class PlaceController {
 
   @PostMapping("/new-place")
   public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
-    Place createdPlace = placeService.saveNewPlace(place, interestId);
-    return "redirect:/" + interestId + "/places/" + createdPlace.getId();
+    Place createdPlace = placeService.savePlace(place, interestId);
+    return String.format("redirect:/%s/places/%s", interestId, createdPlace.getId());
   }
 
   @GetMapping("/{placeId}")
@@ -49,25 +46,25 @@ public class PlaceController {
       @PathVariable String interestId,
       @PathVariable Long placeId,
       Model model,
-      Principal principal) {
-    Optional<Place> optPlace = placeService.findById(placeId);
-    if (optPlace.isEmpty()) {
+      Principal principal,
+      HttpServletResponse response) {
+
+    if (placeService.findById(placeId).isEmpty()) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       model.addAttribute("message", "This place doesn't exist");
       return "errorPage";
     }
-    Place place = optPlace.get();
+
+    Place place = placeService.getReferenceById(placeId);
     model.addAttribute("place", place);
-    model.addAttribute("placeCriteria", place.getInterest().getCriteria());
+    model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
+
     if (principal != null) {
-      AppUser loggedUser =
-          userService
-              .findByEmail(principal.getName())
-              .orElseThrow(() -> new RuntimeException("Email not found in the database"));
-      List<Criterion> loggedUserRatedCriteria =
-          criterionService.findAllByInterestAppUserPlace(place.getInterest(), loggedUser, place);
-      model.addAttribute("loggedUser", loggedUser);
-      model.addAttribute("loggedUserRatedCriteria", loggedUserRatedCriteria);
-      model.addAttribute("ratingService", ratingService);
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      model.addAttribute("loggedUser", loggedUser.getUsername());
+      if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
+        model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(principal, placeId));
+      }
     }
     return "place";
   }
@@ -77,12 +74,12 @@ public class PlaceController {
   public String ratePlace(
       @PathVariable Long interestId,
       @PathVariable Long placeId,
-      @RequestParam HashMap<String, String> rating,
+      @ModelAttribute RatingsDTO rating,
       Principal principal) {
-    System.out.println(rating);
+
     ratingService.updateRating(rating, placeId, principal);
-    // todo Change MAP to <Long, Integer> now not working properly with datatype other than String
-    return "redirect:/{interestId}/places/{placeId}";
+
+    return String.format("redirect:/%s/places/%s", interestId, placeId);
   }
 
   @GetMapping("/{placeId}/edit")
@@ -96,6 +93,7 @@ public class PlaceController {
     if (placeService.findById(placeId).isEmpty()) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       model.addAttribute("message", "This place doesn't exist");
+      return "errorPage";
     }
 
     if (!placeService.isCreator(principal.getName(), placeId)) {
@@ -112,10 +110,20 @@ public class PlaceController {
   }
 
   @PutMapping("/{placeId}/edit")
-  public String editPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
+  public String editPlace(
+      @PathVariable Long interestId,
+      @ModelAttribute Place place,
+      HttpServletResponse response,
+      Principal principal) {
 
-    Place editedPlace = placeService.saveNewPlace(place, interestId);
+    if (placeService.findById(place.getId()).isEmpty()
+        || !placeService.isCreator(principal.getName(), place.getId())) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return "notAuthorized";
+    }
 
-    return "redirect:/" + interestId + "/places/" + editedPlace.getId();
+    placeService.savePlace(place, interestId);
+
+    return String.format("redirect:/%s/places/%s", interestId, place.getId());
   }
 }
