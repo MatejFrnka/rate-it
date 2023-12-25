@@ -93,6 +93,59 @@ class PlaceServiceTest extends BaseTest {
     verify(placeRepository, times(1)).save(same(place));
   }
 
+  @Test
+  void loggedUserIsCreator() {
+    Long placeId = 2L;
+    Place place = getPlaceNoId();
+    AppUser creator = new AppUser();
+    creator.getCreatedPlaces().add(place);
+    place.setCreator(creator);
+
+    when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
+
+    assertEquals(place.getCreator(), creator);
+
+  }
+
+  @Test
+  void loggedUserIsNotCreator() {
+    Long placeId = 2L;
+    Place place = getPlaceNoId();
+    AppUser creator = new AppUser();
+
+    when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
+
+    assertNotEquals(place.getCreator(), creator);
+
+  }
+
+  @Test
+  void nonExistingUser() {
+    Long placeId = 2L;
+    Place place = getPlaceNoId();
+    String loggedUser = "John@doe.com";
+
+    when(userService.findByEmail(eq(loggedUser))).thenReturn(Optional.empty());
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
+
+    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUser, placeId));
+  }
+
+  @Test
+  void nonExistingPlace() {
+    Long placeId = (99999L);
+    AppUser creator = new AppUser();
+    String loggedUserEmail = "John@doe.com";
+    creator.setEmail(loggedUserEmail);
+
+    when(userService.findByEmail(eq(loggedUserEmail))).thenReturn(Optional.of(creator));
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.empty());
+
+    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUserEmail, placeId));
+  }
+
   private static Place getPlaceNoId() {
     Place place = new Place();
     place.setName("name");
