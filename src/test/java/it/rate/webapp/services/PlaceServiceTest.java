@@ -15,6 +15,7 @@ import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -154,6 +155,7 @@ class PlaceServiceTest extends BaseTest {
     Interest interest = new Interest();
     AppUser userOne = new AppUser();
     AppUser userTwo = new AppUser();
+
     List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
 
     List<Rating> ratings =
@@ -167,7 +169,7 @@ class PlaceServiceTest extends BaseTest {
     place.setInterest(interest);
     interest.setCriteria(criteria);
 
-    CriteriaOfPlaceDTO result =
+    CriteriaOfPlaceDTO expectedResult =
         new CriteriaOfPlaceDTO(
             Arrays.asList(
                 new CriterionAvgRatingDTO(criteria.get(0), 4),
@@ -179,7 +181,30 @@ class PlaceServiceTest extends BaseTest {
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(1), place))
         .thenReturn(Arrays.asList(ratings.get(1), ratings.get(3)));
 
-    assertEquals(placeService.getCriteriaOfPlaceDTO(place), result);
+    CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
+
+    assertNotNull(actualResult);
+    assertEquals(actualResult, expectedResult);
+  }
+
+  @Test
+  void getCriteriaOfPlaceDtoNoRatings() {
+    Place place = getPlaceNoId();
+    Interest interest = new Interest();
+    List<Criterion> criteria = List.of(new Criterion());
+    place.setInterest(interest);
+    interest.setCriteria(criteria);
+
+    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
+        .thenReturn(new ArrayList<>());
+
+    CriteriaOfPlaceDTO expectedResult =
+        new CriteriaOfPlaceDTO(List.of(new CriterionAvgRatingDTO(criteria.get(0), -1)));
+
+    CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
+
+    assertNotNull(actualResult);
+    assertEquals(actualResult, expectedResult);
   }
 
   private static Place getPlaceNoId() {
