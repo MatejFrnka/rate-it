@@ -6,7 +6,9 @@ import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
+import it.rate.webapp.models.RoleId;
 import it.rate.webapp.repositories.InterestRepository;
+import it.rate.webapp.repositories.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +24,20 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ManageInterestServiceTest extends BaseTest {
 
   @MockBean Authentication authentication;
   @MockBean SecurityContext securityContext;
   @MockBean InterestService interestService;
+  @MockBean RoleService roleService;
+
 
   @Autowired ManageInterestService manageInterestService;
 
   Interest i1;
   AppUser u1;
-  AppUser u2;
-  AppUser u3;
 
   @BeforeEach
   void setUp() {
@@ -46,9 +48,9 @@ class ManageInterestServiceTest extends BaseTest {
 
     u1 = AppUser.builder().username("Lojza").id(1L).build();
 
-    u2 = AppUser.builder().username("Alfonz").id(2L).build();
+    AppUser u2 = AppUser.builder().username("Alfonz").id(2L).build();
 
-    u3 = AppUser.builder().username("Karel").id(3L).build();
+    AppUser u3 = AppUser.builder().username("Karel").id(3L).build();
 
     i1 = new Interest();
 
@@ -84,6 +86,23 @@ class ManageInterestServiceTest extends BaseTest {
 
     Exception e3 = assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, null));
     assertEquals("400 BAD_REQUEST \"Missing parameter\"", e3.getMessage());
+  }
+
+  @Test
+  void removeRoleNonExistentRoleForUser() {
+    when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.empty());
+    Exception e4 = assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
+    assertEquals("404 NOT_FOUND \"Role not found\"", e4.getMessage());
+  }
+
+  @Test
+  void removeRole() {
+    Role roleToDelete = new Role(u1, i1, Role.RoleType.VOTER);
+
+    when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.of(roleToDelete));
+    manageInterestService.removeRole(1L, 1L);
+    verify(roleService, times(1)).deleteByRoleId(roleToDelete.getId());
+//    verify(roleRepository, times(1)).deleteById(same(roleToDelete.getId()));
   }
 
 
