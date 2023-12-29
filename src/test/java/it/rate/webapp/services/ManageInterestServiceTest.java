@@ -11,6 +11,7 @@ import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,7 @@ class ManageInterestServiceTest extends BaseTest {
   @MockBean SecurityContext securityContext;
   @MockBean InterestService interestService;
   @MockBean RoleService roleService;
+  @MockBean RoleRepository roleRepository;
 
 
   @Autowired ManageInterestService manageInterestService;
@@ -98,11 +100,18 @@ class ManageInterestServiceTest extends BaseTest {
   @Test
   void removeRole() {
     Role roleToDelete = new Role(u1, i1, Role.RoleType.VOTER);
-
     when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.of(roleToDelete));
+    ArgumentCaptor<RoleId> argumentCaptor = ArgumentCaptor.forClass(RoleId.class);
+
     manageInterestService.removeRole(1L, 1L);
+    roleRepository.deleteById(roleToDelete.getId());
+
     verify(roleService, times(1)).deleteByRoleId(roleToDelete.getId());
-//    verify(roleRepository, times(1)).deleteById(same(roleToDelete.getId()));
+    verify(roleRepository).deleteById(argumentCaptor.capture());
+    verify(roleRepository, times(1)).deleteById(same(roleToDelete.getId()));
+
+    RoleId deletedRole = argumentCaptor.getValue();
+    assertSame(roleToDelete.getId(), deletedRole);
   }
 
 
