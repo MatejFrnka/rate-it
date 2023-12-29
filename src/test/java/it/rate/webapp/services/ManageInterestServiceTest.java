@@ -81,12 +81,11 @@ class ManageInterestServiceTest extends BaseTest {
   @Test
   void removeRoleInvalidParams() {
     Exception e1 = assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(null, null));
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e1.getMessage());
-
     Exception e2 = assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(null, 1L));
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e2.getMessage());
-
     Exception e3 = assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, null));
+
+    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e1.getMessage());
+    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e2.getMessage());
     assertEquals("400 BAD_REQUEST \"Missing parameter\"", e3.getMessage());
   }
 
@@ -114,10 +113,43 @@ class ManageInterestServiceTest extends BaseTest {
     assertSame(roleToDelete.getId(), deletedRole);
   }
 
+  @Test
+  void adjustRoleInvalidParameters() throws BadRequestException {
+    Exception e1 = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(null, null, null));
+    Exception e2 = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(1L, null, null));
+    Exception e3 = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(null, 1L, null));
+    Exception e4 = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(null, null, Role.RoleType.APPLICANT));
+    Exception e5 = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(1L, 1L, null));
+    Exception e6 = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(null, 1L, Role.RoleType.APPLICANT));
+    Exception e7 = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(1L, null, Role.RoleType.APPLICANT));
 
+    assertEquals("Missing parameter", e1.getMessage());
+    assertEquals("Missing parameter", e2.getMessage());
+    assertEquals("Missing parameter", e3.getMessage());
+    assertEquals("Missing parameter", e4.getMessage());
+    assertEquals("Missing parameter", e5.getMessage());
+    assertEquals("Missing parameter", e6.getMessage());
+    assertEquals("Missing parameter", e7.getMessage());
+  }
 
   @Test
-  void adjustRole() {}
+  void adjustRoleNonExistentRoleForUser() {
+    when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.empty());
+    Exception e = assertThrows(BadRequestException.class, () -> manageInterestService.adjustRole(1L, 1L, Role.RoleType.APPLICANT));
+    assertEquals("Role not found", e.getMessage());
+  }
+
+  @Test
+  void adjustRole() throws BadRequestException {
+    Role roleToAdjust = new Role(u1, i1, Role.RoleType.APPLICANT);
+    Role.RoleType roleToApply = Role.RoleType.VOTER;
+    when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.of(roleToAdjust));
+
+    manageInterestService.adjustRole(1L, 1L, roleToApply);
+
+    verify(roleService, times(1)).save(same(roleToAdjust));
+    assertEquals(roleToApply, roleToAdjust.getRole());
+  }
 
   @Test
   void createNewRole() {}
