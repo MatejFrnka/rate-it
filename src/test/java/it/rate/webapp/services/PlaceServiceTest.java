@@ -9,11 +9,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import it.rate.webapp.BaseTest;
+import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
+import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.exceptions.BadRequestException;
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Place;
+import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
+import it.rate.webapp.repositories.RatingRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +34,7 @@ class PlaceServiceTest extends BaseTest {
   @MockBean InterestService interestService;
   @MockBean UserService userService;
   @MockBean PlaceRepository placeRepository;
+  @MockBean RatingRepository ratingRepository;
 
   @Autowired PlaceService placeService;
 
@@ -91,6 +96,115 @@ class PlaceServiceTest extends BaseTest {
     // Verify that placeRepository.save() was called exactly once with the same Place object used in
     // the test
     verify(placeRepository, times(1)).save(same(place));
+  }
+
+  @Test
+  void loggedUserIsCreator() {
+    Long placeId = 2L;
+    Place place = getPlaceNoId();
+    AppUser creator = new AppUser();
+    creator.getCreatedPlaces().add(place);
+    place.setCreator(creator);
+
+    when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
+
+    assertEquals(place.getCreator(), creator);
+  }
+
+  @Test
+  void loggedUserIsNotCreator() {
+    Long placeId = 2L;
+    Place place = getPlaceNoId();
+    AppUser creator = new AppUser();
+
+    when(userService.findByEmail(any())).thenReturn(Optional.of(creator));
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
+
+    assertNotEquals(place.getCreator(), creator);
+  }
+
+  @Test
+  void nonExistingUser() {
+    Long placeId = 2L;
+    Place place = getPlaceNoId();
+    String loggedUser = "John@doe.com";
+
+    when(userService.findByEmail(eq(loggedUser))).thenReturn(Optional.empty());
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
+
+    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUser, placeId));
+  }
+
+  @Test
+  void nonExistingPlace() {
+    Long placeId = (99999L);
+    AppUser creator = new AppUser();
+    String loggedUserEmail = "John@doe.com";
+    creator.setEmail(loggedUserEmail);
+
+    when(userService.findByEmail(eq(loggedUserEmail))).thenReturn(Optional.of(creator));
+    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.empty());
+
+    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUserEmail, placeId));
+  }
+
+  @Test
+  void getCriteriaOfPlaceDtoHappyCase() {
+    Place place = getPlaceNoId();
+    Interest interest = new Interest();
+    AppUser userOne = new AppUser();
+    AppUser userTwo = new AppUser();
+
+    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
+
+    List<Rating> ratings =
+        Arrays.asList(
+            new Rating(userOne, place, criteria.get(0), 3),
+            new Rating(userOne, place, criteria.get(1), 4),
+            new Rating(userTwo, place, criteria.get(0), 5),
+            new Rating(userTwo, place, criteria.get(1), 6));
+
+    place.setRatings(ratings);
+    place.setInterest(interest);
+    interest.setCriteria(criteria);
+
+    CriteriaOfPlaceDTO expectedResult =
+        new CriteriaOfPlaceDTO(
+            Arrays.asList(
+                new CriterionAvgRatingDTO(criteria.get(0), 4),
+                new CriterionAvgRatingDTO(criteria.get(1), 5)));
+
+    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
+        .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
+
+    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(1), place))
+        .thenReturn(Arrays.asList(ratings.get(1), ratings.get(3)));
+
+    CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
+
+    assertNotNull(actualResult);
+    assertEquals(actualResult, expectedResult);
+  }
+
+  @Test
+  void getCriteriaOfPlaceDtoNoRatings() {
+    Place place = getPlaceNoId();
+    Interest interest = new Interest();
+    List<Criterion> criteria = List.of(new Criterion());
+    place.setInterest(interest);
+    interest.setCriteria(criteria);
+
+    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
+        .thenReturn(new ArrayList<>());
+
+    CriteriaOfPlaceDTO expectedResult =
+        new CriteriaOfPlaceDTO(List.of(new CriterionAvgRatingDTO(criteria.get(0), -1)));
+
+    CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
+
+    assertNotNull(actualResult);
+    assertEquals(actualResult, expectedResult);
   }
 
   private static Place getPlaceNoId() {

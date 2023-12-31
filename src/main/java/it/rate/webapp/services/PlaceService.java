@@ -1,19 +1,17 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
+import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
-import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
-import it.rate.webapp.dtos.CriterionAvgRatingDTO;
-import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
-
+import it.rate.webapp.repositories.RatingRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import it.rate.webapp.repositories.RatingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -57,7 +55,7 @@ public class PlaceService {
     AppUser appUser =
         userService
             .findByEmail(loggedUserEmail)
-            .orElseThrow(() -> new RuntimeException("Email not found in database"));
+            .orElseThrow(() -> new BadRequestException("Email not found in database"));
 
     Place place =
         placeRepository

@@ -98,7 +98,7 @@ public class PlaceController {
       return "errorPage";
     }
 
-    if (!placeService.isCreator(principal.getName(), placeId)) {
+    if (principal == null || !placeService.isCreator(principal.getName(), placeId)) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return "notAuthorized";
     }
