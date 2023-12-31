@@ -9,6 +9,7 @@ import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.RoleService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class InterestController {
   private UserService userService;
   private RoleService roleService;
 
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
   public String createPage(Model model) {
     List<Criterion> criteria = new ArrayList<>();
@@ -39,6 +41,7 @@ public class InterestController {
     return "interestForm";
   }
 
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
   public String createNew(
       @RequestParam String name,
@@ -77,13 +80,15 @@ public class InterestController {
     return "interest";
   }
 
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{id}/like")
   public String like(@PathVariable Long id, String like) {
     service.changeLikeValue(id, like);
     return "redirect:/interests/" + id;
   }
 
-  @PostMapping("/{id}/voterauthorityrequest")
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+  @PostMapping("/{id}/request")
   public String applyForVoterAuthority(Interest interest) {
     service.setApplicantRole(interest);
     return "redirect:/interests/{id}";

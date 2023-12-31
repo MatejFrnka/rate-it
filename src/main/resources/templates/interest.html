@@ -18,7 +18,7 @@
 </section>
 
 <form th:if='${loggedUserRole == null}'
-      th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}"
+      th:action="@{/interests/{id}/request(id=*{id})}"
       th:method="post">
     <button type="submit">Request Vote Authority</button>
 </form>
