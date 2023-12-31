@@ -16,12 +16,6 @@ public class MainPageController {
   private final InterestService interestService;
   private final UserService userService;
 
-  @GetMapping("/getAllSuggestions")
-  public ResponseEntity<?> getAllSuggestions() {
-
-    return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
-  }
-
   @GetMapping({"/", "/index"})
   public String index(Model model, Principal principal) {
 
