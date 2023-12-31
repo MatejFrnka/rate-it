@@ -21,10 +21,8 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
             authRequests ->
                 authRequests
-                    .requestMatchers("/users/signup", "/h2-console/**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
+                        .anyRequest()
+                        .permitAll())
         .formLogin(form -> form.loginPage("/users/login").defaultSuccessUrl("/").permitAll())
         .httpBasic(Customizer.withDefaults());
     return http.build();
