@@ -19,7 +19,6 @@ function loadAllSuggestions() {
     const suggestionContainer = document.querySelector('#suggestionList');
     suggestionContainer.innerHTML = '';
 
-
     suggestionsData.forEach(suggestion => {
         const div = document.createElement('div');
         div.classList.add('interest-card');
@@ -88,11 +87,6 @@ function getSuggestions(query) {
             div.appendChild(link);
 
             suggestionContainer.appendChild(div);
-
-            // Click event listener for redirection
-            div.addEventListener('click', () => {
-                window.location.href = `/interests/${suggestion.id}`;
-            });
         });
     } else {
         loadAllSuggestions();
