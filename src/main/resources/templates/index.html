@@ -60,35 +60,42 @@
         </div>
     </div>
     <div class="content">
-        <section th:unless="${!#authentication.authenticated || likedInterests.isEmpty()}" id="usersInterests"
+        <section th:if="${#authentication.authenticated}" id="usersInterests"
                  class="interests">
-            <div class="section-label">
-                <p class="section-label-text">My Interests</p>
-                <p id="see-all">See all</p>
-            </div>
-            <div class="interest-cards">
-                <div th:each="interest : ${likedInterests}" id="likedInterests" class="interest-card">
-                    <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
-                        <div>
-                            <div class="img-wrapper">
-
-                                <!--IMAGE GOES HERE - REPLACE BACKGROUND COLOR WITH ACTUAL IMAGE-->
-
-                            </div>
-                            <div class="interest-title">
-                                <p class="interest-name"
-                                   th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
-                            </div>
-                        </div>
-                    </a>
+            <div th:unless="${likedInterests == null || likedInterests.isEmpty()}">
+                <div class="section-label">
+                    <p class="section-label-text">My Interests</p>
+                    <p id="see-all">See all</p>
                 </div>
+                <div class="interest-cards">
+                    <div th:each="interest : ${likedInterests}" id="likedInterests" class="interest-card">
+                        <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
+                            <div>
+                                <div class="img-wrapper">
 
+                                    <!--IMAGE GOES HERE - REPLACE BACKGROUND COLOR WITH ACTUAL IMAGE-->
+
+                                </div>
+                                <div class="interest-title">
+                                    <p class="interest-name"
+                                       th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${likedInterests == null}">
+                <div class="section-label">
+                    <p class="section-label-text">Log-in to see your interests</p>
+                </div>
+            </div>
+            <div th:if="${likedInterests != null && likedInterests.isEmpty()}" id="noLikedInterests">
+                <div class="section-label">
+                    <p class="section-label-text">No interests yet. Add your FIRST!</p>
+                </div>
             </div>
         </section>
-
-        <div th:if="${likedInterests.isEmpty()}" id="noLikedInterests">
-            <h1>No interests added yet</h1>
-        </div>
 
         <!-- I WOULD ADD THIS INTO USER MENU TO MAKE THE MAIN PAGE CLEANER -->
         <!--        <a th:href="@{/interests/create}">Create new interest</a>-->
