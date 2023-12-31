@@ -22,7 +22,7 @@
       th:method="post">
     <button type="submit">Request Vote Authority</button>
 </form>
-<a th:href="@{/interests/{id}/edit(id=${interest.id})}">Edit Page</a>
+<a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>
 <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
 <h1 th:text="*{name}"></h1>
 <p th:text="*{description}"></p>

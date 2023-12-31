@@ -12,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -22,19 +24,32 @@ public class InterestAdminController {
   private final InterestService interestService;
   private final ManageInterestService manageInterestService;
 
-  @GetMapping("/edit")
-  public String editPageView(Model model, @PathVariable Long interestId) {
 
-    // todo: add model attribute(Interest) according to id
-    // todo: return page customization/create template
+  //todo ADD TESTS FOR EDIT
+  @GetMapping("/edit")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  public String editInterestPage(@PathVariable Long interestId, Model model) {
+    Optional<Interest> interest = interestService.findInterestById(interestId);
+    if (interest.isEmpty()) {
+      model.addAttribute("message", "This interest doesn't exist");
+      return "errorPage";
+    }
+    model.addAttribute("interest", interest.get());
+    model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
+    model.addAttribute("method", "put");
     return "interestForm";
   }
 
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   @PutMapping("/edit")
-  public String editPage(@PathVariable Long interestId) {
-    // todo: update Interest object according to input changes
-    // todo: redirect to GET interest page
-    return "redirect:/interests/{interestId}/";
+  public String editInterest(
+          @PathVariable Long interestId,
+          @ModelAttribute Interest interest,
+          @RequestParam List<String> criteriaNames,
+          RedirectAttributes ra) {
+    interestService.saveEditedInterest(interest, criteriaNames);
+    ra.addAttribute("id", interestId);
+    return "redirect:/interests/{id}";
   }
 
   @GetMapping("/users")

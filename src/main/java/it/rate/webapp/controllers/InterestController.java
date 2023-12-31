@@ -93,28 +93,4 @@ public class InterestController {
     service.setApplicantRole(interest);
     return "redirect:/interests/{id}";
   }
-
-  @GetMapping("/{id}/edit")
-  public String editInterestPage(@PathVariable Long id, Model model) {
-    Optional<Interest> interest = service.findInterestById(id);
-    if (interest.isEmpty()) {
-      model.addAttribute("message", "This interest doesn't exist");
-      return "errorPage";
-    }
-    model.addAttribute("interest", interest.get());
-    model.addAttribute("action", "/interests/" + id + "/edit");
-    model.addAttribute("method", "put");
-    return "interestForm";
-  }
-
-  @PutMapping("/{id}/edit")
-  public String editInterest(
-      @PathVariable Long id,
-      @ModelAttribute Interest interest,
-      @RequestParam List<String> criteriaNames,
-      RedirectAttributes ra) {
-    service.saveEditedInterest(interest, criteriaNames);
-    ra.addAttribute("id", id);
-    return "redirect:/interests/{id}";
-  }
 }
