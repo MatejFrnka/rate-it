@@ -12,8 +12,8 @@
 
 <section th:if="${loggedIn}">
     <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-        <button th:if="${like}" type="submit" name="vote" value="dislike">Dislike</button>
-        <button th:unless="${like}" type="submit" name="vote" value="like">Like</button>
+        <button th:if="${like}" type="submit" name="likeOrDislike" value="dislike">Dislike</button>
+        <button th:unless="${like}" type="submit" name="likeOrDislike" value="like">Like</button>
     </form>
 </section>
 

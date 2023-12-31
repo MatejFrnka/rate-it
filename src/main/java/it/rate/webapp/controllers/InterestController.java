@@ -82,8 +82,8 @@ public class InterestController {
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{id}/like")
-  public String like(@PathVariable Long id, String like) {
-    service.changeLikeValue(id, like);
+  public String like(@PathVariable Long id, String likeOrDislike) {
+    service.changeLikeValue(id, likeOrDislike);
     return "redirect:/interests/" + id;
   }
 
