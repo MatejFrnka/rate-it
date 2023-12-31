@@ -27,10 +27,10 @@
 <h1 th:text="*{name}"></h1>
 <p th:text="*{description}"></p>
 <p>Map placeholder</p>
-<a th:href="@{/{id}/places/new-place(id=${interest.id})}">Add Place</a>
+<a th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
 <ul>
     <li th:each="place : *{places}">
-        <a th:href="@{/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+        <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
            th:text="${place.name}"></a>
     </li>
 </ul>

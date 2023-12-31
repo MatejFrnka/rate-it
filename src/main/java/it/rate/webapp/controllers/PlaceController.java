@@ -18,7 +18,7 @@ import java.security.Principal;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/{interestId}/places")
+@RequestMapping("/interests/{interestId}/places")
 public class PlaceController {
 
   private final PlaceService placeService;
@@ -26,26 +26,27 @@ public class PlaceController {
   private final RatingService ratingService;
   private final PermissionService permissionService;
 
-  @GetMapping("/new-place")
+  @GetMapping("/new")
   @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
   public String newPlacePage(@PathVariable Long interestId, Model model) {
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
-    model.addAttribute("action", "/" + interestId + "/places/new-place");
+    model.addAttribute("action", "/interests/" + interestId + "/places/new");
     model.addAttribute("title", "New page");
     return "placeForm";
   }
 
-  @PostMapping("/new-place")
+  @PostMapping("/new")
+  @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
   public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place)
       throws BadRequestException {
     Place createdPlace = placeService.savePlace(place, interestId);
-    return String.format("redirect:/%s/places/%s", interestId, createdPlace.getId());
+    return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
   }
 
   @GetMapping("/{placeId}")
   public String placeDetails(
-      @PathVariable String interestId,
+      @PathVariable Long interestId,
       @PathVariable Long placeId,
       Model model,
       Principal principal,
@@ -71,7 +72,7 @@ public class PlaceController {
     return "place";
   }
 
-  @PostMapping("/{placeId}")
+  @PostMapping("/{placeId}/rate")
   @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#placeId))")
   public String ratePlace(
       @PathVariable Long interestId,
@@ -81,7 +82,7 @@ public class PlaceController {
 
     ratingService.updateRating(rating, placeId, principal);
 
-    return String.format("redirect:/%s/places/%s", interestId, placeId);
+    return String.format("redirect:/interests/%d/places/%d", interestId, placeId);
   }
 
   @GetMapping("/{placeId}/edit")

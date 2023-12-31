@@ -39,7 +39,7 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
     // Perform POST request to create a new place and expect redirection
     mockMvc
         .perform(
-            post("/" + interestId + "/places/new-place")
+            post("/" + interestId + "/places/new")
                 .param("name", name)
                 .param("description", description))
         .andExpect(status().isBadRequest())
@@ -59,7 +59,7 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
     MvcResult res =
         mockMvc
             .perform(
-                post("/" + interestId + "/places/new-place")
+                post("/" + interestId + "/places/new")
                     .param("name", name)
                     .param("description", description))
             .andExpect(status().is3xxRedirection())

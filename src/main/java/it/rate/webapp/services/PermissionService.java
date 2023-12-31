@@ -71,7 +71,8 @@ public class PermissionService {
     if (i.isExclusive()) {
       return new String[] {
               String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-              String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId())
+              String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId()),
+              ServerRole.ADMIN.name()
       };
     } else {
       return new String[] {ServerRole.USER.toString()};
