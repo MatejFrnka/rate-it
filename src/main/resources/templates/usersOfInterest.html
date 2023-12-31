@@ -28,13 +28,13 @@
             <td th:text="${user.username}"></td>
             <td th:text="${user.email}"></td>
             <td>
-                <form th:action="@{/interests/{interestId}/admin/users/applicants/{userId}(userId=${user.id}, interestId=${interest.id})}"
+                <form th:action="@{/interests/{interestId}/admin/users/{userId}(userId=${user.id}, interestId=${interest.id})}"
                       th:method="put">
                     <button type="submit">ACCEPT</button>
                 </form>
             </td>
             <td>
-                <form th:action="@{/interests/{interestId}/admin/users/applicants/{userId}(userId=${user.id}, interestId=${interest.id})}"
+                <form th:action="@{/interests/{interestId}/admin/users/{userId}(userId=${user.id}, interestId=${interest.id})}"
                       th:method="delete">
                     <button type="submit">REJECT</button>
                 </form>

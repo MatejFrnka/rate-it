@@ -68,23 +68,14 @@ public class InterestAdminController {
 
   @DeleteMapping("/users/{userId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String removeVoter(@PathVariable Long interestId, @PathVariable Long userId) {
+  public String removeUser(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.removeRole(interestId, userId);
     return "redirect:/interests/{interestId}/admin/users";
   }
 
-  @DeleteMapping("/users/applicants/{userId}")
+  @PutMapping("/users/{userId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String rejectApplicant(@PathVariable Long interestId, @PathVariable Long userId) {
-    manageInterestService.removeRole(interestId, userId);
-    // todo: // Same method as above (endpoint kept for eventual logging of rejected users)
-    return "redirect:/interests/{interestId}/admin/users";
-  }
-
-  @PutMapping("/users/applicants/{userId}")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String acceptApplicant(@PathVariable Long interestId, @PathVariable Long userId)
-      throws BadRequestException {
+  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) throws BadRequestException {
     manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
     return "redirect:/interests/{interestId}/admin/users";
   }
