@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RequestMapping("/api/v1/interests")
 public class InterestRestController {
-    private final InterestService interestService;
+  private final InterestService interestService;
 
-    @GetMapping("/suggestions")
-    public ResponseEntity<?> getAllSuggestions() {
-        return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
-    }
+  @GetMapping("/suggestions")
+  public ResponseEntity<?> getAllSuggestions() {
+    return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
+  }
 }

@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -81,12 +80,13 @@ public class PermissionService {
       return true;
     }
     // Check if user is Interest creator
-    Optional<Role> optRole = user.getRoles().stream()
+    Optional<Role> optRole =
+        user.getRoles().stream()
             .filter(r -> r.getRole().equals(Role.RoleType.CREATOR))
             .filter(r -> r.getInterest().getId().equals(interestId))
             .findFirst();
     if (optRole.isPresent()) {
-        return true;
+      return true;
     }
     Optional<Place> optPlace = placeRepository.findById(placeId);
     if (optPlace.isEmpty()) {
@@ -111,7 +111,7 @@ public class PermissionService {
         ServerRole.ADMIN.name()
       };
     } else {
-      return new String[] {ServerRole.USER.toString()};
+      return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
     }
   }
 }
