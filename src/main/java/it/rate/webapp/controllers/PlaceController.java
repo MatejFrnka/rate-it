@@ -86,26 +86,12 @@ public class PlaceController {
   }
 
   @GetMapping("/{placeId}/edit")
+  @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlacePage(
-      @PathVariable Long interestId,
-      @PathVariable Long placeId,
-      Model model,
-      Principal principal,
-      HttpServletResponse response) throws BadRequestException {
-
-    if (placeService.findById(placeId).isEmpty()) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      model.addAttribute("message", "This place doesn't exist");
-      return "errorPage";
-    }
-
-    if (principal == null || !placeService.isCreator(principal.getName(), placeId)) {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      return "notAuthorized";
-    }
+      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
 
     model.addAttribute("method", "PUT");
-    model.addAttribute("action", "/" + interestId + "/places/" + placeId + "/edit");
+    model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
     model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.findById(placeId).get());
 
@@ -113,19 +99,17 @@ public class PlaceController {
   }
 
   @PutMapping("/{placeId}/edit")
+  @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlace(
-      @PathVariable Long interestId,
-      @ModelAttribute Place place,
-      HttpServletResponse response,
-      Principal principal) throws BadRequestException {
-    if (placeService.findById(place.getId()).isEmpty()
-        || !placeService.isCreator(principal.getName(), place.getId())) {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      return "notAuthorized";
+          @PathVariable Long interestId,
+          @PathVariable Long placeId,
+          @ModelAttribute Place place)
+          throws BadRequestException {
+
+    if (!placeId.equals(place.getId())) {
+      throw new BadRequestException("Invalid place id");
     }
-
     placeService.savePlace(place, interestId);
-
-    return String.format("redirect:/%s/places/%s", interestId, place.getId());
+    return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
 }

@@ -32,7 +32,7 @@ public class PlaceService {
     AppUser loggedUser =
         userService
             .findByEmail(loggedInUserName)
-            .orElseThrow(() -> new RuntimeException("User email not found in the database"));
+            .orElseThrow(() -> new BadRequestException("User email not found in the database"));
     Interest interest =
         interestService
             .findInterestById(interestId)

@@ -26,10 +26,88 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   @MockBean private ManageInterestService manageInterestService;
 
   @Test
-  void editPageView() {}
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER", "ROLE_VOTER_1"})
+  void editInterestPageReturnsForbiddenForVoter() throws Exception {
+    Long interestId = 1L;
+    mockMvc
+        .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(status().isForbidden())
+        .andReturn();
+  }
 
   @Test
-  void editPage() {}
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER", "ROLE_APPLICANT_1"})
+  void editInterestPageReturnsForbiddenForApplicant() throws Exception {
+    Long interestId = 1L;
+    mockMvc
+        .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(status().isForbidden())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER"})
+  void editInterestPageReturnsForbiddenForNoRolesUser() throws Exception {
+    Long interestId = 1L;
+    mockMvc
+        .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(status().isForbidden())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER", "ROLE_CREATOR_2"})
+  void editInterestPageReturnsForbiddenForCreatorOfDifferentInterest() throws Exception {
+    Long interestId = 1L;
+    mockMvc
+        .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(status().isForbidden())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"ADMIN"})
+  void editInterestPageReturnsErrorForNonExistentInterest() throws Exception {
+    Long interestId = Long.MAX_VALUE;
+    mockMvc
+        .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(status().isNotFound())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER", "ROLE_CREATOR_1"})
+  void editInterestPageReturnsSuccessStatusForCreator() throws Exception {
+    Long interestId = 1L;
+    mockMvc
+        .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(status().isOk())
+        .andReturn();
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"ADMIN"})
+  void editInterestPageReturnsSuccessStatusForAdmin() throws Exception {
+    Long interestId = 1L;
+    mockMvc
+        .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(status().isOk())
+        .andReturn();
+  }
 
   @Test
   @WithMockUser(
@@ -218,7 +296,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
 
     verify(manageInterestService, times(1)).removeRole(interestId, userId);
   }
-
 
   @Test
   @WithMockUser(

@@ -5,6 +5,7 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.ManageInterestService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,8 +32,7 @@ public class InterestAdminController {
   public String editInterestPage(@PathVariable Long interestId, Model model) {
     Optional<Interest> interest = interestService.findInterestById(interestId);
     if (interest.isEmpty()) {
-      model.addAttribute("message", "This interest doesn't exist");
-      return "errorPage";
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
     }
     model.addAttribute("interest", interest.get());
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
@@ -47,6 +47,7 @@ public class InterestAdminController {
           @ModelAttribute Interest interest,
           @RequestParam List<String> criteriaNames,
           RedirectAttributes ra) {
+    interest.setId(interestId);
     interestService.saveEditedInterest(interest, criteriaNames);
     ra.addAttribute("id", interestId);
     return "redirect:/interests/{id}";
