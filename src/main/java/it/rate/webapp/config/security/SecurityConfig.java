@@ -24,6 +24,8 @@ public class SecurityConfig {
                     .requestMatchers(
                         "/h2-console/**",
                         "/styles/**",
+                        "/icons/**",
+                        "/scripts/**",
                         "/",
                         "/interests/{id}",
                         "interests/{interestId}/places/{placeId}",
