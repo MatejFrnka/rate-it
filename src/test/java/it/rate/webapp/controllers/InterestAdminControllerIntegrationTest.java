@@ -4,7 +4,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import it.rate.webapp.BaseIntegrationTest;
+import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
+import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.services.ManageInterestService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +17,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -23,6 +30,7 @@ import static org.mockito.Mockito.*;
 class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
+  @Autowired private InterestRepository interestRepository;
   @MockBean private ManageInterestService manageInterestService;
 
   @Test
@@ -205,6 +213,106 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .andReturn();
 
     verify(manageInterestService, times(1)).getUsersByRole(interestId);
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER", "ROLE_CREATOR_1"})
+  void editInterestReturnsRedirectForInterestCreator() throws Exception {
+    Long interestId = 1L;
+    String interestName = "Zkusit Shushn";
+    String interestDescription = "Very gud vetr";
+    String criterion1 = "Test criterion";
+
+    MvcResult res =
+        mockMvc
+            .perform(
+                put("/interests/" + interestId + "/admin/edit")
+                    .param("name", interestName)
+                    .param("description", interestDescription)
+                    .param("criteriaNames", criterion1))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+    String[] redirectUrl = res.getResponse().getRedirectedUrl().split("/");
+    Long newInterestId = Long.parseLong(redirectUrl[redirectUrl.length - 1]);
+
+    Optional<Interest> updatedInterest = interestRepository.findById(newInterestId);
+    assertTrue(updatedInterest.isPresent());
+    assertEquals(interestName, updatedInterest.get().getName());
+    assertEquals(interestDescription, updatedInterest.get().getDescription());
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"USER", "ROLE_VOTER_1", "ROLE_CREATOR_2"})
+  void editInterestReturnsForbiddenForInterestVoterAndCreatorOfDifferentInterest()
+      throws Exception {
+    Long interestId = 1L;
+    String interestName = "Zkusit Shushn";
+    String interestDescription = "Very gud vetr";
+    String criterion1 = "Test criterion";
+
+    MvcResult res =
+        mockMvc
+            .perform(
+                put("/interests/" + interestId + "/admin/edit")
+                    .param("name", interestName)
+                    .param("description", interestDescription)
+                    .param("criteriaNames", criterion1))
+            .andExpect(status().isForbidden())
+            .andReturn();
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"ADMIN"})
+  void editInterestReturnsNotFoundForNonExistentInterest() throws Exception {
+    Long interestId = Long.MAX_VALUE;
+    String interestName = "Zkusit Shushn";
+    String interestDescription = "Very gud vetr";
+    String criterion1 = "Test criterion";
+
+    MvcResult res =
+        mockMvc
+            .perform(
+                put("/interests/" + interestId + "/admin/edit")
+                    .param("name", interestName)
+                    .param("description", interestDescription)
+                    .param("criteriaNames", criterion1))
+            .andExpect(status().isNotFound())
+            .andReturn();
+  }
+
+  @Test
+  @WithMockUser(
+      username = "alfonz@alfonz.cz",
+      authorities = {"ADMIN"})
+  void editInterestReturnsRedirectForAdmin() throws Exception {
+    Long interestId = 1L;
+    String interestName = "Zkusit Shushn";
+    String interestDescription = "Very gud vetr";
+    String criterion1 = "Test criterion";
+
+    MvcResult res =
+        mockMvc
+            .perform(
+                put("/interests/" + interestId + "/admin/edit")
+                    .param("name", interestName)
+                    .param("description", interestDescription)
+                    .param("criteriaNames", criterion1))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+    String[] redirectUrl = res.getResponse().getRedirectedUrl().split("/");
+    Long newInterestId = Long.parseLong(redirectUrl[redirectUrl.length - 1]);
+
+    Optional<Interest> updatedInterest = interestRepository.findById(newInterestId);
+    assertTrue(updatedInterest.isPresent());
+    assertEquals(interestName, updatedInterest.get().getName());
+    assertEquals(interestDescription, updatedInterest.get().getDescription());
   }
 
   @Test
