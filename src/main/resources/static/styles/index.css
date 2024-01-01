@@ -171,18 +171,3 @@
     width: 20px;
     height: 20px;
 }
-
-.authentication {
-    display: flex;
-    align-content: center;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-}
-
-.authentication > a {
-    all: unset;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-self: center;
-}
