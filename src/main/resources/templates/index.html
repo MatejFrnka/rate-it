@@ -44,7 +44,7 @@
 
         </div>
         <div class="header-top col-8">
-            RateSpot
+            <a th:href="@{/}">RateSpot</a>
         </div>
         <div class="header-right col-2">
             <div id="user-button">
@@ -60,8 +60,7 @@
         </div>
     </div>
     <div class="content">
-        <section th:if="${#authentication.authenticated}" id="usersInterests"
-                 class="interests">
+        <section id="usersInterests" class="interests">
             <div th:unless="${likedInterests == null || likedInterests.isEmpty()}">
                 <div class="section-label">
                     <p class="section-label-text">My Interests</p>
@@ -87,7 +86,7 @@
             </div>
             <div th:if="${likedInterests == null}">
                 <div class="section-label">
-                    <p class="section-label-text">Log-in to see your interests</p>
+                    <p class="section-label-text"><a th:href="@{/users/login}">Log-in</a> to see your interests</p>
                 </div>
             </div>
             <div th:if="${likedInterests != null && likedInterests.isEmpty()}" id="noLikedInterests">

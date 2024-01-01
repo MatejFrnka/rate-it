@@ -17,9 +17,16 @@
     justify-content: center;
 }
 
+.header-top > a {
+    all: unset;
+    cursor: pointer;
+}
+
 .header-right {
     display: flex;
     justify-content: end;
+    align-content: center;
+    gap: 1rem;
 }
 
 #user-button {
@@ -163,4 +170,19 @@
     fill: #999; /* Color of the search icon */
     width: 20px;
     height: 20px;
+}
+
+.authentication {
+    display: flex;
+    align-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.authentication > a {
+    all: unset;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-self: center;
 }

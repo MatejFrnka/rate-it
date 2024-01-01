@@ -7,7 +7,7 @@
 <body th:object="${interest}">
 
 <section th:unless="${loggedIn}">
-    <a th:href="@{/login}">Log In</a>
+    <a th:href="@{/users/login}">Log In</a>
 </section>
 
 <section th:if="${loggedIn}">
