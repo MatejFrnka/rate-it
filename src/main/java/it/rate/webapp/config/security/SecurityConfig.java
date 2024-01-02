@@ -21,11 +21,22 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
             authRequests ->
                 authRequests
-                    .requestMatchers("/users/signup", "/h2-console/**")
+                    .requestMatchers(
+                        "/h2-console/**",
+                        "/styles/**",
+                        "/icons/**",
+                        "/scripts/**",
+                        "/",
+                        "/interests/{id}",
+                        "/interests/{interestId}/places/{placeId}",
+                        "/users/signup",
+                        "/users/login",
+                        "/api/v1/interests/suggestions")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
         .formLogin(form -> form.loginPage("/users/login").defaultSuccessUrl("/").permitAll())
+        .logout(logout -> logout.logoutUrl("/users/logout").logoutSuccessUrl("/").permitAll())
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }

@@ -2,7 +2,7 @@ let suggestionsData = [];
 
 window.addEventListener('load', async () => {
     try {
-        const response = await fetch('/getAllSuggestions');
+        const response = await fetch('/api/v1/interests/suggestions');
         const data = await response.json();
         suggestionsData = data;
         loadAllSuggestions();
@@ -15,26 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAllSuggestions();
 });
 
-// function loadAllSuggestions() {
-//     const suggestionList = document.getElementById('suggestionList');
-//     suggestionList.innerHTML = '';
-//
-//     suggestionsData.forEach(suggestion => {
-//         const li = document.createElement('li');
-//         li.textContent = `${suggestion.name} (Likes: ${suggestion.rating})`;
-//         li.addEventListener('click', () => {
-//             window.location.href = `/interests/${suggestion.id}`;
-//         });
-//         suggestionList.appendChild(li);
-//     });
-//
-//     document.getElementById('suggestions').style.display = 'block';
-// }
-
 function loadAllSuggestions() {
     const suggestionContainer = document.querySelector('#suggestionList');
     suggestionContainer.innerHTML = '';
-
 
     suggestionsData.forEach(suggestion => {
         const div = document.createElement('div');
@@ -67,33 +50,6 @@ function loadAllSuggestions() {
 
     document.getElementById('suggestions').style.display = 'block';
 }
-
-// function getSuggestions(query) {
-//     const suggestionList = document.getElementById('suggestionList');
-//     suggestionList.innerHTML = '';
-//
-//     if (!isEmptyOrSpaces(query)) {
-//
-//         const filteredSuggestions = suggestionsData.filter(suggestion =>
-//             suggestion.name.toLowerCase().includes(query.toLowerCase())
-//         );
-//
-//         filteredSuggestions.forEach(suggestion => {
-//             const li = document.createElement('li');
-//             li.textContent = `${suggestion.name} (Rating: ${suggestion.rating})`;
-//             li.addEventListener('click', () => {
-//                 window.location.href = `/interests/${suggestion.id}`;
-//             });
-//             suggestionList.appendChild(li);
-//         });
-//
-//     } else {
-//         loadAllSuggestions();
-//     }
-//
-//
-//     document.getElementById('suggestions').style.display = 'block';
-// }
 
 function getSuggestions(query) {
     const suggestionContainer = document.querySelector('#suggestionList');
@@ -131,11 +87,6 @@ function getSuggestions(query) {
             div.appendChild(link);
 
             suggestionContainer.appendChild(div);
-
-            // Click event listener for redirection
-            div.addEventListener('click', () => {
-                window.location.href = `/interests/${suggestion.id}`;
-            });
         });
     } else {
         loadAllSuggestions();

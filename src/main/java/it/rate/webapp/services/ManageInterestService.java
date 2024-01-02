@@ -48,6 +48,9 @@ public class ManageInterestService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
     }
     Role role = optRole.get();
+    if (role.getRole().equals(Role.RoleType.CREATOR)) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot remove creator role");
+    }
     RoleId roleId = new RoleId(role.getId().getUserId(), role.getId().getInterestId());
     roleService.deleteByRoleId(roleId);
     // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION

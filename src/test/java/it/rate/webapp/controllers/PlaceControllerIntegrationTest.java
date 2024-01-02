@@ -30,7 +30,7 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
   @Test
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      roles = {"USER"})
+      authorities = {"USER"})
   void testCreateNewPlaceInvalidInterest() throws Exception {
     Long interestId = Long.MAX_VALUE;
     String name = "Test name";
@@ -39,17 +39,17 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
     // Perform POST request to create a new place and expect redirection
     mockMvc
         .perform(
-            post("/" + interestId + "/places/new-place")
+            post("/interests/" + interestId + "/places/new")
                 .param("name", name)
                 .param("description", description))
-        .andExpect(status().isBadRequest())
+        .andExpect(status().isNotFound())
         .andReturn();
   }
 
   @Test
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      roles = {"USER"})
+      authorities = {"USER", "ROLE_VOTER_1"})
   void testCreateNewPlace() throws Exception {
     Long interestId = 1L;
     String name = "Test name";
@@ -59,7 +59,7 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
     MvcResult res =
         mockMvc
             .perform(
-                post("/" + interestId + "/places/new-place")
+                post("/interests/" + interestId + "/places/new")
                     .param("name", name)
                     .param("description", description))
             .andExpect(status().is3xxRedirection())

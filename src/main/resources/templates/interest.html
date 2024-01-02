@@ -7,30 +7,30 @@
 <body th:object="${interest}">
 
 <section th:unless="${loggedIn}">
-    <a th:href="@{/login}">Log In</a>
+    <a th:href="@{/users/login}">Log In</a>
 </section>
 
 <section th:if="${loggedIn}">
     <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-        <button th:if="${like}" type="submit" name="vote" value="dislike">Dislike</button>
-        <button th:unless="${like}" type="submit" name="vote" value="like">Like</button>
+        <button th:if="${like}" type="submit" name="likeOrDislike" value="dislike">Dislike</button>
+        <button th:unless="${like}" type="submit" name="likeOrDislike" value="like">Like</button>
     </form>
 </section>
 
 <form th:if='${loggedUserRole == null}'
-      th:action="@{/interests/{id}/voterauthorityrequest(id=*{id})}"
+      th:action="@{/interests/{id}/request(id=*{id})}"
       th:method="post">
     <button type="submit">Request Vote Authority</button>
 </form>
-<a th:href="@{/interests/{id}/edit(id=${interest.id})}">Edit Page</a>
+<a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>
 <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
 <h1 th:text="*{name}"></h1>
 <p th:text="*{description}"></p>
 <p>Map placeholder</p>
-<a th:href="@{/{id}/places/new-place(id=${interest.id})}">Add Place</a>
+<a th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
 <ul>
     <li th:each="place : *{places}">
-        <a th:href="@{/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+        <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
            th:text="${place.name}"></a>
     </li>
 </ul>

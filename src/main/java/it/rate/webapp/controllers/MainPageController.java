@@ -4,7 +4,6 @@ import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.UserService;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +14,6 @@ public class MainPageController {
 
   private final InterestService interestService;
   private final UserService userService;
-
-  @GetMapping("/getAllSuggestions")
-  public ResponseEntity<?> getAllSuggestions() {
-
-    return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
-  }
 
   @GetMapping({"/", "/index"})
   public String index(Model model, Principal principal) {

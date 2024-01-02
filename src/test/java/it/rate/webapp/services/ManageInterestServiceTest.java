@@ -84,6 +84,16 @@ class ManageInterestServiceTest extends BaseTest {
   }
 
   @Test
+  void removeRoleRemoveCreatorRoleThrowsException() {
+    Role roleToDelete = new Role(u1, i1, Role.RoleType.CREATOR);
+    when(roleService.findByAppUserIdAndInterestId(any(), any()))
+        .thenReturn(Optional.of(roleToDelete));
+
+    Exception e1 = assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
+    assertEquals("400 BAD_REQUEST \"Cannot remove creator role\"", e1.getMessage());
+  }
+
+  @Test
   void removeRoleNonExistentRoleForUser() {
     when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.empty());
     Exception e4 =
