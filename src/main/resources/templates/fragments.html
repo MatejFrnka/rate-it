@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf Fragments</title>
+</head>
+<header th:fragment="header" class="header">
+    <div class="header-left col-2">
+        <div id="top-hamburger"> <!-- UNCOMMENT IF HAMBURGER IS DESIRED-->
+            <!--                <img th:src="@{/icons/hamburger.svg}" alt="Menu">-->
+        </div>
+    </div>
+    <div class="header-top col-8">
+        <a th:href="@{/}">RateSpot</a>
+    </div>
+    <div class="header-right col-2">
+        <div id="user-button" class="dropdown">
+            <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                 th:src="@{/icons/user.svg}" alt="User Profile">
+
+            <ul class="dropdown-menu">
+                <li th:if="${loggedUser}" class="dropdown-header" th:text="${loggedUser.getUsername()}"></li>
+                <li th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/users/logout}">Logout</a></li>
+                <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/users/login}">Login</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+</html>

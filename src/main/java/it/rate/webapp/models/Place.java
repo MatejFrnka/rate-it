@@ -23,6 +23,7 @@ public class Place {
   private String address;
   private double latitude;
   private double longitude;
+  @Builder.Default
   private boolean deleted = false;
 
   @ManyToOne
@@ -32,6 +33,7 @@ public class Place {
   @ManyToOne private Interest interest;
 
   @OneToMany(mappedBy = "place")
+  @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
   public double getAverageRating() {

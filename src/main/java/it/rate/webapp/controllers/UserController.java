@@ -22,7 +22,7 @@ public class UserController {
 
   @GetMapping("/signup")
   public String signupPage() {
-    return "signupForm";
+    return "user/signupForm";
   }
 
   @PostMapping("/signup")
@@ -32,7 +32,7 @@ public class UserController {
     } catch (Exception e) {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("userDTO", new SignupUserOutDTO(userDTO));
-      return "signupForm";
+      return "user/signupForm";
     }
     return "redirect:/";
   }
@@ -42,6 +42,6 @@ public class UserController {
     if (principal != null) {
       return "redirect:/";
     }
-    return "loginForm";
+    return "user/loginForm";
   }
 }

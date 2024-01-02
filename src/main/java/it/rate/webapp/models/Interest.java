@@ -20,19 +20,24 @@ public class Interest {
   private String name;
 
   private String description;
+  @Builder.Default
   private boolean deleted = false;
   private boolean exclusive;
 
   @OneToMany(mappedBy = "interest")
+  @Builder.Default
   private List<Place> places = new ArrayList<>();
 
   @OneToMany(mappedBy = "interest")
+  @Builder.Default
   private List<Criterion> criteria = new ArrayList<>();
 
   @OneToMany(mappedBy = "interest")
+  @Builder.Default
   private List<Like> likes = new ArrayList<>();
 
   @OneToMany(mappedBy = "interest")
+  @Builder.Default
   private List<Role> roles = new ArrayList<>();
 
   public int countLikes() {

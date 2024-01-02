@@ -33,7 +33,7 @@ public class PlaceController {
     model.addAttribute("method", "POST");
     model.addAttribute("action", "/interests/" + interestId + "/places/new");
     model.addAttribute("title", "New page");
-    return "placeForm";
+    return "place/form";
   }
 
   @PostMapping("/new")
@@ -55,7 +55,7 @@ public class PlaceController {
     if (placeService.findById(placeId).isEmpty()) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       model.addAttribute("message", "This place doesn't exist");
-      return "errorPage";
+      return "error/page";
     }
 
     Place place = placeService.getReferenceById(placeId);
@@ -69,7 +69,7 @@ public class PlaceController {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(principal, placeId));
       }
     }
-    return "place";
+    return "place/page";
   }
 
   @PostMapping("/{placeId}/rate")
@@ -95,7 +95,7 @@ public class PlaceController {
     model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.findById(placeId).get());
 
-    return "placeForm";
+    return "place/form";
   }
 
   @PutMapping("/{placeId}/edit")
