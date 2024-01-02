@@ -27,6 +27,6 @@ public class MainPageController {
       model.addAttribute("likedInterests", interestService.getLikedInterests(principal.getName()));
     }
 
-    return "index";
+    return "main/index";
   }
 }

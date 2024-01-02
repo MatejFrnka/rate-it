@@ -38,7 +38,7 @@ public class InterestController {
     model.addAttribute("interest", new Interest());
     model.addAttribute("action", "/interests/create");
     model.addAttribute("method", "post");
-    return "interestForm";
+    return "interest/form";
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
@@ -58,7 +58,7 @@ public class InterestController {
     Optional<Interest> interest = service.findInterestById(id);
     if (interest.isEmpty()) {
       model.addAttribute("message", "This interest doesn't exist");
-      return "errorPage";
+      return "error/page";
     }
 
     if (principal != null) {
@@ -77,7 +77,7 @@ public class InterestController {
       model.addAttribute("loggedIn", false);
     }
     model.addAttribute("interest", interest.get());
-    return "interest";
+    return "interest/page";
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")

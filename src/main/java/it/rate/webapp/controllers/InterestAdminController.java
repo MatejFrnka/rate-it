@@ -36,7 +36,7 @@ public class InterestAdminController {
     model.addAttribute("interest", interest.get());
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
-    return "interestForm";
+    return "interest/form";
   }
 
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
@@ -63,7 +63,7 @@ public class InterestAdminController {
     model.addAttribute("usersByRoles", manageInterestService.getUsersByRole(interestId));
     model.addAttribute("interest", optInterest.get());
     // todo: users template - form to invite users
-    return "usersOfInterest";
+    return "interest/users";
   }
 
   @DeleteMapping("/users/{userId}")
