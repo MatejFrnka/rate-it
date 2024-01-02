@@ -28,7 +28,7 @@ public class SecurityConfig {
                         "/scripts/**",
                         "/",
                         "/interests/{id}",
-                        "interests/{interestId}/places/{placeId}",
+                        "/interests/{interestId}/places/{placeId}",
                         "/users/signup",
                         "/users/login",
                         "/api/v1/interests/suggestions")
