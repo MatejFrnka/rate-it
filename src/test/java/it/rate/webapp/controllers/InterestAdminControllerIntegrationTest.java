@@ -7,6 +7,7 @@ import it.rate.webapp.BaseIntegrationTest;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
+
 import it.rate.webapp.services.ManageInterestService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

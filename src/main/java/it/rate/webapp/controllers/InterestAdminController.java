@@ -25,7 +25,6 @@ public class InterestAdminController {
   private final ManageInterestService manageInterestService;
 
 
-  //todo ADD TESTS FOR EDIT
   @GetMapping("/edit")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String editInterestPage(@PathVariable Long interestId, Model model) {
