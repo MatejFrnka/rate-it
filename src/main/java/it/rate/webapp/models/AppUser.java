@@ -31,14 +31,18 @@ public class AppUser {
   private ServerRole serverRole;
 
   @OneToMany(mappedBy = "creator")
+  @Builder.Default
   private List<Place> createdPlaces = new ArrayList<>();
 
   @OneToMany(mappedBy = "appUser", fetch = FetchType.EAGER)
+  @Builder.Default
   private List<Role> roles = new ArrayList<>();
 
   @OneToMany(mappedBy = "appUser")
+  @Builder.Default
   private List<Like> likes = new ArrayList<>();
 
   @OneToMany(mappedBy = "appUser")
+  @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 }

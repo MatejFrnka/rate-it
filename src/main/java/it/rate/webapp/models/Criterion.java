@@ -16,10 +16,12 @@ import java.util.List;
 public class Criterion {
   @Id @GeneratedValue private Long id;
   private String name;
+  @Builder.Default
   private boolean deleted = false;
 
   @ManyToOne private Interest interest;
 
   @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
+  @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 }
