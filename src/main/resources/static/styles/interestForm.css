@@ -14,11 +14,10 @@ body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     width: fit-content;
-    border: 3px solid #343434;
     border-radius: 20px;
-    background: #343434;
+    background: #ececec;
     font-weight: bold;
-    color: #343434;
+    color: #AAAAAA;
     cursor: pointer;
 }
 
@@ -29,8 +28,9 @@ body {
     height: 100%;
     left: 0%;
     border-radius:20px;
-    background: white;
+    background: #e0e9e4;
     transition: all 0.3s;
+    color: #568D73;
 }
 
 .toggleContainer div {
