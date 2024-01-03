@@ -103,7 +103,7 @@ public class InterestController {
               userService
                       .findByEmail(principal.getName())
                       .orElseThrow(() -> new RuntimeException("Email not found in the database")));
-      model.addAttribute("likedInterests", service.getLikedInterestsByLetters(principal.getName()));
+      model.addAttribute("likedInterests", service.getLikedInterestsDTOS(principal.getName()));
     }
       return "interest/seeAll";
   }

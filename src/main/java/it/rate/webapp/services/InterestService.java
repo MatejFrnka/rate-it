@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDTO;
+import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 
@@ -69,15 +70,15 @@ public class InterestService {
 
   public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
     List<String> oldCriteriaNames =
-            interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
-                    .map(Criterion::getName)
-                    .toList();
+        interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
+            .map(Criterion::getName)
+            .toList();
 
     List<Criterion> newCriteria =
-            criteriaNames.stream()
-                    .filter(name -> !oldCriteriaNames.contains(name))
-                    .map(name -> Criterion.builder().name(name).build())
-                    .toList();
+        criteriaNames.stream()
+            .filter(name -> !oldCriteriaNames.contains(name))
+            .map(name -> Criterion.builder().name(name).build())
+            .toList();
 
     for (String name : oldCriteriaNames) {
       if (!criteriaNames.contains(name)) {
@@ -91,19 +92,16 @@ public class InterestService {
     return interestRepository.save(interest);
   }
 
-  public Map<Character, List<Interest>> getLikedInterestsByLetters(String loggedUser) {
-    Map<Character, List<Interest>> interestMap = new HashMap<>();
-    List<Interest> interests = interestRepository.findAllByLikes_AppUser_EmailOrderByNameAscLikesDesc(loggedUser);
-    interests.forEach(i -> {
-      if (interestMap.containsKey(i.getName().toUpperCase().charAt(0))) {
-        interestMap.get(i.getName().toUpperCase().charAt(0)).add(i);
-      } else {
-        List<Interest> newList = new ArrayList<>();
-        newList.add(i);
-        interestMap.put(i.getName().toUpperCase().charAt(0), newList);
-      }
-    });
-    return interestMap;
+  public List<LikedInterestsDTO> getLikedInterestsDTOS(String loggedUser) {
+
+    List<Interest> interests = interestRepository.findAllByLikes_AppUser_EmailOrderByName(loggedUser);
+
+    for (Interest interest : interests) {
+      System.out.println(interest.getName());
+    }
+    return interests.stream()
+            .map(LikedInterestsDTO::new)
+            .collect(Collectors.toList());
   }
 
   public Interest save(Interest interest) {
