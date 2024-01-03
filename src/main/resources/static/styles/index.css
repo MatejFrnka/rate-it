@@ -134,7 +134,7 @@ h3 {
 
 .place-rating-star {
     font-style: unset !important;
-    height: 25px;
+    height: 1.2rem;
 }
 
 .place-rating-star {
@@ -168,7 +168,6 @@ h3 {
 .place-rating > form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
 }
 
 .place-rating-criterion {
@@ -182,6 +181,7 @@ h3 {
 
 .place-rating-criteria-button {
     margin-left: auto;
+    margin-top: 1rem;
     background-color: #568D73;
     color: #FFFFFF;
     padding: 0.5rem 1.5rem;

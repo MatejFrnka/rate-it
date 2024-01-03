@@ -59,6 +59,11 @@
                 </div>
                 <button class="place-rating-criteria-button" th:if="${usersRatings}" type="submit">Rate</button>
             </form>
+            <form th:unless="${usersRatings}"
+                  th:action="@{/interests/{id}/request(id=${place.interest.id})}"
+                  th:method="post">
+                <button class="place-rating-criteria-button" type="submit">Request rate access</button>
+            </form>
         </section>
     </div>
 </div>
