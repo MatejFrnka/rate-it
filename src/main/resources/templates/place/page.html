@@ -20,7 +20,10 @@
 
         <header class="place-header">
             <h1 th:text="*{name}"></h1>
-            <div class="rating"><i class="fas fa-star"></i> <span th:text="*{getAverageRating()}" ></span></div>
+            <div class="rating">
+                <i class="fas fa-star"></i>
+                <span th:text="${#numbers.formatDecimal(place.getAverageRating(), 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+            </div>
         </header>
 
         <p th:text="*{description}"></p>
@@ -35,7 +38,8 @@
                         <div th:text="${criterionDTO.criterion.name}"/>
 
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
-                            <i class="fas fa-star"></i> <span th:text="${#numbers.formatDecimal(criterionDTO.avgRating, 1, 'DEFAULT', 1, 'DEFAULT')}" ></span>
+                            <i class="fas fa-star"></i>
+                            <span th:text="${#numbers.formatDecimal(criterionDTO.avgRating, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
                         </div>
 
                         <div th:if="${usersRatings}">
