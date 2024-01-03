@@ -12,41 +12,54 @@
 <!--        <a th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit-->
 <!--            Place</a>-->
 
-        <h1 th:text="*{getInterest.name}"></h1>
+        <h2 th:text="*{getInterest.name}"></h2>
 
-        <h2 th:text="*{name} + ': ' + *{getAverageRating()} + '✨'"></h2>
+        <div class="place-image">
+            <img src="https://picsum.photos/500/300" alt="placeholder" />
+        </div>
 
-        <p th:text="'Description: ' + *{description}"></p>
-<!--        <p th:text="'Address: ' + *{address}"></p>-->
-<!--        <p th:text="'Latitude: ' + *{latitude}"></p>-->
-<!--        <p th:text="'Longitude: ' + *{longitude}"></p>-->
-        <section th:unless="${placeCriteria.criteria().isEmpty()}">
-            <h3>Rating criteria</h3>
+        <header class="place-header">
+            <h1 th:text="*{name}"></h1>
+            <div class="rating"><i class="fas fa-star"></i> <span th:text="*{getAverageRating()}" ></span></div>
+        </header>
+
+        <p th:text="*{description}"></p>
+        <section class="place-rating" th:unless="${placeCriteria.criteria().isEmpty()}">
+            <h2>Rating criteria</h2>
             <form th:action="@{/interests/{intId}/places/{placeId}/rate(intId=${place.interest.id}, placeId=${place.id})}"
                   th:method="post"
                   th:object="${usersRatings}"
                   name="rating">
-                <table>
-                    <tr>
-                        <th>Criterion</th>
-                        <th>Avg Rating</th>
-                        <th th:if="${usersRatings}">My Rating</th>
-                    </tr>
-                    <tr th:each="criterionDTO : ${placeCriteria.criteria()}">
-                        <td th:text="${criterionDTO.criterion.name}"/>
-                        <td th:text="${#numbers.formatDecimal(criterionDTO.avgRating, 1, 'DEFAULT', 2, 'DEFAULT')}"/>
-                        <td th:if="${usersRatings}"><label>
-                            <input type="number"
+                <div class="place-rating-criteria">
+                    <div class="place-rating-criterion" th:each="criterionDTO : ${placeCriteria.criteria()}">
+                        <div th:text="${criterionDTO.criterion.name}"/>
+
+                        <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
+                            <i class="fas fa-star"></i> <span th:text="${#numbers.formatDecimal(criterionDTO.avgRating, 1, 'DEFAULT', 1, 'DEFAULT')}" ></span>
+                        </div>
+
+                        <div th:if="${usersRatings}">
+
+                            <div class="place-rating-stars">
+                                <th:block th:each="i: ${#numbers.sequence(0, 9)}">
+                                    <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.criterion.id) ? 'is-active' : ''}" th:attr="data-star=${i+1}"></i>
+                                </th:block>
+                            </div>
+
+                            <input type="number" hidden="hidden"
                                    th:value="${usersRatings.ratings.containsKey(criterionDTO.criterion.id)} ?
-                           ${usersRatings.ratings.get(criterionDTO.criterion.id)}"
+                                        ${usersRatings.ratings.get(criterionDTO.criterion.id)}"
                                    th:field="*{ratings[__${criterionDTO.criterion.id}__]}">
-                        </label></td>
-                    </tr>
-                </table>
-                <button th:if="${usersRatings}" type="submit">Rate</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="place-rating-criteria-button" th:if="${usersRatings}" type="submit">Rate</button>
             </form>
         </section>
     </div>
 </div>
+
+<script th:inline="javascript" src="/scripts/rating.js"></script>
+
 </body>
 </html>
