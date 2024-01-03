@@ -41,6 +41,52 @@ class InterestServiceTest extends BaseTest {
         i = Interest.builder().criteria(criteria).build();
     }
 
+    @Test
+    void saveInterestWithNewCriteria() {
+        List<Criterion> updatedCriteria = new ArrayList<>();
+        Criterion c3 = new Criterion();
+        Criterion c4 = new Criterion();
+        updatedCriteria.add(c3);
+        updatedCriteria.add(c4);
+
+        when(interestRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(criterionRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
+
+        criterionRepository.deleteByNameAndInterestId(c1.getName(), i.getId());
+        criterionRepository.deleteByNameAndInterestId(c2.getName(), i.getId());
+        criterionRepository.saveAll(updatedCriteria);
+
+        i.setCriteria(updatedCriteria);
+        Interest savedInterest = interestService.save(i);
+
+        assertSame(savedInterest.getCriteria(), updatedCriteria);
+        assertFalse(criterionRepository.findAll().contains(c1));
+        assertFalse(criterionRepository.findAll().contains(c2));
+    }
+
+    @Test
+    void saveInterestWithChangedCriteria() {
+        List<Criterion> updatedCriteria = new ArrayList<>();
+        Criterion c3 = new Criterion();
+        Criterion c4 = new Criterion();
+        updatedCriteria.add(c2);
+        updatedCriteria.add(c3);
+        updatedCriteria.add(c4);
+
+        when(interestRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(criterionRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
+
+
+        criterionRepository.deleteByNameAndInterestId(c1.getName(), i.getId());
+        criterionRepository.saveAll(updatedCriteria);
+
+        i.setCriteria(updatedCriteria);
+        Interest editedInterest = interestRepository.save(i);
+
+        assertEquals(3, editedInterest.getCriteria().size());
+        assertSame(editedInterest.getCriteria(), updatedCriteria);
+        assertFalse(criterionRepository.findAll().contains(c1));
+    }
 
     @Test
     void saveNewInterest() {
