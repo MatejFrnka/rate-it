@@ -8,23 +8,29 @@
 <body>
 
 <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}" th:method="${method}">
-    <label>Name:
+    <h3>Name</h3>
+    <label>
         <input type="text" name="name" th:value="*{name}" required>
     </label>
     <br>
 
-    <label>Description:
-        <textarea name="description" th:field="*{description}"></textarea>
+    <h3>Category</h3>
+    <p>sport food whatever placeholder</p>
+    <br>
+
+    <h3>Visibility</h3>
+    <label>
+        <input type=”checkbox” id=”toggle” class=”toggleCheckbox” />
+        <label for=”toggle” class=’toggleContainer’>
+            <div>Public</div>
+            <div>Private</div>
+        </label>
+<!--        <input type="checkbox" th:field="*{exclusive}">-->
     </label>
     <br>
 
-    <label>Exclusive:
-        <input type="checkbox" th:field="*{exclusive}">
-    </label>
-    <!--todo: add checkbox for exclusivity-->
-
+    <h3>Criteria</h3>
     <div id="criteriaContainer" class="criteria-container">
-        Criteria:
         <div>
             <input th:if="*{id == null}" type="text" name="criteriaNames" required/>
         </div>
@@ -42,9 +48,16 @@
         </th:block>
     </div>
 
-    <button type="button" onclick="addCriteria()">More Criteria</button>
+    <button type="button" onclick="addCriteria()">Add criteria</button>
 
     <br>
+
+    <h3>Description</h3>
+    <label>
+        <textarea name="description" th:field="*{description}"></textarea>
+    </label>
+    <br>
+
     <button type="submit">Save</button>
 </form>
 
