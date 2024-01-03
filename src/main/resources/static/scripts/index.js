@@ -36,7 +36,6 @@ function loadAllSuggestions() {
         interestTitle.classList.add('interest-title');
 
         const paragraph = document.createElement('p');
-        paragraph.classList.add('interest-name');
         paragraph.textContent = `${suggestion.name} (${suggestion.rating})`;
 
         interestTitle.appendChild(paragraph);
@@ -77,7 +76,6 @@ function getSuggestions(query) {
             interestTitle.classList.add('interest-title');
 
             const paragraph = document.createElement('p');
-            paragraph.classList.add('interest-name');
             paragraph.textContent = `${suggestion.name} (${suggestion.rating})`;
 
             interestTitle.appendChild(paragraph);

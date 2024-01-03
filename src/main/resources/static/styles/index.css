@@ -1,4 +1,8 @@
 
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
 .container-fluid {
     padding: 0;
 }
@@ -26,7 +30,6 @@
     display: flex;
     justify-content: end;
     align-content: center;
-    gap: 1rem;
 }
 
 #user-button {
@@ -60,14 +63,12 @@
     align-items: baseline;
 }
 
-.section-label-text {
-    font-family: 'Montserrat', sans-serif;
+h2 {
     font-weight: 600;
     font-size: 1.5rem;
 }
 
-#see-all {
-    font-family: 'Montserrat', sans-serif;
+h3 {
     font-weight: 600;
     font-size: 1rem;
     color: #568D73;
@@ -78,7 +79,6 @@
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 1rem;
-    /*justify-content: space-between;*/
     margin-top: 0.5rem;
 }
 
@@ -86,7 +86,7 @@
     display: flex;
     flex-direction: column;
     width: 10rem;
-    height: 8.5rem;
+    height: 9rem;
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -99,12 +99,6 @@
     background-image: linear-gradient(to bottom right, #568c72, #b0d289);
 }
 
-
-.interest-name {
-    margin: 0;
-    padding: 0;
-}
-
 .interest-card-link {
     all: unset;
     cursor: pointer;
@@ -113,8 +107,10 @@
 .interest-title {
     display: flex;
     justify-content: center;
-    padding: 0 0.5rem 0 0.5rem;
+    align-items: center;
+    padding: 0.5rem;
     font-family: 'Ubuntu', sans-serif;
+    line-height: 1;
 }
 
 .filters {
