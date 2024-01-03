@@ -99,12 +99,12 @@ public class InterestController {
   public String myInterests(Model model, Principal principal) {
     if (principal != null) {
       model.addAttribute(
-              "loggedUser",
-              userService
-                      .findByEmail(principal.getName())
-                      .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+          "loggedUser",
+          userService
+              .findByEmail(principal.getName())
+              .orElseThrow(() -> new RuntimeException("Email not found in the database")));
       model.addAttribute("likedInterests", service.getLikedInterestsDTOS(principal.getName()));
     }
-      return "interest/seeAll";
+    return "interest/seeAll";
   }
 }

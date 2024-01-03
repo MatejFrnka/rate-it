@@ -93,15 +93,10 @@ public class InterestService {
   }
 
   public List<LikedInterestsDTO> getLikedInterestsDTOS(String loggedUser) {
-
-    List<Interest> interests = interestRepository.findAllByLikes_AppUser_EmailOrderByName(loggedUser);
-
-    for (Interest interest : interests) {
-      System.out.println(interest.getName());
-    }
-    return interests.stream()
-            .map(LikedInterestsDTO::new)
-            .collect(Collectors.toList());
+    return interestRepository.findAllByLikes_AppUser_Email(loggedUser).stream()
+                    .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
+                    .map(LikedInterestsDTO::new)
+                    .collect(Collectors.toList());
   }
 
   public Interest save(Interest interest) {

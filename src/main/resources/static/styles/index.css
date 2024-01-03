@@ -63,12 +63,18 @@ body {
     align-items: baseline;
 }
 
+.section-label > a {
+    all: unset;
+    cursor: pointer;
+}
+
 h2 {
     font-weight: 600;
     font-size: 1.5rem;
 }
 
 h3 {
+    margin-top: 0.5rem;
     font-weight: 600;
     font-size: 1rem;
     color: #568D73;
@@ -122,6 +128,7 @@ h3 {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .filter-button {
@@ -142,8 +149,7 @@ h3 {
     background-color: rgba(86, 141, 115, 0.1);
 }
 
-#search {
-    margin-top: 1rem;
+.search {
     background-color: #F3F8FE;
     border: 0;
     width: 100%;
@@ -153,7 +159,7 @@ h3 {
     transition: 0.2s;
 }
 
-#search:focus {
+.search:focus {
     outline: none;
     border-color: #6bd77f;
     box-shadow: 0 0 5px rgba(57, 128, 58, 0.8);
@@ -161,12 +167,15 @@ h3 {
 }
 
 .search-container {
+    display: flex;
+    align-content: center;
     position: relative;
+    margin-top: 0;
 }
 
 .search-icon {
     position: absolute;
-    top: 65%;
+    top: 50%;
     left: 1rem;
     transform: translateY(-50%);
     fill: #999; /* Color of the search icon */

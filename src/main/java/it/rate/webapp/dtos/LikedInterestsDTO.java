@@ -4,8 +4,6 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 
-import java.util.List;
-
 public record LikedInterestsDTO(Long id, String name, String creator, Long followers) {
 
   public LikedInterestsDTO(Interest interest) {

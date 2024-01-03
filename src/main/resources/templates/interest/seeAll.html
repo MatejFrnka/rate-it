@@ -16,36 +16,17 @@
 <div class="container-fluid">
     <header th:replace="~{fragments.html :: header}"></header>
     <div class="content">
-
         <div class="section-label">
             <h2>My Interests</h2>
         </div>
         <form method="get" th:href="@{/interests/}">
             <div class="search-container">
-                <input type="text" id="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
+                <input type="text" class="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
                        placeholder="Find interests…">
                 <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
             </div>
         </form>
-        <div class="interest-list" id="my-interests-container">
-            <h3>A</h3>
-            <section class="interest-list-section">
-                <div class="interest-list-entry">
-                    <h5>Art Collecting</h5>
-                    <div class="interest-creator-likes">
-                        <h6>350<img th:src="@{/icons/star.svg}" alt="star"></h6>
-                        <h6>Retard<img th:src="@{/icons/interest-user.svg}" alt="creator"></h6>
-                    </div>
-                </div>
-                <div class="interest-list-entry">
-                    <h5>Fart Collecting</h5>
-                    <div class="interest-creator-likes">
-                        <h6>350<img th:src="@{/icons/star.svg}" alt="star"></h6>
-                        <h6>Retard<img th:src="@{/icons/interest-user.svg}" alt="creator"></h6>
-                    </div>
-                </div>
-            </section>
-        </div>
+        <div class="interest-list" id="my-interests-container"></div>
 
     </div>
 
