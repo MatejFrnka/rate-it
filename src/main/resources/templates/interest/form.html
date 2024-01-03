@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title th:if="${interest.id == null}" th:text="'Rate-It: New Interest'"></title>
     <title th:unless="${interest.id == null}" th:text="'Rate-It: Edit ' + ${interest.name}"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/interestForm.css}">
 </head>
 <body>
 
@@ -19,14 +20,11 @@
     <br>
 
     <h3>Visibility</h3>
-    <label>
-        <input type=”checkbox” id=”toggle” class=”toggleCheckbox” />
-        <label for=”toggle” class=’toggleContainer’>
+        <input type="checkbox" id="toggle" class="toggleCheckbox" th:field="*{exclusive}"/>
+        <label for="toggle" class="toggleContainer">
             <div>Public</div>
             <div>Private</div>
         </label>
-<!--        <input type="checkbox" th:field="*{exclusive}">-->
-    </label>
     <br>
 
     <h3>Criteria</h3>
