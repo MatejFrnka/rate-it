@@ -91,6 +91,21 @@ public class InterestService {
     return interestRepository.save(interest);
   }
 
+  public Map<Character, List<Interest>> getLikedInterestsByLetters(String loggedUser) {
+    Map<Character, List<Interest>> interestMap = new HashMap<>();
+    List<Interest> interests = interestRepository.findAllByLikes_AppUser_EmailOrderByNameAscLikesDesc(loggedUser);
+    interests.forEach(i -> {
+      if (interestMap.containsKey(i.getName().toUpperCase().charAt(0))) {
+        interestMap.get(i.getName().toUpperCase().charAt(0)).add(i);
+      } else {
+        List<Interest> newList = new ArrayList<>();
+        newList.add(i);
+        interestMap.put(i.getName().toUpperCase().charAt(0), newList);
+      }
+    });
+    return interestMap;
+  }
+
   public Interest save(Interest interest) {
     return interestRepository.save(interest);
   }

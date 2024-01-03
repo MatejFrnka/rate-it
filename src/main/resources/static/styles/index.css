@@ -82,6 +82,10 @@ h3 {
     margin-top: 0.5rem;
 }
 
+#suggestionList {
+    flex-wrap: wrap;
+}
+
 .interest-card {
     display: flex;
     flex-direction: column;
