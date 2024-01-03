@@ -9,17 +9,17 @@
     <header th:replace="~{fragments.html :: header}">
     </header>
     <div class="content">
-        <a th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit
-            Place</a>
+<!--        <a th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit-->
+<!--            Place</a>-->
 
         <h1 th:text="*{getInterest.name}"></h1>
 
         <h2 th:text="*{name} + ': ' + *{getAverageRating()} + '✨'"></h2>
 
         <p th:text="'Description: ' + *{description}"></p>
-        <p th:text="'Address: ' + *{address}"></p>
-        <p th:text="'Latitude: ' + *{latitude}"></p>
-        <p th:text="'Longitude: ' + *{longitude}"></p>
+<!--        <p th:text="'Address: ' + *{address}"></p>-->
+<!--        <p th:text="'Latitude: ' + *{latitude}"></p>-->
+<!--        <p th:text="'Longitude: ' + *{longitude}"></p>-->
         <section th:unless="${placeCriteria.criteria().isEmpty()}">
             <h3>Rating criteria</h3>
             <form th:action="@{/interests/{intId}/places/{placeId}/rate(intId=${place.interest.id}, placeId=${place.id})}"
