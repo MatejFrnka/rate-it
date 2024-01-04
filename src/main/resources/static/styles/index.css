@@ -79,7 +79,7 @@ h3 {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 1rem;
-    margin-top: 0.5rem;
+
 }
 
 .interest-card {
@@ -90,6 +90,7 @@ h3 {
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+
 }
 
 .img-wrapper {
@@ -102,6 +103,11 @@ h3 {
 .interest-card-link {
     all: unset;
     cursor: pointer;
+    display: block; /* Ensure it's a block-level element */
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+    width: 100%;
+
 }
 
 .interest-title {

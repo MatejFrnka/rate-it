@@ -12,34 +12,35 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Montserrat:wght@200;400;600&family=Righteous&family=Ubuntu:wght@400;500;700&display=swap"
           rel="stylesheet">
-</head>
+    <!-- new link for Glide.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css">
 
+</head>
 
 <body>
 <div class="container-fluid">
     <header th:replace="~{fragments.html :: header}">
     </header>
     <div class="content">
-        <section id="usersInterests" class="interests">
+        <section id="carousels">
             <div th:unless="${likedInterests == null || likedInterests.isEmpty()}">
                 <div class="section-label">
                     <h2>My Interests</h2>
                     <h3>See all</h3>
                 </div>
-                <div class="interest-cards">
-                    <div th:each="interest : ${likedInterests}" id="likedInterests" class="interest-card">
-                        <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
-                            <div>
-                                <div class="img-wrapper">
-
-                                    <!--IMAGE GOES HERE - REPLACE BACKGROUND COLOR WITH ACTUAL IMAGE-->
-
-                                </div>
-                                <div class="interest-title">
-                                    <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
-                                </div>
-                            </div>
-                        </a>
+                <div class="glide">
+                    <div class="glide__track" data-glide-el="track">
+                        <ul class="glide__slides">
+                            <li th:each="interest : ${likedInterests}" class="glide__slide">
+                                <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
+                                    <div>
+                                        <div class="img-wrapper">
+                                            <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -85,6 +86,36 @@
     </div>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide"></script>
+    <script>
+        // Initialize Glide.js carousel
+        const glide = new Glide('.glide', {
+            type: 'carousel',
+            startAt: 0,
+            perView: 4,  // Number of slides to show at a time
+            focusAt: 0,  // Focus on the leftmost slide initially
+            spaceBetween: 10,
+            peek: {
+                before: 0, // Number of slides to peek before the active slide
+                after: 1,  // Number of slides to peek after the active slide
+            },
+            breakpoints: {
+                350: {
+                    perView: 1
+                },
+                700: {
+                    perView: 2
+                },
+                900: {
+                    perView: 2
+                },
+                1200: {
+                    perView: 3
+                }
+            }
+        }).mount();
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
@@ -92,6 +123,5 @@
 </div>
 
 </body>
-
 
 </html>
