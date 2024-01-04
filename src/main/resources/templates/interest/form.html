@@ -56,10 +56,10 @@
                         </label>
 
                         <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
-                            <label>
+                            <label class="criterion">
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" required/>
-                                <button type="button" onclick="removeCriteria(this, ${iterStat.index})">Remove</button>
+                                <button class="delete-button" type="button" onclick="removeCriteria(this, ${iterStat.index})"></button>
                             </label>
                         </div>
                     </th:block>

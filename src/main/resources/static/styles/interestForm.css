@@ -114,7 +114,7 @@ h3 {
     width: 50%;
     height: 100%;
     left: 0%;
-    border-radius:20px;
+    border-radius: 20px;
     background: #e0e9e4;
     transition: all 0.3s;
     color: #568D73;
@@ -178,4 +178,17 @@ h3 {
 
 .input-param {
     margin: 1rem 0;
+}
+
+.delete-button {
+    width: 3rem; /* Set the width of the button */
+    height: 3rem; /* Set the height of the button */
+    border: none; /* Remove border */
+    background: url('../icons/delete.svg') center center no-repeat; /* Set the image as background */
+    background-size: cover; /* Adjust background size as needed */
+    cursor: pointer;
+}
+
+.criterion {
+    display: flex;
 }

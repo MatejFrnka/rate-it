@@ -1,8 +1,11 @@
 function addCriteria() {
     var criteriaContainer = document.getElementById('criteriaContainer');
     var div = document.createElement('div');
+    var label = document.createElement('label')
     var input = document.createElement('input');
     var removeButton = document.createElement('button');
+
+    label.classList.add('criterion')
 
     input.type = 'text';
     input.name = 'criteriaNames';
@@ -10,7 +13,8 @@ function addCriteria() {
     input.classList.add('input-text-field');
 
     removeButton.type = 'button';
-    removeButton.textContent = 'Remove';
+    removeButton.textContent = '';
+    removeButton.classList.add('delete-button')
     removeButton.onclick = function () {
         removeCriteria(div);
     };
@@ -21,8 +25,9 @@ function addCriteria() {
         removeButton.style.display = 'inline-block';
     }
 
-    div.appendChild(input);
-    div.appendChild(removeButton);
+    label.appendChild(input)
+    label.appendChild(removeButton);
+    div.appendChild(label);
     criteriaContainer.appendChild(div);
 
     var criteriaForm = document.getElementById('criteriaForm');
