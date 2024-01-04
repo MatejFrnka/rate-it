@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDTO;
+import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
@@ -9,9 +10,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -94,12 +97,22 @@ public class InterestService {
 
   public List<LikedInterestsDTO> getLikedInterestsDTOS(String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser).stream()
-                    .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
-                    .map(LikedInterestsDTO::new)
-                    .collect(Collectors.toList());
+        .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
+        .map(LikedInterestsDTO::new)
+        .collect(Collectors.toList());
   }
 
   public Interest save(Interest interest) {
     return interestRepository.save(interest);
+  }
+
+  public List<InterestUserDTO> getUsersDTO(Interest interest, Role.RoleType role) {
+    if (interest == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid interest");
+    }
+    return interest.getRoles().stream()
+        .filter(r -> r.getRole().equals(role))
+        .map(InterestUserDTO::new)
+        .collect(Collectors.toList());
   }
 }

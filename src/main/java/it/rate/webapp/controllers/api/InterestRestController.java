@@ -1,14 +1,18 @@
 package it.rate.webapp.controllers.api;
 
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -28,5 +32,27 @@ public class InterestRestController {
       return ResponseEntity.badRequest().body("User not found");
     }
     return ResponseEntity.ok().body(interestService.getLikedInterestsDTOS(principal.getName()));
+  }
+
+  @GetMapping("/{interestId}/users")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  public ResponseEntity<?> getVotersByInterestId(@PathVariable Long interestId) {
+    Optional<Interest> optInterest = interestService.findInterestById(interestId);
+    if (optInterest.isEmpty()) {
+      return ResponseEntity.badRequest().body("Interest not found");
+    }
+    Interest interest = optInterest.get();
+    return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.VOTER));
+  }
+
+  @GetMapping("/{interestId}/applications")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  public ResponseEntity<?> getApplicantsByInterestId(@PathVariable Long interestId) {
+    Optional<Interest> optInterest = interestService.findInterestById(interestId);
+    if (optInterest.isEmpty()) {
+      return ResponseEntity.badRequest().body("Interest not found");
+    }
+    Interest interest = optInterest.get();
+    return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.APPLICANT));
   }
 }
