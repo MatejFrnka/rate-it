@@ -7,6 +7,7 @@ function addCriteria() {
     input.type = 'text';
     input.name = 'criteriaNames';
     input.required = true;
+    input.classList.add('input-text-field');
 
     removeButton.type = 'button';
     removeButton.textContent = 'Remove';

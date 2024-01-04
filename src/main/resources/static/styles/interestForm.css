@@ -130,22 +130,30 @@ h3 {
     left: 50%;
 }
 
-.toggleCheckbox:checked + .toggleContainer div:first-child{
+.toggleCheckbox:checked + .toggleContainer div:first-child {
     color: white;
     transition: color 0.3s;
 }
 
-.toggleCheckbox:checked + .toggleContainer div:last-child{
+.toggleCheckbox:checked + .toggleContainer div:last-child {
     color: #343434;
     transition: color 0.3s;
 }
 
-.toggleCheckbox + .toggleContainer div:first-child{
+.toggleCheckbox + .toggleContainer div:first-child {
     color: #343434;
     transition: color 0.3s;
 }
 
-.toggleCheckbox + .toggleContainer div:last-child{
+.toggleCheckbox + .toggleContainer div:last-child {
     color: white;
     transition: color 0.3s;
+}
+
+.input-text-field {
+    padding: 0.3rem 1rem;
+    background-color: #FFFFFF;
+    border-radius: 1.5rem;
+    border: none;
+    margin: 0.2rem
 }
