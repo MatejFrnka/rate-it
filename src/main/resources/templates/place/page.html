@@ -29,7 +29,7 @@
             <img src="https://picsum.photos/500/300" alt="placeholder"/>
         </div>
 
-        <header class="place-header">
+        <header class="content-header place-header">
             <h1 th:text="*{name}"></h1>
             <div class="rating">
                 <i class="fas fa-star"></i>
@@ -70,8 +70,8 @@
                     </div>
                 </div>
                 <div th:if="${usersRatings}" class="place-rating-button-bar">
-                    <a class="place-rating-button">Upload photo</a>
-                    <button class="place-rating-button" type="submit">Rate</button>
+                    <a class="button">Upload photo</a>
+                    <button class="button" type="submit">Rate</button>
                 </div>
             </form>
 
@@ -79,7 +79,7 @@
             <form th:unless="${usersRatings}"
                   th:action="@{/interests/{id}/request(id=${place.interest.id})}"
                   th:method="post">
-                <button class="place-rating-button" type="submit">Request rate access</button>
+                <button class="button" type="submit">Request rate access</button>
             </form>
         </section>
 

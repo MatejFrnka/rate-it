@@ -41,16 +41,16 @@
     </header>
 
     <div class="interest-image">
-        <!--        <img src="https://picsum.photos/500/300" alt="placeholder"/>-->
+        <img src="https://picsum.photos/500/300" alt="placeholder"/>
     </div>
 
     <div class="content">
-        <div>
-            <a>Map</a>
-            <a th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
+        <div class="d-flex justify-content-around interest-button-bar">
+            <a class="button">Map</a>
+            <a class="button" th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
         </div>
 
-        <div>
+        <div class="content-header">
             <h1 th:text="*{name}"></h1>
         </div>
 
@@ -62,17 +62,43 @@
             <h2>Criteria</h2>
         </div>
         <ul>
-            <li th:each="criterion : ${interest.criteria}">
-                <p th:text="${criterion.name}"></p>
-            </li>
+            <li th:each="criterion : ${interest.criteria}" th:text="${criterion.name}"></li>
         </ul>
-        <div>
+        <section class="interest-places-section">
             <h2>Places</h2>
-        </div>
-        <div th:each="place : *{places}">
-            <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
-               th:text="${place.name}"></a>
-        </div>
+
+            <div class="interest-places">
+                <a class="interest-place"
+                   th:each="place : *{places}"
+                   th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+                >
+                    <img src="https://picsum.photos/400/300" alt="placeholder"/>
+
+                    <div class="interest-place-content">
+                        <header class="interest-place-header">
+                            <div class="interest-place-title">
+                                <h3 th:text="${place.name}"></h3>
+                                <h4 th:text="${place.address}"></h4>
+                            </div>
+
+                            <div class="interest-place-distance">
+                                3.5 km
+                            </div>
+                        </header>
+
+                        <ul class="interest-place-ratings">
+                            <li>
+                                <i class="fas fa-star yellow"></i> Overall: <strong>2.1</strong>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-star"></i> Křupavost: <strong>5.2</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </a>
+            </div>
+        </section>
     </div>
 </div>
 </body>
