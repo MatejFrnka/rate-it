@@ -14,59 +14,61 @@
 </head>
 <body>
 <div class="container-fluid">
-<header th:replace="~{fragments.html :: header}">
-</header>
+    <header th:replace="~{fragments.html :: header}">
+    </header>
 
-<form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}" th:method="${method}">
-    <h3>Name</h3>
-    <label>
-        <input type="text" name="name" th:value="*{name}" required>
-    </label>
-    <br>
-
-    <h3>Category</h3>
-    <p>sport food whatever placeholder</p>
-    <br>
-
-    <h3>Visibility</h3>
-        <input type="checkbox" id="toggle" class="toggleCheckbox" th:field="*{exclusive}"/>
-        <label for="toggle" class="toggleContainer">
-            <div>Public</div>
-            <div>Private</div>
+    <div class="content">
+    <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}" th:method="${method}">
+        <h3>Name</h3>
+        <label>
+            <input type="text" name="name" th:value="*{name}" required>
         </label>
-    <br>
+        <br>
 
-    <h3>Criteria</h3>
-    <div id="criteriaContainer" class="criteria-container">
-        <div>
-            <input th:if="*{id == null}" type="text" name="criteriaNames" required/>
-        </div>
-        <th:block th:if="*{id != null}">
+        <h3>Category</h3>
+        <p>sport food whatever placeholder</p>
+        <br>
+
+        <h3>Visibility</h3>
+            <input type="checkbox" id="toggle" class="toggleCheckbox" th:field="*{exclusive}"/>
+            <label for="toggle" class="toggleContainer">
+                <div>Public</div>
+                <div>Private</div>
+            </label>
+        <br>
+
+        <h3>Criteria</h3>
+        <div id="criteriaContainer" class="criteria-container">
             <div>
-                <input type="text" name="criteriaNames" th:value="${interest.criteria[0]?.name}" required/>
+                <input th:if="*{id == null}" type="text" name="criteriaNames" required/>
             </div>
-
-            <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
+            <th:block th:if="*{id != null}">
                 <div>
-                    <input type="text" name="criteriaNames" th:value="${criterion.name}" required/>
-                    <button type="button" onclick="removeCriteria(this, ${iterStat.index})">Remove</button>
+                    <input type="text" name="criteriaNames" th:value="${interest.criteria[0]?.name}" required/>
                 </div>
-            </div>
-        </th:block>
+
+                <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
+                    <div>
+                        <input type="text" name="criteriaNames" th:value="${criterion.name}" required/>
+                        <button type="button" onclick="removeCriteria(this, ${iterStat.index})">Remove</button>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+        <button type="button" onclick="addCriteria()">Add criteria</button>
+
+        <br>
+
+        <h3>Description</h3>
+        <label>
+            <textarea name="description" th:field="*{description}"></textarea>
+        </label>
+        <br>
+
+        <button type="submit">Save</button>
+    </form>
     </div>
-
-    <button type="button" onclick="addCriteria()">Add criteria</button>
-
-    <br>
-
-    <h3>Description</h3>
-    <label>
-        <textarea name="description" th:field="*{description}"></textarea>
-    </label>
-    <br>
-
-    <button type="submit">Save</button>
-</form>
 
 <script th:inline="javascript" src="/scripts/interestForm.js"></script>
 
