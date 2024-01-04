@@ -5,6 +5,7 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.ManageInterestService;
+import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +25,11 @@ import java.util.Optional;
 public class InterestAdminController {
   private final InterestService interestService;
   private final ManageInterestService manageInterestService;
-
+  private final UserService userService;
 
   @GetMapping("/edit")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String editInterestPage(@PathVariable Long interestId, Model model) {
+  public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
     Optional<Interest> interest = interestService.findInterestById(interestId);
     if (interest.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
@@ -35,6 +37,13 @@ public class InterestAdminController {
     model.addAttribute("interest", interest.get());
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
+    if (principal != null) {
+      model.addAttribute(
+              "loggedUser",
+              userService
+                      .findByEmail(principal.getName())
+                      .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+    }
     return "interest/form";
   }
 

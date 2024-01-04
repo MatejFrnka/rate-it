@@ -7,6 +7,9 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles/interestForm.css}">
 </head>
 <body>
+<div class="container-fluid">
+<header th:replace="~{fragments.html :: header}">
+</header>
 
 <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}" th:method="${method}">
     <h3>Name</h3>
@@ -61,5 +64,6 @@
 
 <script th:inline="javascript" src="/scripts/interestForm.js"></script>
 
+</div>
 </body>
 </html>
