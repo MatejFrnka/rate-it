@@ -6,6 +6,7 @@ function addCriteria() {
 
     input.type = 'text';
     input.name = 'criteriaNames';
+    input.required = true;
 
     removeButton.type = 'button';
     removeButton.textContent = 'Remove';
@@ -22,6 +23,24 @@ function addCriteria() {
     div.appendChild(input);
     div.appendChild(removeButton);
     criteriaContainer.appendChild(div);
+
+    var criteriaForm = document.getElementById('criteriaForm');
+    criteriaForm.addEventListener('submit', function(event) {
+        var criteriaInputs = document.querySelectorAll('input[name="criteriaNames"]');
+        var isValid = true;
+
+        criteriaInputs.forEach(function(input) {
+            if (input.value.trim() === '') {
+                isValid = false;
+                input.classList.add('invalid-field');
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault();
+            alert('Please fill in all criteria fields.');
+        }
+    });
 }
 
 function removeCriteria(div) {
