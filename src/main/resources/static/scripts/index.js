@@ -83,7 +83,6 @@ function getSuggestions(query) {
             innerDiv.appendChild(interestTitle);
             link.appendChild(innerDiv);
             div.appendChild(link);
-
             suggestionContainer.appendChild(div);
         });
     } else {

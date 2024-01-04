@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDTO;
+import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 
@@ -69,15 +70,15 @@ public class InterestService {
 
   public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
     List<String> oldCriteriaNames =
-            interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
-                    .map(Criterion::getName)
-                    .toList();
+        interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
+            .map(Criterion::getName)
+            .toList();
 
     List<Criterion> newCriteria =
-            criteriaNames.stream()
-                    .filter(name -> !oldCriteriaNames.contains(name))
-                    .map(name -> Criterion.builder().name(name).build())
-                    .toList();
+        criteriaNames.stream()
+            .filter(name -> !oldCriteriaNames.contains(name))
+            .map(name -> Criterion.builder().name(name).build())
+            .toList();
 
     for (String name : oldCriteriaNames) {
       if (!criteriaNames.contains(name)) {
@@ -89,6 +90,13 @@ public class InterestService {
     newCriteria.forEach(c -> c.setInterest(interest));
 
     return interestRepository.save(interest);
+  }
+
+  public List<LikedInterestsDTO> getLikedInterestsDTOS(String loggedUser) {
+    return interestRepository.findAllByLikes_AppUser_Email(loggedUser).stream()
+                    .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
+                    .map(LikedInterestsDTO::new)
+                    .collect(Collectors.toList());
   }
 
   public Interest save(Interest interest) {

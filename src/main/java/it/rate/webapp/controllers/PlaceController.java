@@ -64,7 +64,7 @@ public class PlaceController {
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser.getUsername());
+      model.addAttribute("loggedUser", loggedUser);
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(principal, placeId));
       }
