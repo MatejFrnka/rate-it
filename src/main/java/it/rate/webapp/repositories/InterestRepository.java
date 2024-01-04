@@ -29,4 +29,5 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
   List<Interest> findAllByNameContaining(String query);
 
   List<Interest> findAllByLikes_AppUser_Email(String email);
+
 }
