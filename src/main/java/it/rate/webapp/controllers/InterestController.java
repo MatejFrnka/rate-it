@@ -44,7 +44,7 @@ public class InterestController {
           userService
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database")));
-      }
+    }
     return "interest/form";
   }
 
