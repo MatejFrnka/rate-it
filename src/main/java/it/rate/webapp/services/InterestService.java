@@ -115,6 +115,7 @@ public class InterestService {
     return interest.getRoles().stream()
         .filter(r -> r.getRole().equals(role))
         .map(InterestUserDTO::new)
+        .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
         .collect(Collectors.toList());
   }
 }

@@ -21,7 +21,7 @@
             <h2 th:text="${interest.name}"></h2>
             <a th:href="@{/interests/{interestId}/admin/invite(interestId=${interest.id})}"><h3>Applications</h3></a>
         </div>
-            <div class="search-container">
+            <div class="search-container" id="list-search">
                 <input type="text" class="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
                        placeholder="Find user…">
                 <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
