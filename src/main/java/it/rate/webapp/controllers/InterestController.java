@@ -64,7 +64,7 @@ public class InterestController {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
 
-      model.addAttribute("loggedIn", true);
+      model.addAttribute("loggedUser", loggedUser);
       model.addAttribute("like", service.isLiked(loggedUser.getId(), id));
 
       Optional<Role> loggedUserRole =
