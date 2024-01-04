@@ -1,6 +1,7 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
+    background-color: #E2E2E2;
 }
 
 .container-fluid {
@@ -52,8 +53,6 @@ body {
     flex-direction: column;
     gap: 2rem;
     padding: 0.5rem;
-    background-color: #E2E2E2;
-    min-height: 100vh;
 }
 
 .section-label {
