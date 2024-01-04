@@ -38,11 +38,7 @@ public class InterestAdminController {
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
     if (principal != null) {
-      model.addAttribute(
-              "loggedUser",
-              userService
-                      .findByEmail(principal.getName())
-                      .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
     return "interest/form";
   }
