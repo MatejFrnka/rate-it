@@ -35,7 +35,6 @@ public class InterestService {
   }
 
   public void changeLikeValue(Long interestId, String vote) {
-
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
@@ -46,8 +45,12 @@ public class InterestService {
     }
   }
 
-  public void setApplicantRole(Interest interest) {
-
+  public void setApplicantRole(Long interestId) {
+    Optional<Interest> optInterest = interestRepository.findById(interestId);
+    if (optInterest.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Interest not found");
+    }
+    Interest interest = optInterest.get();
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
@@ -63,7 +66,6 @@ public class InterestService {
   }
 
   public List<InterestSuggestionDTO> getAllSuggestionDtos() {
-
     return findAllInterests().stream().map(InterestSuggestionDTO::new).collect(Collectors.toList());
   }
 

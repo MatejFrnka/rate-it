@@ -88,10 +88,10 @@ public class InterestController {
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-  @PostMapping("/{id}/request")
-  public String applyForVoterAuthority(Interest interest) {
-    service.setApplicantRole(interest);
-    return "redirect:/interests/{id}";
+  @PostMapping("/{interestId}/request")
+  public String applyForVoterAuthority(@PathVariable Long interestId) {
+    service.setApplicantRole(interestId);
+    return "redirect:/interests/{interestId}";
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
