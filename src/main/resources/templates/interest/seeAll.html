@@ -19,13 +19,11 @@
         <div class="section-label">
             <h2>My Interests</h2>
         </div>
-        <form method="get" th:href="@{/interests/}">
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
                        placeholder="Find interests…">
                 <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
             </div>
-        </form>
         <div class="items-list" id="my-interests-container"></div>
 
     </div>

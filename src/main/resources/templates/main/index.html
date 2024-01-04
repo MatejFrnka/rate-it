@@ -68,14 +68,11 @@
                 <button class="filter-button">Food</button>
                 <button class="filter-button">Outdoor</button>
             </div>
-
-            <form method="get" th:href="@{/interests/}">
                 <div class="search-container">
                     <input type="text" class="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
                            placeholder="Find interests…">
                     <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
                 </div>
-            </form>
         </section>
 
         <div id="suggestions">

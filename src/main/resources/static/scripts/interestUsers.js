@@ -64,9 +64,14 @@ function loadAllSuggestions() {
         entry.classList.add('user-list-entry');
         entry.classList.add('col-8');
 
+        const userIcon = document.createElement('img');
+        userIcon.src = "/icons/list-user.svg";
+        userIcon.alt = "User";
+
         const userName = document.createElement('h5');
         userName.textContent = suggestion.userName;
 
+        entry.appendChild(userIcon);
         entry.appendChild(userName);
 
         const record = document.createElement('div');
@@ -135,9 +140,14 @@ function getSuggestions(query) {
             entry.classList.add('user-list-entry');
             entry.classList.add('col-8');
 
+            const userIcon = document.createElement('img');
+            userIcon.src = "/icons/list-user.svg";
+            userIcon.alt = "User";
+
             const userName = document.createElement('h5');
             userName.textContent = suggestion.userName;
 
+            entry.appendChild(userIcon);
             entry.appendChild(userName);
 
             const record = document.createElement('div');
