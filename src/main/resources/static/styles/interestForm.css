@@ -92,11 +92,11 @@ h3 {
     color: #888585;
 }
 
-.toggleCheckbox {
+.toggle-checkbox {
     display: none;
 }
 
-.toggleContainer {
+.toggle-container {
     position: relative;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -108,7 +108,7 @@ h3 {
     cursor: pointer;
 }
 
-.toggleContainer::before {
+.toggle-container::before {
     content: '';
     position: absolute;
     width: 50%;
@@ -120,32 +120,32 @@ h3 {
     color: #568D73;
 }
 
-.toggleContainer div {
+.toggle-container div {
     padding: 6px;
     text-align: center;
     z-index: 1;
 }
 
-.toggleCheckbox:checked + .toggleContainer::before {
+.toggle-checkbox:checked + .toggle-container::before {
     left: 50%;
 }
 
-.toggleCheckbox:checked + .toggleContainer div:first-child {
+.toggle-checkbox:checked + .toggle-container div:first-child {
     color: white;
     transition: color 0.3s;
 }
 
-.toggleCheckbox:checked + .toggleContainer div:last-child {
+.toggle-checkbox:checked + .toggle-container div:last-child {
     color: #343434;
     transition: color 0.3s;
 }
 
-.toggleCheckbox + .toggleContainer div:first-child {
+.toggle-checkbox + .toggle-container div:first-child {
     color: #343434;
     transition: color 0.3s;
 }
 
-.toggleCheckbox + .toggleContainer div:last-child {
+.toggle-checkbox + .toggle-container div:last-child {
     color: white;
     transition: color 0.3s;
 }
@@ -180,6 +180,10 @@ h3 {
     margin: 1rem 0;
 }
 
+.criterion {
+    display: flex;
+}
+
 .delete-button {
     width: 3rem; /* Set the width of the button */
     height: 3rem; /* Set the height of the button */
@@ -187,8 +191,4 @@ h3 {
     background: url('../icons/delete.svg') center center no-repeat; /* Set the image as background */
     background-size: cover; /* Adjust background size as needed */
     cursor: pointer;
-}
-
-.criterion {
-    display: flex;
 }
