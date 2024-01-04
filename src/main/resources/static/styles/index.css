@@ -388,7 +388,6 @@ h4 {
     position: absolute;
     width: 50%;
     height: 100%;
-    left: 0%;
     border-radius: 20px;
     background: #e0e9e4;
     transition: all 0.3s;
@@ -406,23 +405,27 @@ h4 {
 }
 
 .toggle-checkbox:checked + .toggle-container div:first-child {
-    color: white;
+    color: #AAAAAA;
     transition: color 0.3s;
+    font-weight: 500;
 }
 
 .toggle-checkbox:checked + .toggle-container div:last-child {
-    color: #343434;
+    color: #568D73;
     transition: color 0.3s;
+    font-weight: 500;
 }
 
 .toggle-checkbox + .toggle-container div:first-child {
-    color: #343434;
+    color: #568D73;
     transition: color 0.3s;
+    font-weight: 500;
 }
 
 .toggle-checkbox + .toggle-container div:last-child {
-    color: white;
+    color: #AAAAAA;
     transition: color 0.3s;
+    font-weight: 500;
 }
 
 .input-text-field {
