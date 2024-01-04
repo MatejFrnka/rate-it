@@ -20,29 +20,32 @@
     </header>
     <div class="content">
 
-<section th:if="${loggedUser}">
-    <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-        <button th:if="${like}" type="submit" name="likeOrDislike" value="dislike">Dislike</button>
-        <button th:unless="${like}" type="submit" name="likeOrDislike" value="like">Like</button>
-    </form>
-</section>
+<!--        TODO: add like/dislike button somewhere to the top of tha page-->
+<!--        <section th:if="${loggedUser}">-->
+<!--            <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">-->
+<!--                <button th:if="${like}" type="submit" name="likeOrDislike" value="dislike">Dislike</button>-->
+<!--                <button th:unless="${like}" type="submit" name="likeOrDislike" value="like">Like</button>-->
+<!--            </form>-->
+<!--        </section>-->
 
-<form th:if='${loggedUserRole == null}'
-      th:action="@{/interests/{id}/request(id=*{id})}"
-      th:method="post">
-    <button type="submit">Request Vote Authority</button>
-</form>
-<a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>
-<a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
-<h1 th:text="*{name}"></h1>
-<p th:text="*{description}"></p>
-<p>Map placeholder</p>
-<a th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
-<ul>
-    <li th:each="place : *{places}">
-        <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
-           th:text="${place.name}"></a>
-    </li>
-</ul>
+        <form th:if='${loggedUserRole == null}'
+              th:action="@{/interests/{id}/request(id=*{id})}"
+              th:method="post">
+            <button type="submit">Request Vote Authority</button>
+        </form>
+        <a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>
+        <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
+        <h1 th:text="*{name}"></h1>
+        <p th:text="*{description}"></p>
+        <p>Map placeholder</p>
+        <a th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
+        <ul>
+            <li th:each="place : *{places}">
+                <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+                   th:text="${place.name}"></a>
+            </li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>
