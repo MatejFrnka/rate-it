@@ -313,7 +313,7 @@ h3 {
     height: 20px;
 }
 
-.interest-list {
+.items-list {
     display: flex;
     flex-direction: column;
 }

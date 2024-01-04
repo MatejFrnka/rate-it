@@ -2,92 +2,38 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateSpot: Manage Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/index.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/manageUsers.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Montserrat:wght@200;400;600&family=Righteous&family=Ubuntu:wght@400;500;700&display=swap"
+          rel="stylesheet">
 </head>
 <body>
+<div class="container-fluid">
+    <header th:replace="~{fragments.html :: header}"></header>
+    <div class="content">
+        <div class="section-label">
+            <h2 th:text="${interest.name}"></h2>
+            <a th:href="@{/interests/{interestId}/admin/invite(interestId=${interest.id})}"><h3>Applications</h3></a>
+        </div>
+        <form method="get" href="#">
+            <div class="search-container">
+                <input type="text" class="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
+                       placeholder="Find user…">
+                <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
+            </div>
+        </form>
+        <div class="items-list" id="interest-users-container"></div>
 
-<div th:with="creator=${usersByRoles.get('CREATOR')}">
-    <h2> Creator :</h2>
-    <ul>
-        <li th:each="user : ${creator}" th:text="${user.email}"></li>
-    </ul>
+
+    </div>
 </div>
-
-
-<div th:with="applicants=${usersByRoles.get('APPLICANT')}">
-    <h2> List of applicants:</h2>
-    <p th:unless="${applicants != null}">No applicants yet</p>
-    <table th:if="${applicants != null}">
-        <tr>
-            <th>Id</th>
-            <th>Username</th>
-            <th>Email</th>
-        </tr>
-        <tr th:each="user : ${applicants}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.email}"></td>
-            <td>
-                <form th:action="@{/interests/{interestId}/admin/users/{userId}(userId=${user.id}, interestId=${interest.id})}"
-                      th:method="put">
-                    <button type="submit">ACCEPT</button>
-                </form>
-            </td>
-            <td>
-                <form th:action="@{/interests/{interestId}/admin/users/{userId}(userId=${user.id}, interestId=${interest.id})}"
-                      th:method="delete">
-                    <button type="submit">REJECT</button>
-                </form>
-            </td>
-        </tr>
-    </table>
-</div>
-
-<div th:with="voters=${usersByRoles.get('VOTER')}">
-    <h2> List of voters:</h2>
-    <p th:unless="${voters != null}">No voters yet</p>
-    <table th:if="${voters != null}">
-        <tr>
-            <th>Id</th>
-            <th>Username</th>
-            <th>Email</th>
-        </tr>
-        <tr th:each="user : ${voters}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.email}"></td>
-            <td>
-                <form th:action="@{/interests/{interestId}/admin/users/{userId}(userId=${user.id}, interestId=${interest.id})}"
-                      th:method="delete">
-                    <button type="submit">KICK</button>
-                </form>
-            </td>
-        </tr>
-    </table>
-</div>
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<h2>List of users of interest and their role</h2>
-<div th:each="entry : ${usersByRoles.entrySet()}">
-    <p th:text="'Role: ' + ${entry.getKey()}"></p>
-    <ul>
-        <li th:each="user, iterStat : ${entry.getValue()}" th:text="'Email : ' + ${user.email}"></li>
-    </ul>
-</div>
-
+<input type="hidden" id="interest-id" th:value="${interest.id}">
+<script th:src="@{/scripts/interestUsers.js}"></script>
 </body>
 </html>

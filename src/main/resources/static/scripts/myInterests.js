@@ -2,7 +2,7 @@ let suggestionsData = [];
 
 window.addEventListener('load', async () => {
     try {
-        const response = await fetch('/api/v1/interests/suggestions/my');
+        const response = await fetch('/api/v1/interests/my');
         const data = await response.json();
         suggestionsData = data;
         loadAllSuggestions();

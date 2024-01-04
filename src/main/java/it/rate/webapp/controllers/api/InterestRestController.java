@@ -26,7 +26,7 @@ public class InterestRestController {
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-  @GetMapping("/suggestions/my")
+  @GetMapping("/my")
   public ResponseEntity<?> getMyInterestsSuggestions(Principal principal) {
     if (principal == null) {
       return ResponseEntity.badRequest().body("User not found");
