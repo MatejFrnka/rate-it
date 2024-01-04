@@ -313,6 +313,15 @@ h3 {
     height: 20px;
 }
 
+.interest-image {
+    position:relative;
+    display: flex;
+    width: 100%;
+    aspect-ratio: 5/3;
+    object-fit: contain;
+    overflow: hidden;
+}
+
 .interest-list {
     display: flex;
     flex-direction: column;

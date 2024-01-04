@@ -16,35 +16,63 @@
 
 <body th:object="${interest}">
 <div class="container-fluid">
+    <!--        TODO: add like/dislike button somewhere to the top of tha page-->
+    <!--        <section th:if="${loggedUser}">-->
+    <!--            <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">-->
+    <!--                <button th:if="${like}" type="submit" name="likeOrDislike" value="dislike">Dislike</button>-->
+    <!--                <button th:unless="${like}" type="submit" name="likeOrDislike" value="like">Like</button>-->
+    <!--            </form>-->
+    <!--        </section>-->
+
+    <!--TODO: move this probably somewhere in the top menu-->
+    <!--            <form th:unless='${loggedUserRole}'-->
+    <!--                  th:action="@{/interests/{id}/request(id=*{id})}"-->
+    <!--                  th:method="post">-->
+    <!--                <button type="submit">Request Vote Authority</button>-->
+    <!--            </form>-->
+
+    <!--TODO: move this probably somewhere in the top menu-->
+    <!--        <a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>-->
+
+    <!--TODO: move this probably somewhere in the top menu-->
+    <!--        <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>-->
+
     <header th:replace="~{fragments.html :: header}">
     </header>
+
+    <div class="interest-image">
+        <!--        <img src="https://picsum.photos/500/300" alt="placeholder"/>-->
+    </div>
+
     <div class="content">
+        <div>
+            <a>Map</a>
+            <a th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
+        </div>
 
-<!--        TODO: add like/dislike button somewhere to the top of tha page-->
-<!--        <section th:if="${loggedUser}">-->
-<!--            <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">-->
-<!--                <button th:if="${like}" type="submit" name="likeOrDislike" value="dislike">Dislike</button>-->
-<!--                <button th:unless="${like}" type="submit" name="likeOrDislike" value="like">Like</button>-->
-<!--            </form>-->
-<!--        </section>-->
+        <div>
+            <h1 th:text="*{name}"></h1>
+        </div>
 
-        <form th:if='${loggedUserRole == null}'
-              th:action="@{/interests/{id}/request(id=*{id})}"
-              th:method="post">
-            <button type="submit">Request Vote Authority</button>
-        </form>
-        <a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>
-        <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
-        <h1 th:text="*{name}"></h1>
-        <p th:text="*{description}"></p>
-        <p>Map placeholder</p>
-        <a th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
+        <div>
+            <p th:text="*{description}"></p>
+        </div>
+
+        <div>
+            <h2>Criteria</h2>
+        </div>
         <ul>
-            <li th:each="place : *{places}">
-                <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
-                   th:text="${place.name}"></a>
+            <li th:each="criterion : ${interest.criteria}">
+                <p th:text="${criterion.name}"></p>
             </li>
         </ul>
+        <div>
+            <h2>Places</h2>
+        </div>
+        <div th:each="place : *{places}">
+            <a th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+               th:text="${place.name}"></a>
+        </div>
     </div>
 </div>
 </body>
