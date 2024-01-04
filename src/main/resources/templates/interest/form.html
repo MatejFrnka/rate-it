@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title th:if="${interest.id == null}" th:text="'Rate-It: New Interest'"></title>
-    <title th:unless="${interest.id == null}" th:text="'Rate-It: Edit ' + ${interest.name}"></title>
+    <title th:if="${interest.id == null}" th:text="'New Interest | RateSpot'"></title>
+    <title th:unless="${interest.id == null}" th:text="${interest.name} + ' Edit Mode | RateSpot '"></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/styles/interestForm.css}">
@@ -18,59 +18,69 @@
     </header>
 
     <div class="content">
-    <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}" th:method="${method}">
-        <h3>Name</h3>
-        <label>
-            <input class="input-text-field" type="text" name="name" th:value="*{name}" required >
-        </label>
-        <br>
-
-        <h3>Category</h3>
-        <p>sport food whatever placeholder</p>
-        <br>
-
-        <h3>Visibility</h3>
-            <input type="checkbox" id="toggle" class="toggleCheckbox" th:field="*{exclusive}"/>
-            <label for="toggle" class="toggleContainer">
-                <div>Public</div>
-                <div>Private</div>
-            </label>
-        <br>
-
-        <h3>Criteria</h3>
-        <div id="criteriaContainer" class="criteria-container">
-            <label th:if="*{id == null}">
-                <input class="input-text-field" type="text" name="criteriaNames" required/>
-            </label>
-            <th:block th:if="*{id != null}" >
+        <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
+              th:method="${method}">
+            <h2 th:if="${interest.id == null}">New Interest</h2>
+            <h2 th:unless="${interest.id == null}" th:text="${interest.name} + ' Edit'"></h2>
+            <section class="input-param">
+                <h5>Name</h5>
                 <label>
-                    <input class="input-text-field" type="text" name="criteriaNames" th:value="${interest.criteria[0]?.name}" required/>
+                    <input class="input-text-field" type="text" name="name" th:value="*{name}" required>
                 </label>
+            </section>
 
-                <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
-                    <label>
-                        <input class="input-text-field" type="text" name="criteriaNames" th:value="${criterion.name}" required/>
-                        <button type="button" onclick="removeCriteria(this, ${iterStat.index})">Remove</button>
+            <section class="input-param">
+                <h5>Category</h5>
+                <p>sport food whatever placeholder</p>
+            </section>
+
+            <section class="input-param">
+                <h5>Visibility</h5>
+                <input type="checkbox" id="toggle" class="toggleCheckbox" th:field="*{exclusive}"/>
+                <label for="toggle" class="toggleContainer">
+                    <div>Public</div>
+                    <div>Private</div>
+                </label>
+            </section>
+
+            <section class="input-param">
+                <h5>Criteria</h5>
+                <div id="criteriaContainer" class="criteria-container">
+                    <label th:if="*{id == null}">
+                        <input class="input-text-field" type="text" name="criteriaNames" required/>
                     </label>
+                    <th:block th:if="*{id != null}">
+                        <label>
+                            <input class="input-text-field" type="text" name="criteriaNames"
+                                   th:value="${interest.criteria[0]?.name}" required/>
+                        </label>
+
+                        <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
+                            <label>
+                                <input class="input-text-field" type="text" name="criteriaNames"
+                                       th:value="${criterion.name}" required/>
+                                <button type="button" onclick="removeCriteria(this, ${iterStat.index})">Remove</button>
+                            </label>
+                        </div>
+                    </th:block>
                 </div>
-            </th:block>
-        </div>
 
-        <button type="button" onclick="addCriteria()">Add criteria</button>
+                <button class="light-button" type="button" onclick="addCriteria()">Add criteria</button>
 
-        <br>
+            </section>
 
-        <h3>Description</h3>
-        <label>
-            <textarea class="input-text-field" name="description" th:field="*{description}"></textarea>
-        </label>
-        <br>
+            <section class="input-param">
+                <h5>Description</h5>
+                <label>
+                    <textarea class="input-text-field" name="description" th:field="*{description}"></textarea>
+                </label>
+            </section>
 
-        <button type="submit">Save</button>
-    </form>
+            <button class="dark-button" type="submit">Save</button>
+        </form>
     </div>
 
-<script th:inline="javascript" src="/scripts/interestForm.js"></script>
+    <script th:inline="javascript" src="/scripts/interestForm.js"></script>
 
 </div>
 </body>
