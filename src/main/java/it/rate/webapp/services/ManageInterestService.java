@@ -19,25 +19,6 @@ public class ManageInterestService {
   private final RoleService roleService;
   private final UserService userService;
 
-  public Map<String, List<AppUser>> getUsersByRole(Long interestId) throws BadRequestException {
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
-    if (optInterest.isEmpty()) {
-      throw new BadRequestException("Interest not found");
-    }
-    Map<String, List<AppUser>> map = new HashMap<>();
-    Interest interest = optInterest.get();
-    interest
-        .getRoles()
-        .forEach(
-            r -> {
-              if (!map.containsKey(r.getRole().name())) {
-                map.put(r.getRole().name(), new ArrayList<>());
-              }
-              map.get(r.getRole().name()).add(r.getAppUser());
-            });
-    return map;
-  }
-
   public void removeRole(Long interestId, Long userId) {
     if (userId == null || interestId == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");

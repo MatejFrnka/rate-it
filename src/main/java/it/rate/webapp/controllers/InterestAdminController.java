@@ -71,9 +71,6 @@ public class InterestAdminController {
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database")));
     }
-
-    model.addAttribute("usersByRoles", manageInterestService.getUsersByRole(interestId));
-    //todo remove usersByRoles and amend tests to use new method
     model.addAttribute("interest", optInterest.get());
     return "interest/users";
   }
@@ -108,8 +105,6 @@ public class InterestAdminController {
                       .findByEmail(principal.getName())
                       .orElseThrow(() -> new RuntimeException("Email not found in the database")));
     }
-
-    model.addAttribute("usersByRoles", manageInterestService.getUsersByRole(interestId));
     model.addAttribute("interest", optInterest.get());
     return "interest/invite";
   }

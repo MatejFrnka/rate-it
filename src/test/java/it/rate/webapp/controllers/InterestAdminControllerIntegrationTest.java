@@ -128,8 +128,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).getUsersByRole(interestId);
   }
 
   @Test
@@ -142,8 +140,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).getUsersByRole(interestId);
   }
 
   @Test
@@ -156,8 +152,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).getUsersByRole(interestId);
   }
 
   @Test
@@ -170,8 +164,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).getUsersByRole(interestId);
   }
 
   @Test
@@ -184,8 +176,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isNotFound())
         .andReturn();
-
-    verify(manageInterestService, times(0)).getUsersByRole(interestId);
   }
 
   @Test
@@ -198,8 +188,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isOk())
         .andReturn();
-
-    verify(manageInterestService, times(1)).getUsersByRole(interestId);
   }
 
   @Test
@@ -212,8 +200,6 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isOk())
         .andReturn();
-
-    verify(manageInterestService, times(1)).getUsersByRole(interestId);
   }
 
   @Test

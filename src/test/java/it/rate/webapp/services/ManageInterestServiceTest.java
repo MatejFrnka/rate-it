@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,23 +46,6 @@ class ManageInterestServiceTest extends BaseTest {
     Role r3 = new Role(u3, i1, Role.RoleType.APPLICANT);
 
     i1.setRoles(List.of(r1, r2, r3));
-  }
-
-  @Test
-  void getUsersByRoleValidInterest() throws BadRequestException {
-    when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
-    Map<String, List<AppUser>> result = manageInterestService.getUsersByRole(i1.getId());
-
-    assertEquals("Lojza", result.get("CREATOR").get(0).getUsername());
-    assertEquals("Alfonz", result.get("VOTER").get(0).getUsername());
-    assertEquals("Karel", result.get("APPLICANT").get(0).getUsername());
-  }
-
-  @Test
-  void getUsersByRoleInvalidInterest() throws BadRequestException {
-    when(interestService.findInterestById(any())).thenReturn(Optional.empty());
-
-    assertThrows(BadRequestException.class, () -> manageInterestService.getUsersByRole(1L));
   }
 
   @Test
