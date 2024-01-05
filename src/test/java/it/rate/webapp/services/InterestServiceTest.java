@@ -81,18 +81,6 @@ class InterestServiceTest extends BaseTest {
     assertSame(savedInterest.getCriteria(), interest.getCriteria());
   }
 
-//  @Test
-//  void saveNewInterest() {
-//    when(interestRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-//
-//    Interest savedInterest = interestService.save(i);
-//
-//    assertEquals(criteria.size(), savedCriteria.size());
-//    assertSame(savedInterest.getCriteria(), savedCriteria);
-//
-//    verify(interestRepository, times(1)).save(same(i));
-//  }
-
   private List<Criterion> getOldCriteria() {
     return List.of(Criterion.builder().name("c1").build(), Criterion.builder().name("c2").build());
   }
