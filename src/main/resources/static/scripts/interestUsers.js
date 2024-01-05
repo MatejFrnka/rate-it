@@ -57,13 +57,12 @@ function loadAllSuggestions() {
 
         const roleDiv = document.createElement('div');
         roleDiv.classList.add('role-section');
-        // roleDiv.classList.add('col-3');
 
         roleDiv.appendChild(kickForm);
 
         const entry = document.createElement('div');
         entry.classList.add('user-list-entry');
-        entry.classList.add('col-8');
+        entry.classList.add('col-9');
 
         const userIcon = document.createElement('img');
         userIcon.src = "/icons/list-user.svg";
@@ -134,13 +133,11 @@ function getSuggestions(query) {
 
             const roleDiv = document.createElement('div');
             roleDiv.classList.add('kick-section');
-            // roleDiv.classList.add('col-3');
-
             roleDiv.appendChild(kickForm);
 
             const entry = document.createElement('div');
             entry.classList.add('user-list-entry');
-            entry.classList.add('col-8');
+            entry.classList.add('col-9');
 
             const userIcon = document.createElement('img');
             userIcon.src = "/icons/list-user.svg";
@@ -154,7 +151,6 @@ function getSuggestions(query) {
 
             const record = document.createElement('div');
             record.classList.add('list-record');
-
 
             record.appendChild(entry);
             record.appendChild(roleDiv);
