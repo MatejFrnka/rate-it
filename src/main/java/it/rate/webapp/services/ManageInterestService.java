@@ -71,27 +71,8 @@ public class ManageInterestService {
     // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION
   }
 
-  public Role createNewRole(Long interestId, Long userId, Role.RoleType roleType) {
-    if (userId == null || interestId == null || roleType == null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
-    }
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
-    Optional<AppUser> optUser = userService.findById(userId);
-    if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
-    }
-    if (optUser.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-    }
-    AppUser user = optUser.get();
-    Interest interest = optInterest.get();
-    Role role = new Role(user, interest, roleType);
-    return roleService.save(role);
-    // todo REDUNDANT METHOD ! // Get rid off it after refactoring tests
-  }
-
   public Role inviteUser(Long interestId, String inviteBy, String user, Role.RoleType roleType) {
-    if (inviteBy == null || user == null || interestId == null) {
+    if (inviteBy == null || user == null || interestId == null || roleType == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
     }
     Optional<Interest> optInterest = interestService.findInterestById(interestId);
@@ -103,12 +84,12 @@ public class ManageInterestService {
     } else {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid parameter");
     }
-    AppUser appUser =
-        optUser.orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     Interest interest =
         optInterest.orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found"));
+    AppUser appUser =
+        optUser.orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
     Role role = new Role(appUser, interest, roleType);
     return roleService.save(role);

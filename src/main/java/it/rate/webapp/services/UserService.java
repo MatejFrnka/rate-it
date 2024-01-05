@@ -23,8 +23,7 @@ public class UserService {
     return userRepository.save(appUser);
   }
 
-  public AppUser registerUser(SignupUserInDTO userDTO)
-      throws BadRequestException {
+  public AppUser registerUser(SignupUserInDTO userDTO) throws BadRequestException {
     if (!validator.validate(userDTO).isEmpty()) {
       throw new BadRequestException("Invalid registration data");
     }
@@ -53,7 +52,7 @@ public class UserService {
   }
 
   public Optional<AppUser> findByUsernameIgnoreCase(String username) {
-      return userRepository.findByUsernameIgnoreCase(username);
+    return userRepository.findByUsernameIgnoreCase(username);
   }
 
   public Optional<AppUser> findByEmailIgnoreCase(String email) {

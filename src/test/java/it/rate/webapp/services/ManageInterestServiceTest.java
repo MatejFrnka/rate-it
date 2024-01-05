@@ -89,7 +89,8 @@ class ManageInterestServiceTest extends BaseTest {
     when(roleService.findByAppUserIdAndInterestId(any(), any()))
         .thenReturn(Optional.of(roleToDelete));
 
-    Exception e1 = assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
+    Exception e1 =
+        assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
     assertEquals("400 BAD_REQUEST \"Cannot remove creator role\"", e1.getMessage());
   }
 
@@ -181,34 +182,56 @@ class ManageInterestServiceTest extends BaseTest {
   }
 
   @Test
-  void createNewRoleInvalidParameters() {
+  void inviteUserInvalidParameters() {
     Exception e1 =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(null, null, null));
+            () -> manageInterestService.inviteUser(null, null, null, null));
     Exception e2 =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(1L, null, null));
+            () -> manageInterestService.inviteUser(1L, null, null, null));
     Exception e3 =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(null, 1L, null));
+            () -> manageInterestService.inviteUser(null, "email", null, null));
     Exception e4 =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(null, null, Role.RoleType.APPLICANT));
+            () -> manageInterestService.inviteUser(null, null, "franta", null));
     Exception e5 =
         assertThrows(
-            ResponseStatusException.class, () -> manageInterestService.createNewRole(1L, 1L, null));
+            ResponseStatusException.class,
+            () -> manageInterestService.inviteUser(null, null, null, Role.RoleType.APPLICANT));
     Exception e6 =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(null, 1L, Role.RoleType.APPLICANT));
+            () -> manageInterestService.inviteUser(1L, "email", null, null));
+
     Exception e7 =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(1L, null, Role.RoleType.APPLICANT));
+            () -> manageInterestService.inviteUser(1L, null, "franta", null));
+
+    Exception e8 =
+        assertThrows(
+            ResponseStatusException.class,
+            () -> manageInterestService.inviteUser(1L, null, null, Role.RoleType.APPLICANT));
+
+    Exception e9 =
+        assertThrows(
+            ResponseStatusException.class,
+            () -> manageInterestService.inviteUser(1L, "email", "franta", null));
+
+    Exception e10 =
+        assertThrows(
+            ResponseStatusException.class,
+            () -> manageInterestService.inviteUser(1L, "email", null, Role.RoleType.APPLICANT));
+
+    Exception e11 =
+        assertThrows(
+            ResponseStatusException.class,
+            () -> manageInterestService.inviteUser(1L, null, "franta", Role.RoleType.APPLICANT));
 
     assertEquals("400 BAD_REQUEST \"Missing parameter\"", e1.getMessage());
     assertEquals("400 BAD_REQUEST \"Missing parameter\"", e2.getMessage());
@@ -217,15 +240,19 @@ class ManageInterestServiceTest extends BaseTest {
     assertEquals("400 BAD_REQUEST \"Missing parameter\"", e5.getMessage());
     assertEquals("400 BAD_REQUEST \"Missing parameter\"", e6.getMessage());
     assertEquals("400 BAD_REQUEST \"Missing parameter\"", e7.getMessage());
+    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e8.getMessage());
+    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e9.getMessage());
+    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e10.getMessage());
+    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e11.getMessage());
   }
 
   @Test
-  void createNewRoleNonExistentInterest() {
+  void inviteUserNonExistentInterestThrowsNotFound() {
     when(interestService.findInterestById(any())).thenReturn(Optional.empty());
     Exception e =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(1L, 1L, Role.RoleType.APPLICANT));
+            () -> manageInterestService.inviteUser(1L, "username", "franta", Role.RoleType.VOTER));
 
     assertEquals("404 NOT_FOUND \"Interest not found\"", e.getMessage());
   }
@@ -233,29 +260,57 @@ class ManageInterestServiceTest extends BaseTest {
   @Test
   void createNewRoleNonExistentUser() {
     when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
-    when(userService.findById(any())).thenReturn(Optional.empty());
-    Exception e =
+    when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
+    when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
+    Exception e1 =
         assertThrows(
             ResponseStatusException.class,
-            () -> manageInterestService.createNewRole(1L, 1L, Role.RoleType.APPLICANT));
+            () ->
+                manageInterestService.inviteUser(
+                    1L, "username", "franta", Role.RoleType.APPLICANT));
+    Exception e2 =
+        assertThrows(
+            ResponseStatusException.class,
+            () ->
+                manageInterestService.inviteUser(
+                    1L, "email", "test@test.cz", Role.RoleType.APPLICANT));
 
-    assertEquals("404 NOT_FOUND \"User not found\"", e.getMessage());
+    assertEquals("404 NOT_FOUND \"User not found\"", e1.getMessage());
+    assertEquals("404 NOT_FOUND \"User not found\"", e2.getMessage());
   }
 
   @Test
-  void createNewRoleReturnsNewRole() {
+  void inviteUserReturnsRoleForValidParameters() {
     AppUser userWithoutRole = new AppUser();
     Role.RoleType roleToCreate = Role.RoleType.VOTER;
     when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
-    when(userService.findById(any())).thenReturn(Optional.of(userWithoutRole));
+    when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.of(userWithoutRole));
     when(roleService.save(any())).then(i -> roleRepository.save(i.getArgument(0)));
     when(roleRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
-    Role newRole = manageInterestService.createNewRole(1L, 1L, roleToCreate);
+    Role newRole = manageInterestService.inviteUser(1L, "username", "franta", roleToCreate);
 
     verify(roleService, times(1)).save(newRole);
     verify(roleRepository, times(1)).save(newRole);
     assertEquals(roleToCreate, newRole.getRole());
     assertEquals(userWithoutRole, newRole.getAppUser());
+  }
+
+  @Test
+  void inviteUserThrowsBadRequestForInvalidInviteForm() {
+    when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
+    Exception e1 =
+        assertThrows(
+            ResponseStatusException.class,
+            () ->
+                manageInterestService.inviteUser(1L, "usernaaame", "franta", Role.RoleType.VOTER));
+    Exception e2 =
+        assertThrows(
+            ResponseStatusException.class,
+            () ->
+                manageInterestService.inviteUser(
+                    1L, "emaail", "franta@franta.cz", Role.RoleType.VOTER));
+    assertEquals("400 BAD_REQUEST \"Invalid parameter\"", e1.getMessage());
+    assertEquals("400 BAD_REQUEST \"Invalid parameter\"", e2.getMessage());
   }
 }
