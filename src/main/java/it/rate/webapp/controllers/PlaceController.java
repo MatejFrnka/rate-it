@@ -28,11 +28,14 @@ public class PlaceController {
 
   @GetMapping("/new")
   @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
-  public String newPlacePage(@PathVariable Long interestId, Model model) {
+  public String newPlacePage(@PathVariable Long interestId, Model model, Principal principal) {
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
     model.addAttribute("action", "/interests/" + interestId + "/places/new");
     model.addAttribute("title", "New page");
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    }
     return "place/form";
   }
 
@@ -88,12 +91,18 @@ public class PlaceController {
   @GetMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlacePage(
-      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
+      @PathVariable Long interestId,
+      @PathVariable Long placeId,
+      Model model,
+      Principal principal) {
 
     model.addAttribute("method", "PUT");
     model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
     model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.findById(placeId).get());
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    }
 
     return "place/form";
   }
