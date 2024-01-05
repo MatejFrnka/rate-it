@@ -25,17 +25,24 @@
 
             <section class="input-param">
                 <input type="hidden" th:field="*{id}"/>
-                <label for="name">Name: </label>
-                <input type="text" id="name" name="name" th:field="*{name}" required autocomplete="off">
+                <h4>Name</h4>
+                <label class="input-text-field">
+                    <input type="text" name="name" th:field="*{name}" required autocomplete="off">
+                </label>
             </section>
 
             <section class="input-param">
-                <label for="address">Address</label>
-                <input type="text" id="address" name="address" th:field="*{address}" autocomplete="off">
+                <h4>Address</h4>
+                <label class="input-text-field">
+                    <input type="text" id="address" name="address" th:field="*{address}" autocomplete="off">
+                </label>
             </section>
 
             <section class="input-param">
-
+                <div class="place-map">
+                    Map placeholder
+                </div>
+                <button class="light-button">Confirm</button>
             </section>
 
 <!--            <label for="lat">Latitude: (pin on map/get users location/manual)</label>-->
@@ -44,8 +51,10 @@
 <!--            <input type="number" id="lng" name="lng" th:field="*{longitude}" required>-->
 
             <section class="input-param">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" th:field="*{description}"></textarea>
+                <h4>Description</h4>
+                <label class="input-text-field">
+                    <textarea id="description" name="description" th:field="*{description}"></textarea>
+                </label>
             </section>
 
             <button>Save</button>
