@@ -488,7 +488,6 @@ h4 {
     justify-content: center;
 }
 
-
 .list-record {
     display: flex;
     flex-direction: row;
@@ -587,4 +586,3 @@ h4 {
     color: #568D73;
     font-weight: 600;
 }
-
