@@ -29,7 +29,7 @@ public class InterestAdminController {
 
   @GetMapping("/edit")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String editInterestPage(@PathVariable Long interestId, Model model) {
+  public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
     Optional<Interest> interest = interestService.findInterestById(interestId);
     if (interest.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
@@ -37,6 +37,9 @@ public class InterestAdminController {
     model.addAttribute("interest", interest.get());
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    }
     return "interest/form";
   }
 

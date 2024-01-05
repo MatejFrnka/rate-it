@@ -32,12 +32,15 @@ public class InterestController {
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
-  public String createPage(Model model) {
+  public String createPage(Model model, Principal principal) {
     List<Criterion> criteria = new ArrayList<>();
     model.addAttribute("criteria", criteria);
     model.addAttribute("interest", new Interest());
     model.addAttribute("action", "/interests/create");
     model.addAttribute("method", "post");
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    }
     return "interest/form";
   }
 
