@@ -428,12 +428,19 @@ h4 {
     font-weight: 500;
 }
 
+.input-param {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .input-text-field {
     padding: 0.3rem 1rem;
     background-color: #FFFFFF;
     border-radius: 1.5rem;
     border: none;
-    margin: 0.2rem
+    margin: 0.2rem;
+    width: 100%;
 }
 
 .dark-button {
@@ -454,10 +461,6 @@ h4 {
     border: none;
 }
 
-.input-param {
-    margin: 1rem 0;
-}
-
 .criterion {
     display: flex;
 }
@@ -469,4 +472,19 @@ h4 {
     background: url('../icons/delete.svg') center center no-repeat;
     background-size: cover;
     cursor: pointer;
+}
+
+.new-place-map {
+    width: 100%;
+    aspect-ratio: 16/3;
+    border-radius: 1rem;
+    background: #FFFFFF;
+    margin-bottom: 0.5rem;
+    object-fit: contain;
+    overflow: hidden;
+}
+
+.centered-button-wrapper {
+    display: flex;
+    justify-content: center;
 }

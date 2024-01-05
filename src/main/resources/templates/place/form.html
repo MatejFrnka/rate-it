@@ -26,23 +26,26 @@
             <section class="input-param">
                 <input type="hidden" th:field="*{id}"/>
                 <h4>Name</h4>
-                <label class="input-text-field">
-                    <input type="text" name="name" th:field="*{name}" required autocomplete="off">
+                <label>
+                    <input class="input-text-field" type="text" name="name" th:field="*{name}" required autocomplete="off">
                 </label>
             </section>
 
             <section class="input-param">
                 <h4>Address</h4>
-                <label class="input-text-field">
-                    <input type="text" id="address" name="address" th:field="*{address}" autocomplete="off">
+                <label>
+                    <input class="input-text-field" type="text" id="address" name="address" th:field="*{address}" autocomplete="off">
                 </label>
             </section>
 
             <section class="input-param">
-                <div class="place-map">
+                <h4>Exact Spot</h4>
+                <div class="new-place-map">
                     Map placeholder
                 </div>
-                <button class="light-button">Confirm</button>
+                <div class="centered-button-wrapper">
+                    <button class="light-button">Confirm</button>
+                </div>
             </section>
 
 <!--            <label for="lat">Latitude: (pin on map/get users location/manual)</label>-->
@@ -52,12 +55,12 @@
 
             <section class="input-param">
                 <h4>Description</h4>
-                <label class="input-text-field">
-                    <textarea id="description" name="description" th:field="*{description}"></textarea>
+                <label>
+                    <textarea class="input-text-field" id="description" name="description" th:field="*{description}"></textarea>
                 </label>
             </section>
 
-            <button>Save</button>
+            <button class="dark-button">Save</button>
         </form>
     </div>
 </div>
