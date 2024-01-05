@@ -24,6 +24,24 @@
         <div class="section-label">
             <h1>Invite</h1>
         </div>
+        <section class="input-param">
+            <form th:action="@{/interests/{interestId}/admin/invite(interestId=${interest.id})}" th:method="post"
+                  id="invite-form">
+                <input type="checkbox" id="toggle" class="toggle-checkbox" onchange="getInviteType()"
+                       th:checked="${isChecked}"/>
+                <label for="toggle" class="toggle-container">
+                    <div>E-mail</div>
+                    <div>Username</div>
+                </label>
+                <div class="send-invite">
+                    <input type="hidden" id="type" name="inviteBy">
+                    <input class="input-text-field" th:value="${user}" name="user" id="invite-input" type="text"
+                           placeholder="Invite more people…">
+                    <button id="send-invite-button" type="submit">SEND</button>
+                </div>
+                <div th:if="${status}" th:class="${statusClass}" th:text="${status}"></div>
+            </form>
+        </section>
 
         <div class="section-label">
             <h1>Applications</h1>

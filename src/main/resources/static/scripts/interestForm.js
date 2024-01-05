@@ -31,11 +31,11 @@ function addCriteria() {
     criteriaContainer.appendChild(div);
 
     var criteriaForm = document.getElementById('criteriaForm');
-    criteriaForm.addEventListener('submit', function(event) {
+    criteriaForm.addEventListener('submit', function (event) {
         var criteriaInputs = document.querySelectorAll('input[name="criteriaNames"]');
         var isValid = true;
 
-        criteriaInputs.forEach(function(input) {
+        criteriaInputs.forEach(function (input) {
             if (input.value.trim() === '') {
                 isValid = false;
                 input.classList.add('invalid-field');

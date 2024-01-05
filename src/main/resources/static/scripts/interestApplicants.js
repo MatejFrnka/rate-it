@@ -13,6 +13,7 @@ window.addEventListener('load', async () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    getInviteType()
     loadAllSuggestions();
 });
 
@@ -218,6 +219,16 @@ function getSuggestions(query) {
     }
 
     document.getElementById('suggestions').style.display = 'block';
+}
+
+function getInviteType() {
+    const inviteForm = document.getElementById('toggle')
+    const inviteType = document.getElementById('type')
+    if (inviteForm.checked) {
+        inviteType.value = 'username'
+    } else {
+        inviteType.value = 'email'
+    }
 }
 
 function isEmptyOrSpaces(str) {

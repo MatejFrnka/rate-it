@@ -113,4 +113,21 @@ public class InterestAdminController {
     model.addAttribute("interest", optInterest.get());
     return "interest/invite";
   }
+
+  @PostMapping("/invite")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  public String inviteUser(@PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
+    try {
+      manageInterestService.inviteUser(interestId, inviteBy, user, Role.RoleType.VOTER);
+      ra.addFlashAttribute("status", "Invite successfully sent");
+      ra.addFlashAttribute("statusClass", "successful");
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+    } catch (ResponseStatusException e) {
+      ra.addFlashAttribute("status", e.getReason());
+      ra.addFlashAttribute("statusClass", "error");
+      ra.addFlashAttribute("user", user);
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+    }
+    return "redirect:/interests/{interestId}/admin/invite";
+  }
 }

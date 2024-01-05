@@ -87,6 +87,31 @@ public class ManageInterestService {
     Interest interest = optInterest.get();
     Role role = new Role(user, interest, roleType);
     return roleService.save(role);
+    // todo REDUNDANT METHOD ! // Get rid off it after refactoring tests
+  }
+
+  public Role inviteUser(Long interestId, String inviteBy, String user, Role.RoleType roleType) {
+    if (inviteBy == null || user == null || interestId == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
+    }
+    Optional<Interest> optInterest = interestService.findInterestById(interestId);
+    Optional<AppUser> optUser;
+    if (inviteBy.equals("email")) {
+      optUser = userService.findByEmailIgnoreCase(user);
+    } else if (inviteBy.equals("username")) {
+      optUser = userService.findByUsernameIgnoreCase(user);
+    } else {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid parameter");
+    }
+    AppUser appUser =
+        optUser.orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    Interest interest =
+        optInterest.orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found"));
+
+    Role role = new Role(appUser, interest, roleType);
+    return roleService.save(role);
     // todo : CHANGES WONT TAKE EFFECT UNTIL USER RELOGS // NEED TO MANIPULATE SESSION
   }
 }

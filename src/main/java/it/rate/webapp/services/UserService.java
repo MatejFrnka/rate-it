@@ -52,6 +52,14 @@ public class UserService {
     return userRepository.findByEmail(email);
   }
 
+  public Optional<AppUser> findByUsernameIgnoreCase(String username) {
+      return userRepository.findByUsernameIgnoreCase(username);
+  }
+
+  public Optional<AppUser> findByEmailIgnoreCase(String email) {
+    return userRepository.findByEmailIgnoreCase(email);
+  }
+
   public AppUser getByEmail(String email) {
     return userRepository.getByEmail(email);
   }
