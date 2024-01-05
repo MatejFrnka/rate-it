@@ -63,6 +63,24 @@ class InterestServiceTest extends BaseTest {
     assertSame(savedInterest.getCriteria(), updatedCriteria);
   }
 
+  @Test
+  void saveInterestWithoutChangingCriteria() {
+    List<String> criteriaNames = getOldCriteria().stream().map(Criterion::getName).toList();
+
+    Interest interest = Interest.builder().id(1L).criteria(getOldCriteria()).build();
+
+    when(interestRepository.getReferenceById(anyLong())).thenReturn(interest);
+    when(interestRepository.save(any())).thenReturn(interest);
+    when(criterionRepository.saveAll(any())).thenReturn(getOldCriteria());
+
+
+    Interest savedInterest = interestService.saveEditedInterest(interest, criteriaNames);
+
+    verify(criterionRepository, times(0)).deleteByNameAndInterestId(any(), any());
+
+    assertSame(savedInterest.getCriteria(), interest.getCriteria());
+  }
+
 //  @Test
 //  void saveNewInterest() {
 //    when(interestRepository.save(any())).thenAnswer(i -> i.getArgument(0));
