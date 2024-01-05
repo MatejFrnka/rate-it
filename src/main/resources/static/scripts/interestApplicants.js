@@ -3,7 +3,7 @@ let suggestionsData = [];
 window.addEventListener('load', async () => {
     try {
         const interestId = document.getElementById("interest-id").value
-        const response = await fetch(`/api/v1/interests/${interestId}/users`);
+        const response = await fetch(`/api/v1/interests/${interestId}/applications`);
         const data = await response.json();
         suggestionsData = data;
         loadAllSuggestions();
@@ -38,28 +38,55 @@ function loadAllSuggestions() {
             lastLetter = currentLetter;
         }
 
-        const kickForm = document.createElement('form');
-        kickForm.method = 'post';
+        const acceptForm = document.createElement('form');
+        acceptForm.method = 'post';
+        const putInput = document.createElement('input');
+        putInput.type = 'hidden';
+        putInput.name = '_method';
+        putInput.value = 'put';
+
+        acceptForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
+        acceptForm.appendChild(putInput);
+
+        const buttonAccept = document.createElement('img');
+        buttonAccept.src = "/icons/accept.svg";
+
+        const acceptButton = document.createElement('button');
+        acceptButton.id = 'accept-button';
+        acceptButton.appendChild(buttonAccept);
+        acceptButton.classList.add('role-option-button');
+        acceptButton.type = 'submit';
+        acceptForm.appendChild(acceptButton)
+
+        const roleDiv = document.createElement('div');
+        roleDiv.classList.add('role-section');
+
+        roleDiv.appendChild(acceptForm);
+
+
+
+        const rejectForm = document.createElement('form');
+        rejectForm.method = 'post';
         const delInput = document.createElement('input');
         delInput.type = 'hidden';
         delInput.name = '_method';
         delInput.value = 'delete';
 
-        kickForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
-        kickForm.appendChild(delInput);
+        rejectForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
+        rejectForm.appendChild(delInput);
 
-        const kickButton = document.createElement('button');
-        kickButton.textContent = 'KICK';
-        kickButton.classList.add('role-option-button');
-        kickButton.id = 'kick-button';
-        kickButton.type = 'submit';
-        kickForm.appendChild(kickButton)
+        const buttonCross = document.createElement('img');
+        buttonCross.src = "/icons/cross.svg";
 
-        const roleDiv = document.createElement('div');
-        roleDiv.classList.add('role-section');
-        // roleDiv.classList.add('col-3');
+        const rejectButton = document.createElement('button');
+        rejectButton.id = 'kick-button';
+        rejectButton.appendChild(buttonCross);
+        rejectButton.classList.add('role-option-button');
+        rejectButton.type = 'submit';
+        rejectForm.appendChild(rejectButton)
 
-        roleDiv.appendChild(kickForm);
+        roleDiv.appendChild(rejectForm);
+
 
         const entry = document.createElement('div');
         entry.classList.add('user-list-entry');
@@ -77,7 +104,6 @@ function loadAllSuggestions() {
 
         const record = document.createElement('div');
         record.classList.add('list-record');
-
 
         record.appendChild(entry);
         record.appendChild(roleDiv);
@@ -115,28 +141,55 @@ function getSuggestions(query) {
                 lastLetter = currentLetter;
             }
 
-            const kickForm = document.createElement('form');
-            kickForm.method = 'post';
+            const acceptForm = document.createElement('form');
+            acceptForm.method = 'post';
+            const putInput = document.createElement('input');
+            putInput.type = 'hidden';
+            putInput.name = '_method';
+            putInput.value = 'put';
+
+            acceptForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
+            acceptForm.appendChild(putInput);
+
+            const buttonAccept = document.createElement('img');
+            buttonAccept.src = "/icons/accept.svg";
+
+            const acceptButton = document.createElement('button');
+            acceptButton.id = 'accept-button';
+            acceptButton.appendChild(buttonAccept);
+            acceptButton.classList.add('role-option-button');
+            acceptButton.type = 'submit';
+            acceptForm.appendChild(acceptButton)
+
+            const roleDiv = document.createElement('div');
+            roleDiv.classList.add('role-section');
+
+            roleDiv.appendChild(acceptForm);
+
+
+
+            const rejectForm = document.createElement('form');
+            rejectForm.method = 'post';
             const delInput = document.createElement('input');
             delInput.type = 'hidden';
             delInput.name = '_method';
             delInput.value = 'delete';
 
-            kickForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
-            kickForm.appendChild(delInput);
+            rejectForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
+            rejectForm.appendChild(delInput);
 
-            const kickButton = document.createElement('button');
-            kickButton.textContent = 'KICK';
-            kickButton.classList.add('role-option-button');
-            kickButton.id = 'kick-button';
-            kickButton.type = 'submit';
-            kickForm.appendChild(kickButton)
+            const buttonCross = document.createElement('img');
+            buttonCross.src = "/icons/cross.svg";
 
-            const roleDiv = document.createElement('div');
-            roleDiv.classList.add('kick-section');
-            // roleDiv.classList.add('col-3');
+            const rejectButton = document.createElement('button');
+            rejectButton.id = 'kick-button';
+            rejectButton.appendChild(buttonCross);
+            rejectButton.classList.add('role-option-button');
+            rejectButton.type = 'submit';
+            rejectForm.appendChild(rejectButton)
 
-            roleDiv.appendChild(kickForm);
+            roleDiv.appendChild(rejectForm);
+
 
             const entry = document.createElement('div');
             entry.classList.add('user-list-entry');
@@ -154,7 +207,6 @@ function getSuggestions(query) {
 
             const record = document.createElement('div');
             record.classList.add('list-record');
-
 
             record.appendChild(entry);
             record.appendChild(roleDiv);

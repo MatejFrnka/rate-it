@@ -4,7 +4,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0 1rem 0 1rem;
+    /*padding: 0 1rem 0 1rem;*/
     gap: 0.5rem;
 }
 
@@ -17,20 +17,28 @@
     gap: 0.3rem;
 }
 
-.kick-section {
+.role-section {
     display: flex;
+    gap: 0.5rem;
 }
 
-.kick-button {
+.role-option-button {
     display: flex;
     text-align: center;
     align-content: center;
-    background-color: #E88C8C;
     border-radius: 0.5rem;
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     color: white;
     border: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 0.3em 1em 0.3em 1em;
+    padding: 0.5rem;
+}
+
+#kick-button {
+    background-color: #E88C8C;
+}
+
+#accept-button {
+    background-color: #568D73;
 }
