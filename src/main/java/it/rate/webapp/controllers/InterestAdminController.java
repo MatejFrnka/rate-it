@@ -7,7 +7,6 @@ import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.ManageInterestService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -30,11 +28,7 @@ public class InterestAdminController {
   @GetMapping("/edit")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
-    Optional<Interest> interest = interestService.findInterestById(interestId);
-    if (interest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
-    }
-    model.addAttribute("interest", interest.get());
+    model.addAttribute("interest", interestService.getById(interestId));
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
     if (principal != null) {
@@ -58,20 +52,11 @@ public class InterestAdminController {
 
   @GetMapping("/users")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal)
-      throws BadRequestException {
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
-    if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
-    }
+  public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal) {
     if (principal != null) {
-      model.addAttribute(
-          "loggedUser",
-          userService
-              .findByEmail(principal.getName())
-              .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
-    model.addAttribute("interest", optInterest.get());
+    model.addAttribute("interest", interestService.getById(interestId));
     return "interest/users";
   }
 
@@ -92,26 +77,18 @@ public class InterestAdminController {
 
   @GetMapping("/invite")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal)
-          throws BadRequestException {
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
-    if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
-    }
+  public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
     if (principal != null) {
-      model.addAttribute(
-              "loggedUser",
-              userService
-                      .findByEmail(principal.getName())
-                      .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
-    model.addAttribute("interest", optInterest.get());
+    model.addAttribute("interest", interestService.getById(interestId));
     return "interest/invite";
   }
 
   @PostMapping("/invite")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String inviteUser(@PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
+  public String inviteUser(
+      @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
     try {
       manageInterestService.inviteUser(interestId, inviteBy, user, Role.RoleType.VOTER);
       ra.addFlashAttribute("status", "Invite successfully sent");

@@ -30,6 +30,10 @@ public class InterestService {
     return interestRepository.findById(id);
   }
 
+  public Interest getById(Long id) {
+    return interestRepository.getReferenceById(id);
+  }
+
   public boolean isLiked(Long userId, Long interestId) {
     return likeRepository.existsById(new LikeId(userId, interestId));
   }
