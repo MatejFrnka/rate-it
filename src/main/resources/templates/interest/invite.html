@@ -46,16 +46,37 @@
             <h1>Applications</h1>
         </div>
         <div class="search-container" id="list-search">
-            <input type="text" class="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
+            <input type="text" class="search" name="query" oninput="loadResults(this.value)" autocomplete="off"
                    placeholder="Find user…">
             <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
         </div>
         <div class="items-list" id="interest-users-container"></div>
-
-
+        <template>
+            <div class="list-record">
+                <div class="user-list-entry col-8">
+                    <img src="/icons/list-user.svg" alt="User">
+                    <h5></h5>
+                </div>
+                <div class="role-section">
+                    <form method="post">
+                        <input type="hidden" name="_method" value="put">
+                        <button class="role-option-button accept-button" type="submit">
+                            <img src="/icons/accept.svg">
+                        </button>
+                    </form>
+                    <form method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button class="role-option-button kick-button" type="submit">
+                            <img src="/icons/cross.svg">
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </template>
     </div>
 </div>
 <input type="hidden" id="interest-id" th:value="${interest.id}">
-<script th:src="@{/scripts/interestApplicants.js}"></script>
+<input type="hidden" id="api" value="applications">
+<script th:src="@{/scripts/interestUsers.js}"></script>
 </body>
 </html>

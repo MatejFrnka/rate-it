@@ -3,7 +3,8 @@ let data = [];
 window.addEventListener('load', async () => {
     try {
         const interestId = document.getElementById("interest-id").value
-        const response = await fetch(`/api/v1/interests/${interestId}/users`);
+        const endpoint = document.getElementById('api').value
+        const response = await fetch(`/api/v1/interests/${interestId}/${endpoint}`);
         const jsonData = await response.json();
         data = jsonData;
         loadResults();
@@ -11,7 +12,11 @@ window.addEventListener('load', async () => {
         console.error('Error fetching suggestions:', error);
     }
 })
-document.addEventListener('DOMContentLoaded', () => loadResults());
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.split('/').pop() === 'invite') getInviteType();
+    loadResults();
+});
 
 function loadResults(query) {
     const container = document.querySelector('#interest-users-container');
@@ -39,11 +44,23 @@ function loadResults(query) {
             container.appendChild(section);
             lastLetter = currentLetter;
         }
-        let forms = clone.querySelectorAll('form');
-        forms[forms.length -1].action = `/interests/${record.interestId}/admin/users/${record.userId}`;
+        let listRecords = clone.querySelectorAll('.list-record');
+        let forms = listRecords[listRecords.length - 1].querySelectorAll('form');
+        forms.forEach(form => form.action = `/interests/${record.interestId}/admin/users/${record.userId}`);
+
         clone.querySelector('h5').textContent = record.userName;
         section.appendChild(clone);
     })
+}
+
+function getInviteType() {
+    const inviteForm = document.getElementById('toggle')
+    const inviteType = document.getElementById('type')
+    if (inviteForm.checked) {
+        inviteType.value = 'username'
+    } else {
+        inviteType.value = 'email'
+    }
 }
 
 function isEmptyOrSpaces(str) {
