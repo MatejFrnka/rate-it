@@ -1,167 +1,49 @@
-let suggestionsData = [];
+let data = [];
 
 window.addEventListener('load', async () => {
     try {
         const interestId = document.getElementById("interest-id").value
         const response = await fetch(`/api/v1/interests/${interestId}/users`);
-        const data = await response.json();
-        suggestionsData = data;
-        loadAllSuggestions();
+        const jsonData = await response.json();
+        data = jsonData;
+        loadResults();
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
-});
+})
+document.addEventListener('DOMContentLoaded', () => loadResults());
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadAllSuggestions();
-});
-
-function loadAllSuggestions() {
-    const suggestionContainer = document.querySelector('#interest-users-container');
-    suggestionContainer.innerHTML = '';
-
+function loadResults(query) {
+    const container = document.querySelector('#interest-users-container');
+    container.innerHTML = '';
+    const template = document.getElementsByTagName('template')[0];
     let lastLetter = null;
     let section = null;
+    let dataSet = data;
 
-    suggestionsData.forEach(suggestion => {
-        const currentLetter = suggestion.userName.charAt(0).toUpperCase();
+    if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
+        dataSet = data.filter(record => record.userName.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    dataSet.forEach(record => {
+        let currentLetter = record.userName.charAt(0).toUpperCase();
+        const clone = template.content.cloneNode(true);
 
         if (currentLetter !== lastLetter) {
-            const letter = document.createElement('h3');
-            letter.textContent = currentLetter;
-            suggestionContainer.appendChild(letter);
+            const h3 = document.createElement('h3');
+            h3.textContent = currentLetter;
+            container.appendChild(h3);
 
             section = document.createElement('section');
             section.classList.add('interest-list-section');
-            suggestionContainer.appendChild(section);
-
+            container.appendChild(section);
             lastLetter = currentLetter;
         }
-
-        const kickForm = document.createElement('form');
-        kickForm.method = 'post';
-        const delInput = document.createElement('input');
-        delInput.type = 'hidden';
-        delInput.name = '_method';
-        delInput.value = 'delete';
-
-        kickForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
-        kickForm.appendChild(delInput);
-
-        const kickButton = document.createElement('button');
-        kickButton.textContent = 'KICK';
-        kickButton.classList.add('role-option-button');
-        kickButton.id = 'kick-button';
-        kickButton.type = 'submit';
-        kickForm.appendChild(kickButton)
-
-        const roleDiv = document.createElement('div');
-        roleDiv.classList.add('role-section');
-
-        roleDiv.appendChild(kickForm);
-
-        const entry = document.createElement('div');
-        entry.classList.add('user-list-entry');
-        entry.classList.add('col-9');
-
-        const userIcon = document.createElement('img');
-        userIcon.src = "/icons/list-user.svg";
-        userIcon.alt = "User";
-
-        const userName = document.createElement('h5');
-        userName.textContent = suggestion.userName;
-
-        entry.appendChild(userIcon);
-        entry.appendChild(userName);
-
-        const record = document.createElement('div');
-        record.classList.add('list-record');
-
-
-        record.appendChild(entry);
-        record.appendChild(roleDiv);
-
-        section.appendChild(record);
-    });
-
-    document.getElementById('suggestions').style.display = 'block';
-}
-
-function getSuggestions(query) {
-    const suggestionContainer = document.querySelector('#interest-users-container');
-    suggestionContainer.innerHTML = '';
-
-    let lastLetter = null;
-    let section = null;
-
-    if (!isEmptyOrSpaces(query)) {
-        const filteredSuggestions = suggestionsData.filter(suggestion =>
-            suggestion.userName.toLowerCase().includes(query.toLowerCase())
-        );
-
-        filteredSuggestions.forEach(suggestion => {
-            const currentLetter = suggestion.userName.charAt(0).toUpperCase();
-
-            if (currentLetter !== lastLetter) {
-                const letter = document.createElement('h3');
-                letter.textContent = currentLetter;
-                suggestionContainer.appendChild(letter);
-
-                section = document.createElement('section');
-                section.classList.add('interest-list-section');
-                suggestionContainer.appendChild(section);
-
-                lastLetter = currentLetter;
-            }
-
-            const kickForm = document.createElement('form');
-            kickForm.method = 'post';
-            const delInput = document.createElement('input');
-            delInput.type = 'hidden';
-            delInput.name = '_method';
-            delInput.value = 'delete';
-
-            kickForm.action = `/interests/${suggestion.interestId}/admin/users/${suggestion.userId}`;
-            kickForm.appendChild(delInput);
-
-            const kickButton = document.createElement('button');
-            kickButton.textContent = 'KICK';
-            kickButton.classList.add('role-option-button');
-            kickButton.id = 'kick-button';
-            kickButton.type = 'submit';
-            kickForm.appendChild(kickButton)
-
-            const roleDiv = document.createElement('div');
-            roleDiv.classList.add('kick-section');
-            roleDiv.appendChild(kickForm);
-
-            const entry = document.createElement('div');
-            entry.classList.add('user-list-entry');
-            entry.classList.add('col-9');
-
-            const userIcon = document.createElement('img');
-            userIcon.src = "/icons/list-user.svg";
-            userIcon.alt = "User";
-
-            const userName = document.createElement('h5');
-            userName.textContent = suggestion.userName;
-
-            entry.appendChild(userIcon);
-            entry.appendChild(userName);
-
-            const record = document.createElement('div');
-            record.classList.add('list-record');
-
-            record.appendChild(entry);
-            record.appendChild(roleDiv);
-
-            section.appendChild(record);
-        });
-    } else {
-        loadAllSuggestions();
-    }
-
-    document.getElementById('suggestions').style.display = 'block';
+        let forms = clone.querySelectorAll('form');
+        forms[forms.length -1].action = `/interests/${record.interestId}/admin/users/${record.userId}`;
+        clone.querySelector('h5').textContent = record.userName;
+        section.appendChild(clone);
+    })
 }
 
 function isEmptyOrSpaces(str) {

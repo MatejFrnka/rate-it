@@ -525,11 +525,11 @@ h4 {
     padding: 0.5rem;
 }
 
-#kick-button {
+.kick-button {
     background-color: #E88C8C;
 }
 
-#accept-button {
+.accept-button {
     background-color: #568D73;
 }
 
