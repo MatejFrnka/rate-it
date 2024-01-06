@@ -37,22 +37,14 @@ public class InterestRestController {
   @GetMapping("/{interestId}/users")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public ResponseEntity<?> getVotersByInterestId(@PathVariable Long interestId) {
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
-    if (optInterest.isEmpty()) {
-      return ResponseEntity.badRequest().body("Interest not found");
-    }
-    Interest interest = optInterest.get();
+    Interest interest = interestService.getById(interestId);
     return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.VOTER));
   }
 
   @GetMapping("/{interestId}/applications")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public ResponseEntity<?> getApplicantsByInterestId(@PathVariable Long interestId) {
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
-    if (optInterest.isEmpty()) {
-      return ResponseEntity.badRequest().body("Interest not found");
-    }
-    Interest interest = optInterest.get();
+    Interest interest = interestService.getById(interestId);
     return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.APPLICANT));
   }
 }
