@@ -4,10 +4,7 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
-import it.rate.webapp.services.CreateInterestService;
-import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.RoleService;
-import it.rate.webapp.services.UserService;
+import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,6 +26,7 @@ public class InterestController {
   private CreateInterestService interestCreationService;
   private UserService userService;
   private RoleService roleService;
+  private PlaceService placeService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -77,6 +75,7 @@ public class InterestController {
       }
     }
     model.addAttribute("interest", interest.get());
+    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
     return "interest/page";
   }
 

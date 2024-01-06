@@ -67,6 +67,10 @@ body {
     min-height: 100vh;
 }
 
+.content-interest {
+    padding-top: 0;
+}
+
 .mainpage-content {
     gap: 2rem;
 }
@@ -112,6 +116,11 @@ h3 {
 
 .button:hover {
     background-color: #3e6652;
+}
+
+.place-interest {
+    text-decoration: none;
+    color: #000000;
 }
 
 .place-header > .rating {
@@ -310,12 +319,29 @@ h3 {
     padding-left: 0;
 }
 
+.interest-place-ratings li {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
 .interest-place-ratings i {
     color: #bebebe;
+    width: 2rem;
+    text-align: center;
+}
+
+.interest-place-ratings i.overall {
+    font-size: 120%;
 }
 
 .interest-place-ratings i.yellow {
    color: #EFBB00;
+}
+
+.interest-place-ratings .rating {
+    display: block;
+    width: 2rem;
 }
 
 .interest-place > img {
@@ -398,7 +424,7 @@ h3 {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, #E2E2E2, rgba(227, 227, 227, 0.8) 15%, transparent 30%, transparent 100%);
+    background: linear-gradient(to top, #E2E2E2, rgba(227, 227, 227, 0.8) 4%, transparent 35%, transparent 100%);
 }
 
 .interest-button-bar {

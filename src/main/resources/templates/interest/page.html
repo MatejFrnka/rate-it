@@ -44,7 +44,7 @@
         <img src="https://picsum.photos/500/300" alt="placeholder"/>
     </div>
 
-    <div class="content">
+    <div class="content content-interest">
         <div class="d-flex justify-content-around interest-button-bar">
             <a class="button">Map</a>
             <a class="button" th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
@@ -64,21 +64,28 @@
         <ul>
             <li th:each="criterion : ${interest.criteria}" th:text="${criterion.name}"></li>
         </ul>
-        <section class="interest-places-section">
+        <section class="interest-places-section"
+                 th:unless="${places.isEmpty()}">
             <h2>Places</h2>
+
+<!--            TODO: add filters-->
+            <div>Filter categories placeholder</div>
+
+<!--            TODO: add search bar-->
+            <div>Search bar placeholder</div>
 
             <div class="interest-places">
                 <a class="interest-place"
-                   th:each="place : *{places}"
-                   th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
+                   th:each="place : ${places}"
+                   th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.place().id})}"
                 >
                     <img src="https://picsum.photos/400/300" alt="placeholder"/>
 
                     <div class="interest-place-content">
                         <header class="interest-place-header">
                             <div class="interest-place-title">
-                                <h3 th:text="${place.name}"></h3>
-                                <h4 th:text="${place.address}"></h4>
+                                <h3 th:text="${place.place().name}"></h3>
+                                <h4 th:text="${place.place().address}"></h4>
                             </div>
 
                             <div class="interest-place-distance">
@@ -88,11 +95,31 @@
 
                         <ul class="interest-place-ratings">
                             <li>
-                                <i class="fas fa-star yellow"></i> Overall: <strong>2.1</strong>
+                                <i class="fas fa-star overall yellow"></i>
+                                <strong class="rating"
+                                        th:text="${#numbers.formatDecimal(place.place().getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}">
+                                </strong>
+                                <strong class="criterion">Overall</strong>
                             </li>
 
                             <li>
-                                <i class="fas fa-star"></i> Křupavost: <strong>5.2</strong>
+                                <i class="fas fa-star yellow"></i>
+                                <span class="rating"
+                                      th:text="${#numbers.formatDecimal(place.bestRatedCriterion().avgRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}">
+                                </span>
+                                <span class="criterion"
+                                      th:text="${place.bestRatedCriterion().criterion().name}">
+                                </span>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-star"></i>
+                                <span class="rating"
+                                      th:text="${#numbers.formatDecimal(place.worstRatedCriterion().avgRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}">
+                                </span>
+                                <span class="criterion"
+                                      th:text="${place.worstRatedCriterion().criterion().name}">
+                                </span>
                             </li>
                         </ul>
                     </div>
