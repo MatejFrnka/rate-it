@@ -1,158 +1,56 @@
-let suggestionsData = [];
+let data = [];
 
 window.addEventListener('load', async () => {
     try {
-        const response = await fetch('/api/v1/interests/my');
-        const data = await response.json();
-        suggestionsData = data;
-        loadAllSuggestions();
+        const response = await fetch(`/api/v1/interests/my`);
+        const jsonData = await response.json();
+        data = jsonData;
+        loadResults();
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
-});
+})
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadAllSuggestions();
+    loadResults();
 });
 
-function loadAllSuggestions() {
-    const suggestionContainer = document.querySelector('#my-interests-container');
-    suggestionContainer.innerHTML = '';
-
+function loadResults(query) {
+    const container = document.querySelector('#my-interests-container');
+    container.innerHTML = '';
+    const template = document.getElementsByTagName('template')[0];
     let lastLetter = null;
     let section = null;
+    let dataSet = data;
 
-    suggestionsData.forEach(suggestion => {
-        const currentLetter = suggestion.name.charAt(0).toUpperCase();
+    if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
+        dataSet = data.filter(interest => interest.name.toLowerCase().includes(query.toLowerCase()));
+    }
 
+    dataSet.forEach(interest => {
+        let currentLetter = interest.name.charAt(0).toUpperCase();
+        const clone= template.content.cloneNode(true);
         if (currentLetter !== lastLetter) {
-            const letter = document.createElement('h3');
-            letter.textContent = currentLetter;
-            suggestionContainer.appendChild(letter);
+            const h3 = document.createElement('h3');
+            h3.textContent = currentLetter;
+            container.appendChild(h3);
 
             section = document.createElement('section');
             section.classList.add('interest-list-section');
-            suggestionContainer.appendChild(section);
-
+            container.appendChild(section);
             lastLetter = currentLetter;
         }
-
-        const starIcon = document.createElement("img");
-        starIcon.src = "/icons/star.svg";
-        starIcon.alt = "following";
-
-        const creatorIcon = document.createElement("img");
-        creatorIcon.src = "/icons/interest-user.svg";
-        creatorIcon.alt = "Interest creator";
-
-        const creatorName = document.createTextNode(suggestion.creator);
-        const followingNumber = document.createTextNode(suggestion.followers);
-
-        const entry = document.createElement('div');
-        entry.classList.add('interest-list-entry');
-
-        const interestName = document.createElement('h5');
-        interestName.textContent = suggestion.name;
-
-        const interestCreatorLikes = document.createElement('div');
-        interestCreatorLikes.classList.add('interest-creator-likes');
-
-        const followers = document.createElement('h6');
-        followers.appendChild(followingNumber);
-        followers.appendChild(starIcon);
-
-        const creator = document.createElement('h6');
-        creator.appendChild(creatorName);
-        creator.appendChild(creatorIcon);
-
-        interestCreatorLikes.appendChild(followers);
-        interestCreatorLikes.appendChild(creator);
-
-        entry.appendChild(interestName);
-        entry.appendChild(interestCreatorLikes);
-
-        entry.addEventListener('click', () => {
-            window.location.href = `/interests/${suggestion.id}`;
-        });
-
-        section.appendChild(entry);
-    });
-
-    document.getElementById('suggestions').style.display = 'block';
-}
-
-function getSuggestions(query) {
-    const suggestionContainer = document.querySelector('#my-interests-container');
-    suggestionContainer.innerHTML = '';
-
-    let lastLetter = null;
-    let section = null;
-
-    if (!isEmptyOrSpaces(query)) {
-        const filteredSuggestions = suggestionsData.filter(suggestion =>
-            suggestion.name.toLowerCase().includes(query.toLowerCase())
-        );
-
-        filteredSuggestions.forEach(suggestion => {
-            const currentLetter = suggestion.name.charAt(0).toUpperCase();
-
-            if (currentLetter !== lastLetter) {
-                const letter = document.createElement('h3');
-                letter.textContent = currentLetter;
-                suggestionContainer.appendChild(letter);
-
-                section = document.createElement('section');
-                section.classList.add('interest-list-section');
-                suggestionContainer.appendChild(section);
-
-                lastLetter = currentLetter;
-            }
-
-            const starIcon = document.createElement("img");
-            starIcon.src = "/icons/star.svg";
-            starIcon.alt = "following";
-
-            const creatorIcon = document.createElement("img");
-            creatorIcon.src = "/icons/interest-user.svg";
-            creatorIcon.alt = "Interest creator";
-
-            const creatorName = document.createTextNode(suggestion.creator);
-            const followingNumber = document.createTextNode(suggestion.followers);
-
-            const entry = document.createElement('div');
-            entry.classList.add('interest-list-entry');
-
-            const interestName = document.createElement('h5');
-            interestName.textContent = suggestion.name;
-
-            const interestCreatorLikes = document.createElement('div');
-            interestCreatorLikes.classList.add('interest-creator-likes');
-
-            const followers = document.createElement('h6');
-            followers.appendChild(followingNumber);
-            followers.appendChild(starIcon);
-
-            const creator = document.createElement('h6');
-            creator.appendChild(creatorName);
-            creator.appendChild(creatorIcon);
-
-            interestCreatorLikes.appendChild(followers);
-            interestCreatorLikes.appendChild(creator);
-
-            entry.appendChild(interestName);
-            entry.appendChild(interestCreatorLikes);
-
-            entry.addEventListener('click', () => {
-                window.location.href = `/interests/${suggestion.id}`;
-            });
-
-            section.appendChild(entry);
-        });
-    } else {
-        loadAllSuggestions();
-    }
-
-    document.getElementById('suggestions').style.display = 'block';
+        clone.querySelector('h5').textContent = interest.name;
+        const followers = document.createTextNode(`${interest.followers}`);
+        const creator = document.createTextNode(`${interest.creator}`);
+        const h6s = clone.querySelector('.interest-creator-likes').querySelectorAll('h6');
+        clone.querySelector('.interest-list-entry').addEventListener('click', () => {
+            window.location.href = `/interests/${interest.id}`
+        })
+        h6s[0].insertBefore(creator, h6s[0].firstChild);
+        h6s[1].insertBefore(followers, h6s[1].firstChild);
+        section.appendChild(clone);
+    })
 }
 
 function isEmptyOrSpaces(str) {
