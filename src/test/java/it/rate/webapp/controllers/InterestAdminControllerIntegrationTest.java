@@ -9,12 +9,14 @@ import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
 
 import it.rate.webapp.services.ManageInterestService;
+import it.rate.webapp.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +35,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private InterestRepository interestRepository;
   @MockBean private ManageInterestService manageInterestService;
+  @MockBean private UserService userService;
 
   @Test
   @WithMockUser(
@@ -128,6 +131,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
+
+    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
@@ -140,6 +145,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
+
+    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
@@ -152,6 +159,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
+
+    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
@@ -164,6 +173,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isForbidden())
         .andReturn();
+
+    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
@@ -176,6 +187,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isNotFound())
         .andReturn();
+
+    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
@@ -184,10 +197,13 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
       authorities = {"USER", "ROLE_CREATOR_1"})
   void editUsersReturnsSuccessStatusForCreator() throws Exception {
     Long interestId = 1L;
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isOk())
         .andReturn();
+
+    verify(userService, times(1)).getByEmail(email);
   }
 
   @Test
@@ -196,10 +212,13 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
       authorities = {"ADMIN"})
   void editUsersReturnsSuccessForAdmin() throws Exception {
     Long interestId = 1L;
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
         .andExpect(status().isOk())
         .andReturn();
+
+    verify(userService, times(1)).getByEmail(email);
   }
 
   @Test
