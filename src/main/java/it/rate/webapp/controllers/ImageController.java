@@ -17,19 +17,21 @@ public class ImageController {
   @PostMapping("interests/{interestId}/places/{placeId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#placeId))")
   public String uploadPlaceImage(
-      @RequestParam("picture") MultipartFile file, @PathVariable Long interestId, @PathVariable Long placeId) {
-      
-      // Testing purposes
-      String testUploadDirectory =
-              "C:\\Users\\Bened\\OneDrive\\Plocha\\testImageFolder\\" + file.getOriginalFilename();
+      @RequestParam("picture") MultipartFile file,
+      @PathVariable Long interestId,
+      @PathVariable Long placeId) {
 
-      try {
-          Path pathToDirectory = Paths.get(testUploadDirectory);
-          file.transferTo(pathToDirectory);
-      } catch (IOException e) {
-          throw new RuntimeException(e);
-      }
+    // Testing purposes
+    String testUploadDirectory =
+        "C:\\Users\\Bened\\OneDrive\\Plocha\\testImageFolder\\" + file.getOriginalFilename();
 
-      return "redirect:/interests/" + interestId + "/places/" + placeId;
+    try {
+      Path pathToDirectory = Paths.get(testUploadDirectory);
+      file.transferTo(pathToDirectory);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    return "redirect:/interests/" + interestId + "/places/" + placeId;
   }
 }
