@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:if="${interest.id == null}" th:text="'New Interest | RateSpot'"></title>
-    <title th:unless="${interest.id == null}" th:text="${interest.name} + ' Edit Mode | RateSpot '"></title>
+    <title th:unless="${interest.id == null}" th:text="'Editing... ' + ${interest.name} + ' | RateSpot '"></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/styles/index.css}">
@@ -22,7 +22,7 @@
         <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
               th:method="${method}">
             <h2 th:if="${interest.id == null}">New Interest</h2>
-            <h2 th:unless="${interest.id == null}" th:text="${interest.name} + ' Edit'"></h2>
+            <h2 th:unless="${interest.id == null}" th:text="'Editing... ' + ${interest.name}"></h2>
             <section class="input-param">
                 <h4>Name</h4>
                 <label>
