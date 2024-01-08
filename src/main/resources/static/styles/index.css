@@ -464,15 +464,6 @@ h4 {
     display: flex;
 }
 
-.delete-button {
-    width: 2.8rem;
-    height: 2.5rem;
-    border: none;
-    background: url('../icons/delete.svg') center center no-repeat;
-    background-size: cover;
-    cursor: pointer;
-}
-
 .new-place-map {
     width: 100%;
     aspect-ratio: 16/3;
