@@ -23,18 +23,20 @@
     <div class="content">
         <!--        <a th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit-->
         <!--            Place</a>-->
-
-        <h2 th:text="*{getInterest.name}"></h2>
+        <a class="place-interest"
+           th:href="@{/interests/{interestId}(interestId=${place.interest.id})}">
+            <h2 th:text="*{getInterest.name}"></h2>
+        </a>
 
         <div class="place-image">
             <img src="https://picsum.photos/500/300" alt="placeholder"/>
         </div>
 
-        <header class="place-header">
+        <header class="content-header place-header">
             <h1 th:text="*{name}"></h1>
             <div class="rating">
                 <i class="fas fa-star"></i>
-                <span th:text="${#numbers.formatDecimal(place.getAverageRating(), 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+                <span th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
             </div>
         </header>
 
@@ -51,7 +53,7 @@
 
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
-                            <span th:text="${#numbers.formatDecimal(criterionDTO.avgRating, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+                            <span th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
                         </div>
 
                         <div th:if="${usersRatings}">
@@ -72,10 +74,10 @@
                 </div>
 
                 <div th:if="${usersRatings}" class="place-rating-button-bar">
-                    <a id="uppy-modal" href="#" type="button" class="place-rating-button" style="text-decoration: none">
+                    <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
                         Upload photo</a>
                     <div id="uppy"></div>
-                    <button class="place-rating-button" type="submit">Rate</button>
+                    <button class="button" type="submit">Rate</button>
                 </div>
             </form>
 
@@ -83,7 +85,7 @@
             <form th:unless="${usersRatings}"
                   th:action="@{/interests/{id}/request(id=${place.interest.id})}"
                   th:method="post">
-                <button class="place-rating-button" type="submit">Request rate access</button>
+                <button class="button" type="submit">Request rate access</button>
             </form>
         </section>
 

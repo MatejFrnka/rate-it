@@ -1,64 +1,56 @@
 // https://medium.com/geekculture/how-to-build-a-simple-star-rating-system-abcbb5117365
 
-document.addEventListener('DOMContentLoaded', function(){
-    (function(){
-        let sr = document.querySelectorAll('.place-rating-star');
-        let i = 0;
+const STARS = 10;
 
-        //loop through stars
-        while (i < sr.length){
-            //attach click event
-            sr[i].addEventListener('mouseover', function(){
-                let currentStars = this.parentElement;
-                // add hover class to all preceding stars
-                let starNumber = parseInt(this.getAttribute("data-star"));
-                // get preceding stars
-                for (let j = 1; j <= starNumber; j++){
-                    // check if the classlist contains the active class, if not, add the class
-                    if(!currentStars.querySelector('.star-'+j).classList.contains('hover')){
-                        currentStars.querySelector('.star-'+j).classList.add('hover');
-                    }
-                }
-            });
+function addClassToStars(stars, rating, className){
+    //loop through and set the active class on preceding stars
+    for (let i = 1; i <= STARS; i++){
+        if (i <= rating) {
+            //check if the classlist contains the active class, if not, add the class
+            if(!stars.querySelector('.star-'+i).classList.contains(className)){
+                stars.querySelector('.star-'+i).classList.add(className);
+            }
+        } else {
+            //check if the classlist contains the active class, if yes, remove the class
+            if(stars.querySelector('.star-'+i).classList.contains(className)){
+                stars.querySelector('.star-'+i).classList.remove(className);
+            }
+        }
+    }
+}
 
-            sr[i].addEventListener('mouseout', function(){
-                let currentStars = this.parentElement;
-                // remove hover class from all preceding stars
-                let starNumber = parseInt(this.getAttribute("data-star"));
-                // get preceding stars
-                for (let j = 1; j <= starNumber; j++){
-                    //check if the classlist contains the active class, if yes, remove the class
-                    if(currentStars.querySelector('.star-'+j).classList.contains('hover')){
-                        currentStars.querySelector('.star-'+j).classList.remove('hover');
-                    }
-                }
-            })
+function initializeRating(){
+    let placeRatingStars = document.querySelectorAll('.place-rating-star');
 
-            sr[i].addEventListener('click', function(){
-                let currentStars = this.parentElement;
-                //current star
-                let starNumber = parseInt(this.getAttribute("data-star"));
-                //output current clicked star value
-                let input = currentStars.parentElement.querySelector('input');
-                input.value = starNumber;
+    placeRatingStars.forEach(function(star){
+        //attach click event
+        star.addEventListener('mouseover', function(){
+            let stars = this.parentElement;
+            stars.classList.add('hover');
 
-                //loop through and set the active class on preceding stars
-                for (let i = 1; i <= 10; i++){
-                    if (i <= starNumber) {
-                        //check if the classlist contains the active class, if not, add the class
-                        if(!currentStars.querySelector('.star-'+i).classList.contains('is-active')){
-                            currentStars.querySelector('.star-'+i).classList.add('is-active');
-                        }
-                    } else {
-                        //check if the classlist contains the active class, if yes, remove the class
-                        if(currentStars.querySelector('.star-'+i).classList.contains('is-active')){
-                            currentStars.querySelector('.star-'+i).classList.remove('is-active');
-                        }
-                    }
+            // add hover class to all preceding stars
+            let rating = parseInt(this.getAttribute("data-star"));
+            addClassToStars(stars, rating, 'hover-active');
+        });
 
-                }
-            })//end of click event
-            i++;
-        }//end of while loop
-    })();//end of function
-})
+        star.addEventListener('mouseout', function(){
+            let stars = this.parentElement;
+            stars.classList.remove('hover');
+            for (let j = 1; j <= STARS; j++){
+                stars.querySelector('.star-'+j).classList.remove('hover-active');
+            }
+        })
+
+        star.addEventListener('click', function(){
+            let stars = this.parentElement;
+            let input = stars.parentElement.querySelector('input');
+            let rating = parseInt(this.getAttribute("data-star"));
+
+            input.value = rating;
+
+            addClassToStars(stars, rating, 'is-active');
+        })
+    })
+}
+
+document.addEventListener('DOMContentLoaded', initializeRating);

@@ -4,10 +4,7 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
-import it.rate.webapp.services.CreateInterestService;
-import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.RoleService;
-import it.rate.webapp.services.UserService;
+import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,10 +22,11 @@ import java.util.Optional;
 @RequestMapping("/interests")
 public class InterestController {
 
-  private InterestService service;
+  private InterestService interestService;
   private CreateInterestService interestCreationService;
   private UserService userService;
   private RoleService roleService;
+  private PlaceService placeService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -56,9 +54,9 @@ public class InterestController {
     return "redirect:/interests/{id}";
   }
 
-  @GetMapping("/{id}")
-  public String interestView(Model model, @PathVariable Long id, Principal principal) {
-    Optional<Interest> interest = service.findInterestById(id);
+  @GetMapping("/{interestId}")
+  public String interestView(Model model, @PathVariable Long interestId, Principal principal) {
+    Optional<Interest> interest = interestService.findInterestById(interestId);
     if (interest.isEmpty()) {
       model.addAttribute("message", "This interest doesn't exist");
       return "error/page";
@@ -67,33 +65,31 @@ public class InterestController {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
 
-      model.addAttribute("loggedIn", true);
-      model.addAttribute("like", service.isLiked(loggedUser.getId(), id));
+      model.addAttribute("loggedUser", loggedUser);
+      model.addAttribute("like", interestService.isLiked(loggedUser.getId(), interestId));
 
       Optional<Role> loggedUserRole =
-          roleService.findByAppUserIdAndInterestId(loggedUser.getId(), id);
+          roleService.findByAppUserIdAndInterestId(loggedUser.getId(), interestId);
       if (loggedUserRole.isPresent()) {
         model.addAttribute("loggedUserRole", loggedUserRole.get());
       }
-
-    } else {
-      model.addAttribute("loggedIn", false);
     }
     model.addAttribute("interest", interest.get());
+    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
     return "interest/page";
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-  @PostMapping("/{id}/like")
-  public String like(@PathVariable Long id, String likeOrDislike) {
-    service.changeLikeValue(id, likeOrDislike);
-    return "redirect:/interests/" + id;
+  @PostMapping("/{interestId}/like")
+  public String like(@PathVariable Long interestId, String likeOrDislike) {
+    interestService.changeLikeValue(interestId, likeOrDislike);
+    return "redirect:/interests/" + interestId;
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{interestId}/request")
   public String applyForVoterAuthority(@PathVariable Long interestId) {
-    service.setApplicantRole(interestId);
+    interestService.setApplicantRole(interestId);
     return "redirect:/interests/{interestId}";
   }
 
@@ -106,7 +102,8 @@ public class InterestController {
           userService
               .findByEmail(principal.getName())
               .orElseThrow(() -> new RuntimeException("Email not found in the database")));
-      model.addAttribute("likedInterests", service.getLikedInterestsDTOS(principal.getName()));
+      model.addAttribute(
+          "likedInterests", interestService.getLikedInterestsDTOS(principal.getName()));
     }
     return "interest/seeAll";
   }

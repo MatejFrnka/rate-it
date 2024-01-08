@@ -2,6 +2,7 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
+import it.rate.webapp.dtos.PlaceInfoDTO;
 import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
@@ -9,9 +10,10 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,6 @@ public class PlaceService {
   private UserService userService;
   private InterestService interestService;
   private RatingRepository ratingRepository;
-
 
   public Place savePlace(Place place, Long interestId) throws BadRequestException {
     String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -70,16 +71,58 @@ public class PlaceService {
   }
 
   public CriteriaOfPlaceDTO getCriteriaOfPlaceDTO(Place place) {
-    List<Criterion> criteria = place.getInterest().getCriteria();
     List<CriterionAvgRatingDTO> criteriaAvgRatingDTOs = new ArrayList<>();
-    criteria.forEach(criterion -> {
-      double avgRating = ratingRepository.findAllByCriterionAndPlace(criterion, place)
-              .stream()
-              .mapToDouble(Rating::getScore)
-              .average()
-              .orElse(-1);
-      criteriaAvgRatingDTOs.add(new CriterionAvgRatingDTO(criterion, avgRating));
-    });
+
+    place
+        .getInterest()
+        .getCriteria()
+        .forEach(
+            criterion -> criteriaAvgRatingDTOs.add(getCriterionAvgRatingDTO(criterion, place)));
+
     return new CriteriaOfPlaceDTO(criteriaAvgRatingDTOs);
+  }
+
+  public List<PlaceInfoDTO> getPlaceInfoDTOS(Interest interest) {
+    return interest.getPlaces().stream().map(this::getPlaceInfoDTO).collect(Collectors.toList());
+  }
+
+  private PlaceInfoDTO getPlaceInfoDTO(Place place) {
+    Set<CriterionAvgRatingDTO> criteria =
+        place.getInterest().getCriteria().stream()
+            .map(criterion -> getCriterionAvgRatingDTO(criterion, place))
+            .collect(Collectors.toSet());
+    CriterionAvgRatingDTO bestCriterion = getBestRatedCriterion(criteria);
+    CriterionAvgRatingDTO worstCriterion = getWorstRatedCriterion(criteria);
+    return new PlaceInfoDTO(place, bestCriterion, worstCriterion);
+  }
+
+  private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
+    double avgRating =
+        ratingRepository.findAllByCriterionAndPlace(criterion, place).stream()
+            .mapToDouble(Rating::getScore)
+            .average()
+            .orElse(-1);
+
+    return new CriterionAvgRatingDTO(criterion, avgRating);
+  }
+
+  private CriterionAvgRatingDTO getBestRatedCriterion(
+      Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
+    if (!criteriaAvgRatingDTOs.isEmpty()) {
+      return criteriaAvgRatingDTOs.stream()
+          .max(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
+          .get();
+    }
+    throw new IllegalStateException("No criteria found");
+  }
+
+  private CriterionAvgRatingDTO getWorstRatedCriterion(
+      Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
+    if (!criteriaAvgRatingDTOs.isEmpty()) {
+      return criteriaAvgRatingDTOs.stream()
+          .min(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
+          .get();
+    }
+    throw new IllegalStateException("No criteria found");
   }
 }
