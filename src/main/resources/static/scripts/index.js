@@ -1,95 +1,36 @@
-let suggestionsData = [];
+let data = [];
 
 window.addEventListener('load', async () => {
     try {
-        const response = await fetch('/api/v1/interests/suggestions');
-        const data = await response.json();
-        suggestionsData = data;
-        loadAllSuggestions();
+        const response = await fetch(`/api/v1/interests/suggestions`);
+        const jsonData = await response.json();
+        data = jsonData;
+        loadInterests()
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
-});
+})
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadAllSuggestions();
+    loadInterests()
 });
 
-function loadAllSuggestions() {
-    const suggestionContainer = document.querySelector('#suggestionList');
-    suggestionContainer.innerHTML = '';
+function loadInterests(query) {
+    const container = document.querySelector('#suggestionList');
+    container.innerHTML = '';
+    const template = document.getElementsByTagName('template')[0];
+    let dataSet = data;
 
-    suggestionsData.forEach(suggestion => {
-        const div = document.createElement('div');
-        div.classList.add('interest-card');
-
-        const link = document.createElement('a');
-        link.classList.add('interest-card-link');
-        link.href = `/interests/${suggestion.id}`;
-
-        const innerDiv = document.createElement('div');
-
-        const imgWrapper = document.createElement('div');
-        imgWrapper.classList.add('img-wrapper');
-
-        const interestTitle = document.createElement('div');
-        interestTitle.classList.add('interest-title');
-
-        const paragraph = document.createElement('p');
-        paragraph.textContent = `${suggestion.name} (${suggestion.rating})`;
-
-        interestTitle.appendChild(paragraph);
-        innerDiv.appendChild(imgWrapper);
-        innerDiv.appendChild(interestTitle);
-        link.appendChild(innerDiv);
-        div.appendChild(link);
-
-        suggestionContainer.appendChild(div);
-    });
-
-    document.getElementById('suggestions').style.display = 'block';
-}
-
-function getSuggestions(query) {
-    const suggestionContainer = document.querySelector('#suggestionList');
-    suggestionContainer.innerHTML = '';
-
-    if (!isEmptyOrSpaces(query)) {
-        const filteredSuggestions = suggestionsData.filter(suggestion =>
-            suggestion.name.toLowerCase().includes(query.toLowerCase())
-        );
-
-        filteredSuggestions.forEach(suggestion => {
-            const div = document.createElement('div');
-            div.classList.add('interest-card');
-
-            const link = document.createElement('a');
-            link.classList.add('interest-card-link');
-            link.href = `/interests/${suggestion.id}`;
-
-            const innerDiv = document.createElement('div');
-
-            const imgWrapper = document.createElement('div');
-            imgWrapper.classList.add('img-wrapper');
-
-            const interestTitle = document.createElement('div');
-            interestTitle.classList.add('interest-title');
-
-            const paragraph = document.createElement('p');
-            paragraph.textContent = `${suggestion.name} (${suggestion.rating})`;
-
-            interestTitle.appendChild(paragraph);
-            innerDiv.appendChild(imgWrapper);
-            innerDiv.appendChild(interestTitle);
-            link.appendChild(innerDiv);
-            div.appendChild(link);
-            suggestionContainer.appendChild(div);
-        });
-    } else {
-        loadAllSuggestions();
+    if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
+        dataSet = data.filter(record => record.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    document.getElementById('suggestions').style.display = 'block';
+    dataSet.forEach(record => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector('.interest-card-link').href = `/interests/${record.id}`;
+        clone.querySelector('p').textContent = `${record.name} (${record.rating})`;
+        container.appendChild(clone);
+    })
 }
 
 function isEmptyOrSpaces(str) {

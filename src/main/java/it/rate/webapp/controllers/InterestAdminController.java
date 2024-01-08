@@ -7,7 +7,6 @@ import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.ManageInterestService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -30,11 +28,7 @@ public class InterestAdminController {
   @GetMapping("/edit")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
-    Optional<Interest> interest = interestService.findInterestById(interestId);
-    if (interest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
-    }
-    model.addAttribute("interest", interest.get());
+    model.addAttribute("interest", interestService.getById(interestId));
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
     if (principal != null) {
@@ -46,10 +40,10 @@ public class InterestAdminController {
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
   @PutMapping("/edit")
   public String editInterest(
-          @PathVariable Long interestId,
-          @ModelAttribute Interest interest,
-          @RequestParam List<String> criteriaNames,
-          RedirectAttributes ra) {
+      @PathVariable Long interestId,
+      @ModelAttribute Interest interest,
+      @RequestParam List<String> criteriaNames,
+      RedirectAttributes ra) {
     interest.setId(interestId);
     interestService.saveEditedInterest(interest, criteriaNames);
     ra.addAttribute("id", interestId);
@@ -58,15 +52,11 @@ public class InterestAdminController {
 
   @GetMapping("/users")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String editUsersPage(@PathVariable Long interestId, Model model)
-      throws BadRequestException {
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
-    if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
+  public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal) {
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
-    model.addAttribute("usersByRoles", manageInterestService.getUsersByRole(interestId));
-    model.addAttribute("interest", optInterest.get());
-    // todo: users template - form to invite users
+    model.addAttribute("interest", interestService.getById(interestId));
     return "interest/users";
   }
 
@@ -79,8 +69,37 @@ public class InterestAdminController {
 
   @PutMapping("/users/{userId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
-  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) throws BadRequestException {
+  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId)
+      throws BadRequestException {
     manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
     return "redirect:/interests/{interestId}/admin/users";
+  }
+
+  @GetMapping("/invite")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
+    if (principal != null) {
+      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    }
+    model.addAttribute("interest", interestService.getById(interestId));
+    return "interest/invite";
+  }
+
+  @PostMapping("/invite")
+  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  public String inviteUser(
+      @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
+    try {
+      manageInterestService.inviteUser(interestId, inviteBy, user, Role.RoleType.VOTER);
+      ra.addFlashAttribute("status", "Invite successfully sent");
+      ra.addFlashAttribute("statusClass", "successful");
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+    } catch (ResponseStatusException e) {
+      ra.addFlashAttribute("status", e.getReason());
+      ra.addFlashAttribute("statusClass", "error");
+      ra.addFlashAttribute("user", user);
+      ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
+    }
+    return "redirect:/interests/{interestId}/admin/invite";
   }
 }

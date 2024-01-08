@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.InterestSuggestionDTO;
+import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
@@ -9,9 +10,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -27,12 +30,15 @@ public class InterestService {
     return interestRepository.findById(id);
   }
 
+  public Interest getById(Long id) {
+    return interestRepository.getReferenceById(id);
+  }
+
   public boolean isLiked(Long userId, Long interestId) {
     return likeRepository.existsById(new LikeId(userId, interestId));
   }
 
   public void changeLikeValue(Long interestId, String vote) {
-
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
@@ -43,8 +49,12 @@ public class InterestService {
     }
   }
 
-  public void setApplicantRole(Interest interest) {
-
+  public void setApplicantRole(Long interestId) {
+    Optional<Interest> optInterest = interestRepository.findById(interestId);
+    if (optInterest.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Interest not found");
+    }
+    Interest interest = optInterest.get();
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
@@ -60,7 +70,6 @@ public class InterestService {
   }
 
   public List<InterestSuggestionDTO> getAllSuggestionDtos() {
-
     return findAllInterests().stream().map(InterestSuggestionDTO::new).collect(Collectors.toList());
   }
 
@@ -94,12 +103,23 @@ public class InterestService {
 
   public List<LikedInterestsDTO> getLikedInterestsDTOS(String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser).stream()
-                    .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
-                    .map(LikedInterestsDTO::new)
-                    .collect(Collectors.toList());
+        .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
+        .map(LikedInterestsDTO::new)
+        .collect(Collectors.toList());
   }
 
   public Interest save(Interest interest) {
     return interestRepository.save(interest);
+  }
+
+  public List<InterestUserDTO> getUsersDTO(Interest interest, Role.RoleType role) {
+    if (interest == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid interest");
+    }
+    return interest.getRoles().stream()
+        .filter(r -> r.getRole().equals(role))
+        .map(InterestUserDTO::new)
+        .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
+        .collect(Collectors.toList());
   }
 }

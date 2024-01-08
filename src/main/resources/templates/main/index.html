@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Montserrat:wght@200;400;600&family=Righteous&family=Ubuntu:wght@400;500;700&display=swap"
           rel="stylesheet">
 </head>
-
 <body>
 <div class="container-fluid">
     <header th:replace="~{fragments.html :: header}">
@@ -29,11 +27,7 @@
                     <div th:each="interest : ${likedInterests}" id="likedInterests" class="interest-card">
                         <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
                             <div>
-                                <div class="img-wrapper">
-
-                                    <!--IMAGE GOES HERE - REPLACE BACKGROUND COLOR WITH ACTUAL IMAGE-->
-
-                                </div>
+                                <div class="img-wrapper"></div>
                                 <div class="interest-title">
                                     <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
                                 </div>
@@ -53,10 +47,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- I WOULD ADD THIS INTO USER MENU TO MAKE THE MAIN PAGE CLEANER -->
-        <!--        <a th:href="@{/interests/create}">Create new interest</a>-->
-
         <section class="discover">
             <div class="section-label">
                 <h2>Discover new</h2>
@@ -68,22 +58,27 @@
                 <button class="filter-button">Food</button>
                 <button class="filter-button">Outdoor</button>
             </div>
-
-            <form method="get" th:href="@{/interests/}">
-                <div class="search-container">
-                    <input type="text" class="search" name="query" oninput="getSuggestions(this.value)" autocomplete="off"
-                           placeholder="Find interests…">
-                    <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
-                </div>
-            </form>
+            <div class="search-container">
+                <input type="text" class="search" name="query" oninput="loadInterests(this.value)" autocomplete="off"
+                       placeholder="Find interests…">
+                <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
+            </div>
         </section>
-
-        <div id="suggestions">
-            <div class="interest-cards" id="suggestionList"></div>
-        </div>
+        <div class="interest-cards" id="suggestionList"></div>
+        <template>
+            <div class="interest-card">
+                <a class="interest-card-link">
+                    <div>
+                        <div class="img-wrapper"></div>
+                        <div class="interest-title">
+                            <p></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </template>
     </div>
-
-    <script src="/scripts/index.js"></script>
 </div>
+<script src="/scripts/index.js"></script>
 </body>
 </html>
