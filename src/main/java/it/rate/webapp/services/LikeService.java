@@ -20,7 +20,7 @@ public class LikeService {
     if (like) {
       this.createLike(interestId, userId);
     } else {
-      this.deleteById(new LikeId(interestId, userId));
+      this.deleteById(new LikeId(userId, interestId));
     }
   }
 
