@@ -50,6 +50,7 @@
         <section class="discover">
             <div class="section-label">
                 <h2>Discover new</h2>
+                <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
             </div>
 
             <div class="filters">
