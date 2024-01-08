@@ -2,7 +2,6 @@ package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.EmailMessageDTO;
 import it.rate.webapp.services.EmailService;
-import it.rate.webapp.services.EmailServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
