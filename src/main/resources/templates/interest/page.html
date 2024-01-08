@@ -17,19 +17,15 @@
 <body th:object="${interest}">
 <div class="container-fluid">
     <!--        TODO: add like/dislike button somewhere to the top of tha page-->
-            <section th:if="${loggedUser}">
-                <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-                    <button th:if="${like}" type="submit" name="like" value="0">Dislike</button>
-                    <button th:unless="${like}" type="submit" name="like" value="1">Like</button>
-                </form>
-            </section>
+    <section th:if="${loggedUser}">
+        <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
+            <button th:if="${liked}" type="submit" name="like" value="0">Dislike</button>
+            <button th:unless="${liked}" type="submit" name="like" value="1">Like</button>
+        </form>
+    </section>
 
-    <!--TODO: move this probably somewhere in the top menu-->
-    <!--            <form th:unless='${loggedUserRole}'-->
-    <!--                  th:action="@{/interests/{id}/request(id=*{id})}"-->
-    <!--                  th:method="post">-->
-    <!--                <button type="submit">Request Vote Authority</button>-->
-    <!--            </form>-->
+    <!--    TODO: move this probably somewhere in the top menu-->
+
 
     <!--TODO: move this probably somewhere in the top menu-->
     <!--        <a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>-->
@@ -47,7 +43,14 @@
     <div class="content content-interest">
         <div class="d-flex justify-content-around interest-button-bar">
             <a class="button">Map</a>
-            <a class="button" th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
+            <a class="button"
+               th:if="${ratingPermission}"
+               th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
+            <form th:unless="${ratingPermission}"
+                  th:action="@{/interests/{id}/request(id=*{id})}"
+                  th:method="post">
+                <button class="button" type="submit">Request Vote Authority</button>
+            </form>
         </div>
 
         <div class="content-header">
@@ -68,10 +71,10 @@
                  th:unless="${places.isEmpty()}">
             <h2>Places</h2>
 
-<!--            TODO: add filters-->
+            <!--            TODO: add filters-->
             <div>Filter categories placeholder</div>
 
-<!--            TODO: add search bar-->
+            <!--            TODO: add search bar-->
             <div>Search bar placeholder</div>
 
             <div class="interest-places">

@@ -23,6 +23,7 @@ public class InterestController {
   private CreateInterestService interestCreationService;
   private UserService userService;
   private RoleService roleService;
+  private PermissionService permissionService;
   private PlaceService placeService;
   private LikeService likeService;
 
@@ -70,13 +71,9 @@ public class InterestController {
 
       model.addAttribute("loggedUser", loggedUser);
       model.addAttribute(
-          "like", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
-
-      Optional<Role> loggedUserRole =
-          roleService.findByAppUserIdAndInterestId(loggedUser.getId(), interestId);
-      if (loggedUserRole.isPresent()) {
-        model.addAttribute("loggedUserRole", loggedUserRole.get());
-      }
+          "liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
+      model.addAttribute(
+          "ratingPermission", permissionService.hasRatingPermission(loggedUser, interest.get()));
     }
     model.addAttribute("interest", interest.get());
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
