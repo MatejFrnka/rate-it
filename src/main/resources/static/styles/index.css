@@ -461,10 +461,6 @@ h4 {
     border: none;
 }
 
-.criterion {
-    display: flex;
-}
-
 .new-place-map {
     width: 100%;
     aspect-ratio: 16/3;
