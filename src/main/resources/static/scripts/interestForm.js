@@ -4,8 +4,10 @@ function addCriteria() {
     var label = document.createElement('label')
     var input = document.createElement('input');
     var removeButton = document.createElement('button');
+    const img = document.createElement('img');
+    img.src = '/icons/cross.svg';
 
-    label.classList.add('criterion')
+    label.classList.add('list-record')
 
     input.type = 'text';
     input.name = 'criteriaNames';
@@ -14,7 +16,8 @@ function addCriteria() {
 
     removeButton.type = 'button';
     removeButton.textContent = '';
-    removeButton.classList.add('delete-button')
+    removeButton.classList.add('role-option-button', 'kick-button')
+    removeButton.appendChild(img)
     removeButton.onclick = function () {
         removeCriteria(div);
     };
@@ -22,7 +25,7 @@ function addCriteria() {
     if (criteriaContainer.children.length === 0) {
         removeButton.style.display = 'none';
     } else {
-        removeButton.style.display = 'inline-block';
+        removeButton.style.display = 'flex';
     }
 
     label.appendChild(input)

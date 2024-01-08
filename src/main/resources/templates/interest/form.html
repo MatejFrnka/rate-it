@@ -51,16 +51,18 @@
                         <input class="input-text-field" type="text" name="criteriaNames" required/>
                     </label>
                     <th:block th:if="*{id != null}">
-                        <label class="first-criterion">
+                        <label class="list-record first-criterion">
                             <input class="input-text-field" type="text" name="criteriaNames"
                                    th:value="${interest.criteria[0]?.name}" required/>
                         </label>
 
                         <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
-                            <label class="criterion">
+                            <label class="list-record">
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" required/>
-                                <button class="delete-button" type="button" onclick="removeCriteria(this, ${iterStat.index})"></button>
+                                <button class="role-option-button kick-button" type="button" onclick="removeCriteria(this, ${iterStat.index})">
+                                    <img src="/icons/cross.svg">
+                                </button>
                             </label>
                         </div>
                     </th:block>
