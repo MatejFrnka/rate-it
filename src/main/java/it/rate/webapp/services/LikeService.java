@@ -16,15 +16,11 @@ public class LikeService {
   private UserRepository userRepository;
   private InterestRepository interestRepository;
 
-  public boolean isLiked(Long userId, Long interestId) {
-    return likeRepository.existsById(new LikeId(userId, interestId));
-  }
-
-  public void changeLikeValue(Long interestId, Long userId, int likeValue) {
-    if (likeValue == 1) {
+  public void changeLike(Long interestId, Long userId, boolean like) {
+    if (like) {
       this.createLike(interestId, userId);
     } else {
-      this.deleteLike(interestId, userId);
+      this.deleteById(new LikeId(interestId, userId));
     }
   }
 
@@ -35,7 +31,11 @@ public class LikeService {
             interestRepository.getReferenceById(interestId)));
   }
 
-  public void deleteLike(Long interestId, Long userId) {
-    likeRepository.deleteById(new LikeId(userId, interestId));
+  public void deleteById(LikeId likeId) {
+    likeRepository.deleteById(likeId);
+  }
+
+  public boolean existsById(LikeId likeId) {
+    return likeRepository.existsById(likeId);
   }
 }

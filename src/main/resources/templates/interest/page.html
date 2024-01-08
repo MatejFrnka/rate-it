@@ -19,8 +19,8 @@
     <!--        TODO: add like/dislike button somewhere to the top of tha page-->
             <section th:if="${loggedUser}">
                 <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-                    <button th:if="${like}" type="submit" name="likeValue" value="0">Dislike</button>
-                    <button th:unless="${like}" type="submit" name="likeValue" value="1">Like</button>
+                    <button th:if="${like}" type="submit" name="like" value="0">Dislike</button>
+                    <button th:unless="${like}" type="submit" name="like" value="1">Like</button>
                 </form>
             </section>
 
