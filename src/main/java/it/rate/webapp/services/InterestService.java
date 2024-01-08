@@ -23,7 +23,6 @@ public class InterestService {
   private InterestRepository interestRepository;
   private RoleRepository roleRepository;
   private CriterionRepository criterionRepository;
-  private LikeRepository likeRepository;
   private UserRepository userRepository;
 
   public Optional<Interest> findInterestById(Long id) {
@@ -34,20 +33,7 @@ public class InterestService {
     return interestRepository.getReferenceById(id);
   }
 
-  public boolean isLiked(Long userId, Long interestId) {
-    return likeRepository.existsById(new LikeId(userId, interestId));
-  }
 
-  public void changeLikeValue(Long interestId, String vote) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    AppUser currentUser = userRepository.getByEmail(authentication.getName());
-
-    if (vote.equals("like")) {
-      likeRepository.save(new Like(currentUser, interestRepository.getReferenceById(interestId)));
-    } else {
-      likeRepository.deleteById(new LikeId(currentUser.getId(), interestId));
-    }
-  }
 
   public void setApplicantRole(Long interestId) {
     Optional<Interest> optInterest = interestRepository.findById(interestId);

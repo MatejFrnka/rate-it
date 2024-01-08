@@ -27,6 +27,7 @@ public class InterestController {
   private UserService userService;
   private RoleService roleService;
   private PlaceService placeService;
+  private LikeService likeService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -50,6 +51,7 @@ public class InterestController {
       @RequestParam List<String> criteriaNames,
       RedirectAttributes ra) {
     Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
+
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }
@@ -66,7 +68,7 @@ public class InterestController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
 
       model.addAttribute("loggedUser", loggedUser);
-      model.addAttribute("like", interestService.isLiked(loggedUser.getId(), interestId));
+      model.addAttribute("like", likeService.isLiked(loggedUser.getId(), interestId));
 
       Optional<Role> loggedUserRole =
           roleService.findByAppUserIdAndInterestId(loggedUser.getId(), interestId);
@@ -82,7 +84,7 @@ public class InterestController {
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{interestId}/like")
   public String like(@PathVariable Long interestId, String likeOrDislike) {
-    interestService.changeLikeValue(interestId, likeOrDislike);
+    likeService.changeLikeValue(interestId, likeOrDislike);
     return "redirect:/interests/" + interestId;
   }
 
