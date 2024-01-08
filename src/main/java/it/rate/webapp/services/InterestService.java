@@ -33,8 +33,6 @@ public class InterestService {
     return interestRepository.getReferenceById(id);
   }
 
-
-
   public void setApplicantRole(Long interestId) {
     Optional<Interest> optInterest = interestRepository.findById(interestId);
     if (optInterest.isEmpty()) {
@@ -49,10 +47,6 @@ public class InterestService {
 
   public List<Interest> findAllInterests() {
     return interestRepository.findAllSortByLikes();
-  }
-
-  public List<Interest> findInterestsByName(String query) {
-    return interestRepository.findAllByNameSortByLikes(query);
   }
 
   public List<InterestSuggestionDTO> getAllSuggestionDtos() {

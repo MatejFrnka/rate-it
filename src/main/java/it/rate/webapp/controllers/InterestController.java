@@ -49,9 +49,13 @@ public class InterestController {
       @RequestParam String name,
       @RequestParam String description,
       @RequestParam List<String> criteriaNames,
-      RedirectAttributes ra) {
+      RedirectAttributes ra,
+      Principal principal) {
     Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
-
+    if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      likeService.createLike(savedInterest.getId(), loggedUser.getId());
+    }
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }
