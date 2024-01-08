@@ -47,7 +47,7 @@
             <section class="input-param">
                 <h4>Rating criteria</h4>
                 <div id="criteriaContainer" class="criteria-container">
-                    <label th:if="*{id == null}" class="first-criterion">
+                    <label th:if="*{id == null}" class="list-record first-criterion">
                         <input class="input-text-field" type="text" name="criteriaNames" required/>
                     </label>
                     <th:block th:if="*{id != null}">
@@ -68,7 +68,12 @@
                     </th:block>
                 </div>
 
-                <button class="light-button" type="button" onclick="addCriteria()">Add criteria</button>
+                <div class="add-criteria">
+                    <h7>Add criteria</h7>
+                    <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
+                        <img src="/icons/add.svg">
+                    </button>
+                </div>
 
             </section>
 

@@ -581,3 +581,11 @@ h4 {
 .first-criterion {
     margin-right: 3.5rem;
 }
+
+.add-criteria {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2px;
+}
