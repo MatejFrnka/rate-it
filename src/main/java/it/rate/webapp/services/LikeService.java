@@ -23,14 +23,14 @@ public class LikeService {
     return likeRepository.existsById(new LikeId(userId, interestId));
   }
 
-  public void changeLikeValue(Long interestId, String vote) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    AppUser currentUser = userRepository.getByEmail(authentication.getName());
-
-    if (vote.equals("like")) {
-      likeRepository.save(new Like(currentUser, interestRepository.getReferenceById(interestId)));
+  public void changeLikeValue(Long interestId, Long userId, int likeValue) {
+    if (likeValue == 1) {
+      likeRepository.save(
+          new Like(
+              userRepository.getReferenceById(userId),
+              interestRepository.getReferenceById(interestId)));
     } else {
-      likeRepository.deleteById(new LikeId(currentUser.getId(), interestId));
+      likeRepository.deleteById(new LikeId(userId, interestId));
     }
   }
 }
