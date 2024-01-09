@@ -46,9 +46,11 @@
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/pencil.svg}" alt="Options">
         <div class="dropdown-menu">
+            <span th:if="${loggedUser}" class="dropdown-header" th:text="${loggedUser.getUsername()}"></span>
+            <span th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></span>
+            <hr class="dropdown-divider">
             <a class="dropdown-item"
                th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Interest</a>
-            <hr class="dropdown-divider">
             <a class="dropdown-item"
                th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
             <hr class="dropdown-divider">
@@ -63,6 +65,9 @@
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/pencil.svg}" alt="Options">
         <div class="dropdown-menu">
+            <span th:if="${loggedUser}" class="dropdown-header" th:text="${loggedUser.getUsername()}"></span>
+            <span th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></span>
+            <hr class="dropdown-divider">
             <a class="dropdown-item"
                th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">
                 Edit Place</a>
