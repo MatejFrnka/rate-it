@@ -26,7 +26,7 @@
 </div>
 
 <div th:fragment="login-menu" class="header-right col-2">
-    <div class="topbar-button dropdown">
+    <div class="topbar-menu dropdown">
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/user.svg}" alt="User Profile">
         <ul class="dropdown-menu">
@@ -41,8 +41,8 @@
     </div>
 </div>
 
-<div th:fragment="admin-menu" class="header-right col-2">
-    <div class="topbar-button dropdown">
+<div th:fragment="interest-admin-menu" class="header-right col-2">
+    <div class="topbar-menu dropdown">
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/pencil.svg}" alt="Options">
         <div class="dropdown-menu">
@@ -58,17 +58,31 @@
     </div>
 </div>
 
+<div th:fragment="place-admin-menu" class="header-right col-2">
+    <div class="topbar-menu dropdown">
+        <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+             th:src="@{/icons/pencil.svg}" alt="Options">
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">
+                Edit Place</a>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item"
+               th:href="@{/users/logout}">Logout</a>
+        </div>
+    </div>
+</div>
+
 <div th:fragment="like-button" class="header-right col-2">
-    <div class="topbar-button">
+    <div class="topbar-menu">
         <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-            <button th:if="${liked}" type="submit" name="like" value="0">
+            <button th:if="${liked}" class="like-button" type="submit" name="like" value="0">
                 <img th:src="@{/icons/heart-solid.svg}" alt="Dislike">
             </button>
-            <button th:unless="${liked}" type="submit" name="like" value="1">
+            <button th:unless="${liked}" class="like-button" type="submit" name="like" value="1">
                 <img th:src="@{/icons/heart-outline.svg}" alt="Like">
             </button>
         </form>
-
     </div>
 </div>
 

@@ -45,7 +45,7 @@ body {
     margin-bottom: 0;
 }
 
-.topbar-button {
+.topbar-menu {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,6 +53,12 @@ body {
     height: 2.5rem;
     margin-right: 0.5rem;
     background-color: #EED889;
+    border-radius: 50%;
+}
+
+.topbar-menu .like-button {
+    border: none;
+    background: transparent;
     border-radius: 50%;
 }
 

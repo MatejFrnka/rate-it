@@ -21,12 +21,11 @@
     <header class="header">
         <div th:replace="~{fragments.html :: hamburger-menu}"></div>
         <div th:replace="~{fragments.html :: logo}"></div>
-        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <div th:replace="${loggedUser != null && loggedUser.getCreatedPlaces().contains(place)} ?
+         ~{fragments.html :: place-admin-menu} : ~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
     <div class="content">
-        <!--        <a th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit-->
-        <!--            Place</a>-->
         <a class="place-interest"
            th:href="@{/interests/{interestId}(interestId=${place.interest.id})}">
             <h2 th:text="*{getInterest.name}"></h2>
