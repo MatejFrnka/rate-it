@@ -32,7 +32,7 @@ public class LikeServiceTest extends BaseTest {
     when(userRepository.getReferenceById(any())).thenReturn(u);
     when(interestRepository.getReferenceById(any())).thenReturn(i);
 
-    likeService.changeLike(i.getId(), u.getId(), true);
+    likeService.changeLike(u, i, true);
 
     verify(likeRepository, times(1)).save(any());
   }
@@ -45,7 +45,7 @@ public class LikeServiceTest extends BaseTest {
     when(userRepository.getReferenceById(any())).thenReturn(u);
     when(interestRepository.getReferenceById(any())).thenReturn(i);
 
-    likeService.changeLike(i.getId(), u.getId(), false);
+    likeService.changeLike(u, i, false);
 
     verify(likeRepository, times(1)).deleteById(new LikeId(u.getId(), i.getId()));
   }
