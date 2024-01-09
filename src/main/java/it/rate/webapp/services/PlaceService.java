@@ -123,8 +123,8 @@ public class PlaceService {
     }
     throw new IllegalStateException("No criteria found");
   }
-  
-  public void addImage( Long placeId, String imageId) {
+
+  public void addImage(Long placeId, String imageId) {
     Place place = placeRepository.getReferenceById(placeId);
     place.getImageNames().add(imageId);
     placeRepository.save(place);
