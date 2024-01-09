@@ -93,7 +93,7 @@
                     <button class="button" type="submit">Request Rating Authority</button>
                 </form>
                 <a class="button"
-                   th:if="${loggedUser == null && place.interest.isExclusive()}"
+                   th:if="${loggedUser == null}"
                    th:href="@{/users/login}">Login</a>
             </div>
         </section>
