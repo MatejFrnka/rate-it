@@ -511,6 +511,7 @@ h4 {
     background: #e0e9e4;
     transition: all 0.3s;
     color: #568D73;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .toggle-container div {
@@ -558,7 +559,7 @@ h4 {
     background-color: #FFFFFF;
     border-radius: 1.5rem;
     border: none;
-    margin: 0.2rem;
+    margin: 0.2rem 0 0.2rem 0;
     width: 100%;
 }
 
@@ -572,25 +573,12 @@ h4 {
 }
 
 .light-button {
-    margin-top: 0.2rem;
+    margin: 0.2rem;
     background-color: #bfd3c9;
     color: #000000;
     padding: 0.3rem 1rem;
     border-radius: 2rem;
     border: none;
-}
-
-.criterion {
-    display: flex;
-}
-
-.delete-button {
-    width: 2.8rem;
-    height: 2.5rem;
-    border: none;
-    background: url('../icons/delete.svg') center center no-repeat;
-    background-size: cover;
-    cursor: pointer;
 }
 
 .new-place-map {
@@ -607,7 +595,6 @@ h4 {
     display: flex;
     justify-content: center;
 }
-
 
 .list-record {
     display: flex;
@@ -708,3 +695,14 @@ h4 {
     font-weight: 600;
 }
 
+.first-criterion {
+    margin-right: 3.5rem;
+}
+
+.add-criterion {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2px;
+}
