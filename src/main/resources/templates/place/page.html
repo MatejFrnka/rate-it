@@ -56,7 +56,8 @@
 
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
-                            <span th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+                            <span class="rating"
+                                  th:text="${#numbers.formatDecimal(criterionDTO.avgRating / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
                         </div>
 
                         <div th:if="${usersRatings}">

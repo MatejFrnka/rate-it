@@ -56,10 +56,35 @@ body {
     border-radius: 50%;
 }
 
-.topbar-menu .like-button {
+.topbar-menu .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     background: transparent;
-    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+.topbar-menu .dropdown-toggle::after {
+    display: none;
+}
+
+.like-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+    border: none;
+    background: transparent;
+    font-size: 2.5rem;
+}
+
+.like-button.disliked {
+    color: #e1e1e1;
+}
+
+.like-button.liked {
+    color: red;
 }
 
 #top-hamburger {
@@ -201,6 +226,14 @@ h3 {
 
 .place-rating-average {
     margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.place-rating-average > i {
+    width: 1.5rem;
+    text-align: center;
 }
 
 .place-rating-criteria {
@@ -221,6 +254,11 @@ h3 {
     padding: 0.75rem 1rem;
     background-color: #FFFFFF;
     border-radius: 1.5rem;
+}
+
+.place-rating-criterion .rating {
+    display: block;
+    width: 2rem;
 }
 
 .place-rating-button-bar {
@@ -285,6 +323,7 @@ h3 {
 
 .interest-place {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
     background: #FFFFFF;
     color: #000000;
@@ -330,8 +369,7 @@ h3 {
 
 .interest-place-ratings li {
     display: flex;
-    align-items: center;
-    gap: 0.2rem;
+    align-items: baseline;
 }
 
 .interest-place-ratings i {
@@ -353,9 +391,25 @@ h3 {
     width: 2rem;
 }
 
-.interest-place > img {
-    width: 12rem;
+.interest-place-img {
+    width: 100%;
+}
+
+.interest-place-img > img {
+    width: 100%;
+    height: 100%;
     border-radius: 1rem;
+    object-fit: cover;
+}
+
+@media only screen and (min-width: 475px) {
+    .interest-place {
+        flex-direction: row;
+    }
+
+    .interest-place-img {
+        width: 10rem;
+    }
 }
 
 .filters {
@@ -423,8 +477,14 @@ h3 {
     display: flex;
     width: 100%;
     aspect-ratio: 5/3;
-    object-fit: contain;
     overflow: hidden;
+    max-height: 400px;
+}
+
+.interest-image > img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
 }
 
 .interest-image:after {

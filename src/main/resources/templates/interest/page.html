@@ -9,7 +9,7 @@
         <div th:replace="~{fragments.html :: hamburger-menu}"></div>
         <div th:replace="~{fragments.html :: logo}"></div>
         <div th:replace="${loggedUser == null} ? ~{fragments.html :: login-menu} :
-        (${role.equals(role.CREATOR)} ? ~{fragments.html :: interest-admin-menu} : ~{fragments.html :: like-button})"></div>
+        (${role != null && role.equals(role.CREATOR)} ? ~{fragments.html :: interest-admin-menu} : ~{fragments.html :: like-button})"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 
@@ -21,11 +21,11 @@
         <div class="d-flex justify-content-around interest-button-bar">
             <a class="button">Map</a>
             <span class="button pending"
-                  th:if="${loggedUser != null && interest.isExclusive() && role.equals(role.APPLICANT)}">Pending Request</span>
+                  th:if="${loggedUser != null && interest.isExclusive() && role != null && role.equals(role.APPLICANT)}">Pending Request</span>
             <a class="button"
                th:if="${loggedUser != null && (!interest.isExclusive() || ratingPermission == true)}"
                th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
-            <form th:if="${loggedUser != null && interest.isExclusive() && ratingPermission != true && !role.equals(role.APPLICANT)}"
+            <form th:if="${loggedUser != null && interest.isExclusive() && ratingPermission != true && (role == null || !role.equals(role.APPLICANT))}"
                   th:action="@{/interests/{id}/request(id=*{id})}"
                   th:method="post">
                 <button class="button" type="submit">Request Rating Authority</button>
@@ -64,7 +64,9 @@
                    th:each="place : ${places}"
                    th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.place().id})}"
                 >
-                    <img src="https://picsum.photos/400/300" alt="placeholder"/>
+                    <div class="interest-place-img">
+                        <img src="https://picsum.photos/400/300" alt="placeholder"/>
+                    </div>
 
                     <div class="interest-place-content">
                         <header class="interest-place-header">
