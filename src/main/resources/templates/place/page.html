@@ -18,7 +18,11 @@
 
 <body th:object="${place}">
 <div class="container-fluid">
-    <header th:replace="~{fragments.html :: header}">
+    <header class="header">
+        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: user-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
     <div class="content">
         <!--        <a th:href="@{/interests/{intId}/places/{placeId}/edit(intId=${place.interest.id}, placeId=${place.id})}">Edit-->

@@ -20,7 +20,11 @@
     <!--TODO: move this probably somewhere in the top menu-->
     <!--        <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>-->
 
-    <header th:replace="~{fragments.html :: header}">
+    <header class="header">
+        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: user-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 
     <div class="interest-image">
