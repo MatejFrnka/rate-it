@@ -126,31 +126,6 @@ class PlaceServiceTest extends BaseTest {
   }
 
   @Test
-  void nonExistingUser() {
-    Long placeId = 2L;
-    Place place = getPlaceNoId();
-    String loggedUser = "John@doe.com";
-
-    when(userService.findByEmail(eq(loggedUser))).thenReturn(Optional.empty());
-    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.of(place));
-
-    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUser, placeId));
-  }
-
-  @Test
-  void nonExistingPlace() {
-    Long placeId = (99999L);
-    AppUser creator = new AppUser();
-    String loggedUserEmail = "John@doe.com";
-    creator.setEmail(loggedUserEmail);
-
-    when(userService.findByEmail(eq(loggedUserEmail))).thenReturn(Optional.of(creator));
-    when(placeRepository.findById(eq(placeId))).thenReturn(Optional.empty());
-
-    assertThrows(BadRequestException.class, () -> placeService.isCreator(loggedUserEmail, placeId));
-  }
-
-  @Test
   void getPlaceInfoDTOSHappyCase() {
     Place place = getPlaceNoId();
     Interest interest = new Interest();

@@ -62,7 +62,7 @@ public class PlaceController {
       return "error/page";
     }
 
-    Place place = placeService.getReferenceById(placeId);
+    Place place = placeService.getById(placeId);
     model.addAttribute("place", place);
     model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
 
@@ -101,7 +101,7 @@ public class PlaceController {
     model.addAttribute("method", "PUT");
     model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
     model.addAttribute("title", "Edit page");
-    model.addAttribute("place", placeService.findById(placeId).get());
+    model.addAttribute("place", placeService.getById(placeId));
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
