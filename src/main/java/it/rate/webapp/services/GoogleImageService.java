@@ -32,24 +32,24 @@ public class GoogleImageService implements ImageService {
   @Value("${UPLOAD_DIRECTORY}")
   private String UPLOAD_DIRECTORY;
 
-  private Drive getGoogleDriveService() {
+  private Drive getGoogleDriveService() throws IOException {
 
     FileInputStream credentialFile = null;
 
     try {
       credentialFile = new FileInputStream("src/main/resources/credentials.json");
     } catch (FileNotFoundException e) {
-      System.out.println("Credentials not found");
+      throw new FileNotFoundException("Credentials not find");
     }
 
-    GoogleCredentials credentials = null;
+    GoogleCredentials credentials;
     try {
       credentials =
           ServiceAccountCredentials.fromStream(credentialFile)
               .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/drive"));
 
     } catch (IOException e) {
-      System.out.println("Credentials cannot be created from stream");
+      throw new IOException(e.getMessage());
     }
 
     HttpTransport httpTransport = new NetHttpTransport();
@@ -63,9 +63,10 @@ public class GoogleImageService implements ImageService {
   }
 
   @Override
-  public String savePlaceImage(MultipartFile image, Long placeId) {
+  public String savePlaceImage(MultipartFile image, Long placeId) throws IOException {
+
     Drive driveService = getGoogleDriveService();
-    FileContent mediaContent = null;
+    FileContent mediaContent;
     String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
     try {
@@ -73,7 +74,7 @@ public class GoogleImageService implements ImageService {
       image.transferTo(tempFilePath);
       mediaContent = new FileContent("image/*", tempFilePath.toFile());
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new IOException(e.getMessage());
     }
 
     String fileName = currentUser + "_" + placeId + "_" + UUID.randomUUID();
@@ -85,7 +86,7 @@ public class GoogleImageService implements ImageService {
     try {
       return driveService.files().create(fileMeta, mediaContent).execute().getId();
     } catch (IOException e) {
-      throw new RuntimeException("nope");
+      throw new IOException(e.getMessage());
     }
   }
 
