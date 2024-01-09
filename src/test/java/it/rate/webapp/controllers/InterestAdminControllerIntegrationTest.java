@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import it.rate.webapp.BaseIntegrationTest;
+import it.rate.webapp.config.security.UpdateSecurityContextAspect;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
@@ -36,6 +37,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   @Autowired private InterestRepository interestRepository;
   @MockBean private ManageInterestService manageInterestService;
   @MockBean private UserService userService;
+  @MockBean private UpdateSecurityContextAspect securityContextAspect;
 
   @Test
   @WithMockUser(
