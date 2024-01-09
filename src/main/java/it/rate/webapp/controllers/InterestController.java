@@ -74,6 +74,8 @@ public class InterestController {
           "liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
       model.addAttribute(
           "ratingPermission", permissionService.hasRatingPermission(loggedUser, interest.get()));
+    } else {
+      model.addAttribute("ratingPermission", false);
     }
     model.addAttribute("interest", interest.get());
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));

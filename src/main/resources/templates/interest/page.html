@@ -44,9 +44,9 @@
         <div class="d-flex justify-content-around interest-button-bar">
             <a class="button">Map</a>
             <a class="button"
-               th:if="${ratingPermission}"
+               th:if="${!interest.isExclusive() || ratingPermission}"
                th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
-            <form th:unless="${ratingPermission}"
+            <form th:unless="${!interest.isExclusive() || ratingPermission}"
                   th:action="@{/interests/{id}/request(id=*{id})}"
                   th:method="post">
                 <button class="button" type="submit">Request Vote Authority</button>
