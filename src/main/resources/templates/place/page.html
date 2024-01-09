@@ -81,12 +81,18 @@
                 </div>
             </form>
 
-            <!--            TODO: Request rate access button to appear only if user doesn't have access and interest is exclusive-->
-            <form th:unless="${usersRatings}"
-                  th:action="@{/interests/{id}/request(id=${place.interest.id})}"
-                  th:method="post">
-                <button class="button" type="submit">Request rate access</button>
-            </form>
+            <div class="place-rating-button-bar">
+                <span class="button pending"
+                      th:if="${loggedUser != null && place.interest.isExclusive() && applicant == true}">Pending Request</span>
+                <form th:if="${loggedUser != null && place.interest.isExclusive() && usersRatings == null && applicant != true}"
+                      th:action="@{/interests/{id}/request(id=${place.interest.id})}"
+                      th:method="post">
+                    <button class="button" type="submit">Request Rating Authority</button>
+                </form>
+                <a class="button"
+                   th:if="${loggedUser == null && place.interest.isExclusive()}"
+                   th:href="@{/users/login}">Login</a>
+            </div>
         </section>
 
         <div class="place-map">

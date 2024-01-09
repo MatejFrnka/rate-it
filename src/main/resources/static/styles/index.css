@@ -224,6 +224,10 @@ h3 {
     margin-top: 1rem;
 }
 
+.place-rating-button-bar .pending {
+    background-color: #575757;
+}
+
 .interest-cards {
     display: flex;
     flex-direction: row;
@@ -434,6 +438,10 @@ h3 {
 .interest-button-bar .button {
     min-width: 10rem;
     text-align: center;
+}
+
+.interest-button-bar .pending {
+    background-color: #575757;
 }
 
 .items-list {

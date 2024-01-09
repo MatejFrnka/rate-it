@@ -4,10 +4,9 @@ import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;
-import it.rate.webapp.services.PermissionService;
-import it.rate.webapp.services.PlaceService;
-import it.rate.webapp.services.RatingService;
-import it.rate.webapp.services.UserService;
+import it.rate.webapp.models.Role;
+import it.rate.webapp.models.RoleId;
+import it.rate.webapp.services.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -25,6 +25,7 @@ public class PlaceController {
   private final UserService userService;
   private final RatingService ratingService;
   private final PermissionService permissionService;
+  private final RoleService roleService;
 
   @GetMapping("/new")
   @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
@@ -71,6 +72,10 @@ public class PlaceController {
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(principal, placeId));
       }
+      Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
+      if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.APPLICANT)) {
+        model.addAttribute("applicant", true);
+      }
     }
     return "place/page";
   }
@@ -91,10 +96,7 @@ public class PlaceController {
   @GetMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlacePage(
-      @PathVariable Long interestId,
-      @PathVariable Long placeId,
-      Model model,
-      Principal principal) {
+      @PathVariable Long interestId, @PathVariable Long placeId, Model model, Principal principal) {
 
     model.addAttribute("method", "PUT");
     model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
@@ -110,10 +112,8 @@ public class PlaceController {
   @PutMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlace(
-          @PathVariable Long interestId,
-          @PathVariable Long placeId,
-          @ModelAttribute Place place)
-          throws BadRequestException {
+      @PathVariable Long interestId, @PathVariable Long placeId, @ModelAttribute Place place)
+      throws BadRequestException {
 
     if (!placeId.equals(place.getId())) {
       throw new BadRequestException("Invalid place id");

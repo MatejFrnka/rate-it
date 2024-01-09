@@ -43,14 +43,19 @@
     <div class="content content-interest">
         <div class="d-flex justify-content-around interest-button-bar">
             <a class="button">Map</a>
+            <span class="button pending"
+                  th:if="${loggedUser != null && interest.isExclusive() && applicant == true}">Pending Request</span>
             <a class="button"
-               th:if="${!interest.isExclusive() || ratingPermission}"
+               th:if="${loggedUser != null && (!interest.isExclusive() || ratingPermission == true)}"
                th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
-            <form th:unless="${!interest.isExclusive() || ratingPermission}"
+            <form th:if="${loggedUser != null && interest.isExclusive() && ratingPermission != true && applicant != true}"
                   th:action="@{/interests/{id}/request(id=*{id})}"
                   th:method="post">
-                <button class="button" type="submit">Request Vote Authority</button>
+                <button class="button" type="submit">Request Rating Authority</button>
             </form>
+            <a class="button"
+               th:if="${loggedUser == null && interest.isExclusive()}"
+               th:href="@{/users/login}">Login</a>
         </div>
 
         <div class="content-header">

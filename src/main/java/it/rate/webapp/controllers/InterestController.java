@@ -74,8 +74,11 @@ public class InterestController {
           "liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
       model.addAttribute(
           "ratingPermission", permissionService.hasRatingPermission(loggedUser, interest.get()));
-    } else {
-      model.addAttribute("ratingPermission", false);
+
+      Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
+      if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.APPLICANT)) {
+        model.addAttribute("applicant", true);
+      }
     }
     model.addAttribute("interest", interest.get());
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
