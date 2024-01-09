@@ -26,29 +26,28 @@ public class ValidatePermissionsAspect {
   @Before("@annotation(validatePermissions)")
   public void reauthenticate(JoinPoint joinPoint, ValidatePermissions validatePermissions) {
     Authentication oldAuthentication = SecurityContextHolder.getContext().getAuthentication();
+    if (oldAuthentication.getPrincipal() == null
+        || oldAuthentication.getPrincipal().equals("anonymousUser")) return;
 
-    if (oldAuthentication.getPrincipal() != null) {
-      AppUser user = userService.getByEmail(oldAuthentication.getName());
+    AppUser user = userService.getByEmail(oldAuthentication.getName());
+    List<GrantedAuthority> updatedAuthorities = new ArrayList<>();
+    updatedAuthorities.add(new SimpleGrantedAuthority(user.getServerRole().name()));
 
-      List<GrantedAuthority> updatedAuthorities = new ArrayList<>();
-      updatedAuthorities.add(new SimpleGrantedAuthority(user.getServerRole().name()));
+    user.getRoles().stream()
+        .map(
+            r ->
+                new SimpleGrantedAuthority(
+                    String.format("ROLE_%s_%d", r.getRole().name(), r.getId().getInterestId())))
+        .forEach(updatedAuthorities::add);
 
-      user.getRoles().stream()
-          .map(
-              r ->
-                  new SimpleGrantedAuthority(
-                      String.format("ROLE_%s_%d", r.getRole().name(), r.getId().getInterestId())))
-          .forEach(updatedAuthorities::add);
+    Authentication updatedAuthentication =
+        new UsernamePasswordAuthenticationToken(
+            oldAuthentication.getPrincipal(),
+            oldAuthentication.getCredentials(),
+            updatedAuthorities);
 
-      Authentication updatedAuthentication =
-          new UsernamePasswordAuthenticationToken(
-              oldAuthentication.getPrincipal(),
-              oldAuthentication.getCredentials(),
-              updatedAuthorities);
-
-      SecurityContext newContext = SecurityContextHolder.createEmptyContext();
-      newContext.setAuthentication(updatedAuthentication);
-      SecurityContextHolder.setContext(newContext);
-    }
+    SecurityContext newContext = SecurityContextHolder.createEmptyContext();
+    newContext.setAuthentication(updatedAuthentication);
+    SecurityContextHolder.setContext(newContext);
   }
 }

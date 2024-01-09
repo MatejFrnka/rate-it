@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.config.security.ValidatePermissions;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
@@ -27,6 +28,7 @@ public class PermissionService {
   private final RoleRepository roleRepository;
   private final UserRepository userRepository;
 
+  @ValidatePermissions
   public boolean hasRatingPermission(AppUser user, Interest interest) {
     Optional<Role> optRole =
         roleRepository.findByAppUserIdAndInterestId(user.getId(), interest.getId());
@@ -39,6 +41,7 @@ public class PermissionService {
     return false;
   }
 
+  @ValidatePermissions
   public String[] ratePlace(Long placeId) {
     Optional<Place> optPlace = placeRepository.findById(placeId);
     if (optPlace.isEmpty()) {
@@ -56,6 +59,7 @@ public class PermissionService {
     }
   }
 
+  @ValidatePermissions
   public String[] manageCommunity(Long interestId) {
     if (!interestRepository.existsById(interestId)) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
@@ -65,6 +69,7 @@ public class PermissionService {
     };
   }
 
+  @ValidatePermissions
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication.getPrincipal().equals("anonymousUser")) {
@@ -97,6 +102,7 @@ public class PermissionService {
     return place.getCreator().getId().equals(user.getId());
   }
 
+  @ValidatePermissions
   public String[] createPlace(Long interestId) {
     Optional<Interest> optInterest = interestRepository.findById(interestId);
     if (optInterest.isEmpty()) {
