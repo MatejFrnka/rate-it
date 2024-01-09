@@ -45,7 +45,7 @@ body {
     margin-bottom: 0;
 }
 
-.user-button {
+.topbar-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -339,7 +339,7 @@ h3 {
 }
 
 .interest-place-ratings i.yellow {
-   color: #EFBB00;
+    color: #EFBB00;
 }
 
 .interest-place-ratings .rating {
