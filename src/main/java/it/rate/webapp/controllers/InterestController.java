@@ -51,7 +51,7 @@ public class InterestController {
     Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      likeService.createLike(savedInterest.getId(), loggedUser.getId());
+      likeService.createLike(loggedUser, savedInterest);
     }
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
@@ -88,7 +88,8 @@ public class InterestController {
   public String like(@PathVariable Long interestId, boolean like, Principal principal) {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      likeService.changeLike(interestId, loggedUser.getId(), like);
+      Interest interest = interestService.getById(interestId);
+      likeService.changeLike(loggedUser, interest, like);
     }
     return "redirect:/interests/" + interestId;
   }
