@@ -39,7 +39,7 @@ public class GoogleImageService implements ImageService {
     try {
       credentialFile = new FileInputStream("src/main/resources/credentials.json");
     } catch (FileNotFoundException e) {
-      throw new FileNotFoundException("Credentials not find");
+      throw new FileNotFoundException("Credentials not found");
     }
 
     GoogleCredentials credentials;
