@@ -76,12 +76,7 @@ public class InterestController {
           "ratingPermission", permissionService.hasRatingPermission(loggedUser, interest.get()));
 
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
-      if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.APPLICANT)) {
-        model.addAttribute("applicant", true);
-      }
-      if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.CREATOR)) {
-        model.addAttribute("creator", true);
-      }
+      optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
     }
     model.addAttribute("interest", interest.get());
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
