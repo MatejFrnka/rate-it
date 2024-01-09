@@ -7,7 +7,8 @@ const uppy = new Uppy({
         allowedFileTypes: ["image/*"],
         maxFileSize: 10 * 1024 * 1024,
 
-    }
+    },
+    allowMultipleUploadBatches: false
 })
     .use(Dashboard, {
         target: '#uppy',
@@ -15,6 +16,7 @@ const uppy = new Uppy({
         proudlyDisplayPoweredByUppy: false,
         trigger: '#uppy-modal',
         closeModalOnClickOutside: true,
+        closeAfterFinish: true
     })
     .use(XHRUpload, {
         endpoint: dynamicEndpoint,
@@ -26,6 +28,13 @@ const uppy = new Uppy({
         showVideoSourceDropdown: true,
         modes: 'picture'
     })
+
+uppy.on('complete', (result) => {
+
+    console.log('Upload complete:', result);
+
+    window.location.reload();
+});
 
 
 const uppyAddFilesList = document.querySelector('.uppy-Dashboard--modal .uppy-Dashboard-inner');
