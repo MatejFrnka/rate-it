@@ -1,8 +1,8 @@
 package it.rate.webapp.controllers;
 
 import it.rate.webapp.services.GoogleImageService;
+import it.rate.webapp.services.PlaceService;
 import java.nio.file.*;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,40 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageController {
   
   private final GoogleImageService googleImageService;
+  private final PlaceService placeService;
 
   @PostMapping("interests/{interestId}/places/{placeId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#placeId))")
   public String uploadPlaceImage(
           @RequestParam("picture") MultipartFile file,
           @PathVariable Long interestId,
-          @PathVariable Long placeId,
-          Principal principal) {
+          @PathVariable Long placeId) {
 
-    System.out.println(googleImageService.savePlaceImage(file, placeId));
-
-    try {
-
-
-
-
-//      File convertedFile = new File(file.getOriginalFilename());
-//      file.transferTo(convertedFile);
-//
-//      Path smudla = Paths.get("src/main/java/it/rate/webapp/controllers/min.jpg");
-//      File me = smudla.toFile();
-//
-//      
-//
-//      FileContent mediaContent = new FileContent("image/*", me);
-//
-//      com.google.api.services.drive.model.File uploadedFile = driveService.files().create(fileMeta, mediaContent ).execute();
-//      var pepik = driveService.files().list().execute();
-
-
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-
+    placeService.addImage(placeId, googleImageService.savePlaceImage(file, placeId));
+    
     return "redirect:/interests/" + interestId + "/places/" + placeId;
   }
 }

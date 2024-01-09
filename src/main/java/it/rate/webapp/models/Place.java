@@ -23,6 +23,10 @@ public class Place {
   private String address;
   private double latitude;
   private double longitude;
+
+  @ElementCollection
+  private List<String> imageNames = new ArrayList<>();
+
   @Builder.Default
   private boolean deleted = false;
 
