@@ -17,12 +17,12 @@
 <body th:object="${interest}">
 <div class="container-fluid">
     <!--        TODO: add like/dislike button somewhere to the top of tha page-->
-    <!--        <section th:if="${loggedUser}">-->
-    <!--            <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">-->
-    <!--                <button th:if="${like}" type="submit" name="likeOrDislike" value="dislike">Dislike</button>-->
-    <!--                <button th:unless="${like}" type="submit" name="likeOrDislike" value="like">Like</button>-->
-    <!--            </form>-->
-    <!--        </section>-->
+            <section th:if="${loggedUser}">
+                <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
+                    <button th:if="${like}" type="submit" name="like" value="0">Dislike</button>
+                    <button th:unless="${like}" type="submit" name="like" value="1">Like</button>
+                </form>
+            </section>
 
     <!--TODO: move this probably somewhere in the top menu-->
     <!--            <form th:unless='${loggedUserRole}'-->

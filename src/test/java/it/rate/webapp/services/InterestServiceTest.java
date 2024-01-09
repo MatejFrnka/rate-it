@@ -1,10 +1,8 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
-import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Criterion;
 import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Like;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.LikeRepository;
@@ -12,10 +10,6 @@ import it.rate.webapp.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +36,8 @@ class InterestServiceTest extends BaseTest {
     Interest interest = Interest.builder().id(1L).criteria(getOldCriteria()).build();
 
     when(interestRepository.getReferenceById(anyLong())).thenReturn(interest);
-    when(interestRepository.save(any())).thenReturn(Interest.builder().criteria(updatedCriteria).build());
+    when(interestRepository.save(any()))
+        .thenReturn(Interest.builder().criteria(updatedCriteria).build());
     when(criterionRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
 
     Interest savedInterest = interestService.saveEditedInterest(interest, newCriteriaNames);
@@ -63,7 +58,8 @@ class InterestServiceTest extends BaseTest {
     Interest interest = Interest.builder().id(1L).criteria(getOldCriteria()).build();
 
     when(interestRepository.getReferenceById(anyLong())).thenReturn(interest);
-    when(interestRepository.save(any())).thenReturn(Interest.builder().criteria(updatedCriteria).build());
+    when(interestRepository.save(any()))
+        .thenReturn(Interest.builder().criteria(updatedCriteria).build());
     when(criterionRepository.saveAll(any())).thenAnswer(i -> i.getArgument(0));
 
     Interest savedInterest = interestService.saveEditedInterest(interest, newCriteriaNames);
@@ -83,29 +79,11 @@ class InterestServiceTest extends BaseTest {
     when(interestRepository.save(any())).thenReturn(interest);
     when(criterionRepository.saveAll(any())).thenReturn(getOldCriteria());
 
-
     Interest savedInterest = interestService.saveEditedInterest(interest, criteriaNames);
 
     verify(criterionRepository, times(0)).deleteByNameAndInterestId(any(), any());
 
     assertSame(savedInterest.getCriteria(), interest.getCriteria());
-  }
-
-  @Test
-  void likedInterest() {
-    Interest i = new Interest();
-    AppUser u = AppUser.builder().username("Karel").id(1L).build();
-    Like like = new Like(u, i);
-    Authentication auth = new UsernamePasswordAuthenticationToken("Karel", null);
-    SecurityContext securityContext = SecurityContextHolder.getContext();
-    securityContext.setAuthentication(auth);
-
-    when(userRepository.getByEmail(any())).thenReturn(u);
-    when(interestRepository.getReferenceById(any())).thenReturn(i);
-
-    interestService.changeLikeValue(i.getId(), "like");
-
-    verify(likeRepository, times(1)).save(any());
   }
 
   private List<Criterion> getOldCriteria() {

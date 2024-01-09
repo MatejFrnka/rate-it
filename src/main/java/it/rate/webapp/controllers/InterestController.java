@@ -1,9 +1,6 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Criterion;
-import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Role;
+import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +24,7 @@ public class InterestController {
   private UserService userService;
   private RoleService roleService;
   private PlaceService placeService;
+  private LikeService likeService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -48,8 +46,13 @@ public class InterestController {
       @RequestParam String name,
       @RequestParam String description,
       @RequestParam List<String> criteriaNames,
-      RedirectAttributes ra) {
+      RedirectAttributes ra,
+      Principal principal) {
     Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
+    if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      likeService.createLike(loggedUser, savedInterest);
+    }
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }
@@ -66,7 +69,8 @@ public class InterestController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
 
       model.addAttribute("loggedUser", loggedUser);
-      model.addAttribute("like", interestService.isLiked(loggedUser.getId(), interestId));
+      model.addAttribute(
+          "like", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
 
       Optional<Role> loggedUserRole =
           roleService.findByAppUserIdAndInterestId(loggedUser.getId(), interestId);
@@ -81,8 +85,12 @@ public class InterestController {
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{interestId}/like")
-  public String like(@PathVariable Long interestId, String likeOrDislike) {
-    interestService.changeLikeValue(interestId, likeOrDislike);
+  public String like(@PathVariable Long interestId, boolean like, Principal principal) {
+    if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      Interest interest = interestService.getById(interestId);
+      likeService.changeLike(loggedUser, interest, like);
+    }
     return "redirect:/interests/" + interestId;
   }
 
