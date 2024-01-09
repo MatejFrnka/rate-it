@@ -45,7 +45,7 @@ body {
     margin-bottom: 0;
 }
 
-#user-button {
+.user-button {
     display: flex;
     align-items: center;
     justify-content: center;

@@ -5,25 +5,10 @@
 
 <body th:object="${interest}">
 <div class="container-fluid">
-    <!--        TODO: add like/dislike button somewhere to the top of tha page-->
-    <section th:if="${loggedUser}">
-        <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-            <button th:if="${liked}" type="submit" name="like" value="0">Dislike</button>
-            <button th:unless="${liked}" type="submit" name="like" value="1">Like</button>
-        </form>
-    </section>
-
-
-    <!--TODO: move this probably somewhere in the top menu-->
-    <!--        <a th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Page</a>-->
-
-    <!--TODO: move this probably somewhere in the top menu-->
-    <!--        <a th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>-->
-
     <header class="header">
         <div th:replace="~{fragments.html :: hamburger-menu}"></div>
         <div th:replace="~{fragments.html :: logo}"></div>
-        <div th:replace="~{fragments.html :: user-menu}"></div>
+        <div th:replace="${loggedUser == null} ? ~{fragments.html :: login-menu} : (${creator} ? ~{fragments.html :: admin-menu} : ~{fragments.html :: like-button})"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 

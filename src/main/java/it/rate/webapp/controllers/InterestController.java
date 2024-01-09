@@ -79,6 +79,9 @@ public class InterestController {
       if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.APPLICANT)) {
         model.addAttribute("applicant", true);
       }
+      if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.CREATOR)) {
+        model.addAttribute("creator", true);
+      }
     }
     model.addAttribute("interest", interest.get());
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));

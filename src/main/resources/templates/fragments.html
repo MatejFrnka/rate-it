@@ -25,11 +25,10 @@
     <a th:href="@{/}">RateSpot</a>
 </div>
 
-<div th:fragment="user-menu" class="header-right col-2">
-    <div id="user-button" class="dropdown">
+<div th:fragment="login-menu" class="header-right col-2">
+    <div class="user-button dropdown">
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/user.svg}" alt="User Profile">
-
         <ul class="dropdown-menu">
             <li th:if="${loggedUser}" class="dropdown-header" th:text="${loggedUser.getUsername()}"></li>
             <li th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></li>
@@ -39,6 +38,34 @@
             <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/users/logout}">Logout</a></li>
             <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/users/login}">Login</a></li>
         </ul>
+    </div>
+</div>
+
+<div th:fragment="admin-menu" class="header-right col-2">
+    <div class="user-button dropdown">
+        <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+             th:src="@{/icons/pencil.svg}" alt="Options">
+        <div class="dropdown-menu">
+            <a class="dropdown-item"
+               th:href="@{/interests/{id}/admin/edit(id=${interest.id})}">Edit Interest</a>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item"
+               th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
+            <hr class="dropdown-divider">
+            <a class="dropdown-item"
+               th:href="@{/users/logout}">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="like-button" class="header-right col-2">
+    <div id="like-button">
+        <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
+            <button th:if="${liked}" type="submit" name="like" value="0">Dislike</button>
+            <button th:unless="${liked}" type="submit" name="like" value="1">Like</button>
+        </form>
+        <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+             th:src="@{/icons/user.svg}" alt="User Profile">
     </div>
 </div>
 
