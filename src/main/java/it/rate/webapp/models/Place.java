@@ -24,11 +24,9 @@ public class Place {
   private double latitude;
   private double longitude;
 
-  @ElementCollection
-  private List<String> imageNames = new ArrayList<>();
+  @ElementCollection @Builder.Default private List<String> imageNames = new ArrayList<>();
 
-  @Builder.Default
-  private boolean deleted = false;
+  @Builder.Default private boolean deleted = false;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

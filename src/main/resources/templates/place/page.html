@@ -42,7 +42,7 @@
                   name="rating">
                 <div class="place-rating-criteria">
                     <div class="place-rating-criterion" th:each="criterionDTO : ${placeCriteria.criteria()}">
-                        <div th:text="${criterionDTO.criterion.name}"/>
+                        <div th:text="${criterionDTO.name()}"/>
 
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
@@ -54,15 +54,15 @@
 
                             <div class="place-rating-stars">
                                 <th:block th:each="i: ${#numbers.sequence(0, 9)}">
-                                    <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.criterion.id) ? 'is-active' : ''}"
+                                    <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.id) ? 'is-active' : ''}"
                                        th:attr="data-star=${i+1}"></i>
                                 </th:block>
                             </div>
 
                             <input type="number" hidden="hidden"
-                                   th:value="${usersRatings.ratings.containsKey(criterionDTO.criterion.id)} ?
-                                        ${usersRatings.ratings.get(criterionDTO.criterion.id)}"
-                                   th:field="*{ratings[__${criterionDTO.criterion.id}__]}">
+                                   th:value="${usersRatings.ratings.containsKey(criterionDTO.id)} ?
+                                        ${usersRatings.ratings.get(criterionDTO.id)}"
+                                   th:field="*{ratings[__${criterionDTO.id}__]}">
                         </div>
                     </div>
                 </div>

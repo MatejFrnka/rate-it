@@ -2,6 +2,7 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.RoleService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class MapController {
   private final InterestService interestService;
   private final UserService userService;
   private final RoleService roleService;
+  private final PlaceService placeService;
 
   @GetMapping("/{interestId}")
   public String mapView(Model model, @PathVariable Long interestId, Principal principal) {
@@ -37,6 +39,7 @@ public class MapController {
       optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
     }
     model.addAttribute("interest", interest.get());
+    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
     return "interest/map";
   }
 }
