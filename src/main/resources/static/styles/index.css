@@ -412,6 +412,14 @@ h3 {
     }
 }
 
+.interest-map {
+    height: 75vh;
+    border-radius: 1rem;
+    background: #FFFFFF;
+    object-fit: contain;
+    overflow: hidden;
+}
+
 .filters {
     display: flex;
     flex-direction: row;

@@ -14,9 +14,13 @@
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
 </div>
-
-<div class="place-map">
-    <div id="map"></div>
+<div class="content content-interest">
+    <div class="content-header">
+        <h1 th:text="*{name}"></h1>
+    </div>
+    <div class="interest-map">
+        <div id="map"></div>
+    </div>
 </div>
 
 <script th:replace="~{fragments :: placeMap-script}"></script>
