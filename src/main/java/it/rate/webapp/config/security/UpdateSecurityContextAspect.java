@@ -24,7 +24,7 @@ public class UpdateSecurityContextAspect {
   private final UserService userService;
 
   @Before("@annotation(updateSecurityContext)")
-  public void updateContext(JoinPoint joinPoint, UpdateSecurityContext updateSecurityContext) {
+  public void updateContext(UpdateSecurityContext updateSecurityContext) {
     Authentication oldAuthentication = SecurityContextHolder.getContext().getAuthentication();
     if (oldAuthentication.getPrincipal() == null
         || oldAuthentication.getPrincipal().equals("anonymousUser")) {
