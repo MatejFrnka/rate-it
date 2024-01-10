@@ -178,7 +178,7 @@ h3 {
 
 .place-map {
     width: 100%;
-    aspect-ratio: 16/9;
+    aspect-ratio: 16/10;
     border-radius: 1rem;
     background: #FFFFFF;
     margin-bottom: 1.5rem;
@@ -779,4 +779,9 @@ h4 {
     align-items: center;
     gap: 1.5rem;
     margin-top: 2px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
 }
