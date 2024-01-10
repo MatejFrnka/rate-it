@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments.html :: head(title=${interest.id == null} ? 'New Interest' : 'Edit ' + ${interest.name})}">
+<head th:replace="~{fragments.html :: head(title=${interest.id == null} ? 'New Interest' : 'Editing ' + ${interest.name})}">
 </head>
 
 <body>
@@ -17,7 +18,7 @@
         <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
               th:method="${method}">
             <h2 th:if="${interest.id == null}">New Interest</h2>
-            <h2 th:unless="${interest.id == null}" th:text="${interest.name} + ' Edit'"></h2>
+            <h2 th:unless="${interest.id == null}" th:text="'Editing... ' + ${interest.name}"></h2>
             <section class="input-param">
                 <h4>Name</h4>
                 <label>
@@ -40,28 +41,35 @@
             </section>
 
             <section class="input-param">
-                <h4>Criteria</h4>
+                <h4>Rating criteria</h4>
                 <div id="criteriaContainer" class="criteria-container">
-                    <label th:if="*{id == null}">
+                    <label th:if="*{id == null}" class="list-record first-criterion">
                         <input class="input-text-field" type="text" name="criteriaNames" required/>
                     </label>
                     <th:block th:if="*{id != null}">
-                        <label>
+                        <label class="list-record first-criterion">
                             <input class="input-text-field" type="text" name="criteriaNames"
                                    th:value="${interest.criteria[0]?.name}" required/>
                         </label>
 
                         <div th:each="criterion, iterStat : ${interest.criteria}" th:if="${iterStat.index > 0}">
-                            <label class="criterion">
+                            <label class="list-record">
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" required/>
-                                <button class="delete-button" type="button" onclick="removeCriteria(this, ${iterStat.index})"></button>
+                                <button class="role-option-button kick-button" type="button" onclick="removeCriteria(this, ${iterStat.index})">
+                                    <img src="/icons/cross.svg">
+                                </button>
                             </label>
                         </div>
                     </th:block>
                 </div>
 
-                <button class="light-button" type="button" onclick="addCriteria()">Add criteria</button>
+                <div class="add-criterion">
+                    <h7>Add criterion</h7>
+                    <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
+                        <img src="/icons/add.svg">
+                    </button>
+                </div>
 
             </section>
 

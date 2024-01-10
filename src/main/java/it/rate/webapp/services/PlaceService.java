@@ -10,10 +10,8 @@ import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
-
 import java.util.*;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -109,5 +107,11 @@ public class PlaceService {
           .get();
     }
     throw new IllegalStateException("No criteria found");
+  }
+
+  public void addImage(Long placeId, String imageId) {
+    Place place = placeRepository.getReferenceById(placeId);
+    place.getImageNames().add(imageId);
+    placeRepository.save(place);
   }
 }
