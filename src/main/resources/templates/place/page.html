@@ -21,7 +21,8 @@
 
         <div class="place-image">
             <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="placeholder"/>
-            <img th:unless="*{imageNames.isEmpty()}" th:src="'https://drive.google.com/uc?export=view&id=' + *{imageNames.get(0)}" alt="placeholder"/>
+            <img th:unless="*{imageNames.isEmpty()}"
+                 th:src="'https://drive.google.com/uc?export=view&id=' + *{imageNames.get(0)}" alt="placeholder"/>
         </div>
 
         <header class="content-header place-header">
@@ -94,8 +95,37 @@
     </div>
 </div>
 
-<script th:replace="~{fragments :: map-script}"></script></script>
-<script th:inline="javascript" src="/scripts/map.js"></script>
+<script th:replace="~{fragments :: placeMap-script}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    let latitude = [[${place.latitude}]];
+    let longitude = [[${place.longitude}]];
+
+    let latlng = L.latLng([latitude, longitude]);
+    let map = L.map('map').setView(latlng, 16);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // let marker = L.marker([51.5, -0.09]).addTo(map);
+    //
+    // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    //
+    // let popup = L.popup();
+    //
+    // function onMapClick(e) {
+    //     popup
+    //         .setLatLng(e.latlng)
+    //         .setContent("You clicked the map at " + e.latlng.toString())
+    //         .openOn(map);
+    // }
+    //
+    // map.on('click', onMapClick);
+    /*]]>*/
+</script>
 <script th:inline="javascript" src="/scripts/rating.js"></script>
 <script type="module" src="/scripts/imageUpload.js"></script>
 
