@@ -55,7 +55,7 @@ class UpdateSecurityContextAspectTest extends BaseTest {
             r ->
                 r.getRole().equals(roleToRemove)
                     && r.getInterest().getId().equals(interest.getId()));
-    updateSecurityContextAspect.updateContext(null);
+    updateSecurityContextAspect.updateContext();
 
     // Assert
     assertEquals(1, SecurityContextHolder.getContext().getAuthentication().getAuthorities().size());
@@ -85,7 +85,7 @@ class UpdateSecurityContextAspectTest extends BaseTest {
 
     // Act
     user.getRoles().add(new Role(user, interest, roleToAdd));
-    updateSecurityContextAspect.updateContext(null);
+    updateSecurityContextAspect.updateContext();
 
     // Assert
     assertEquals(2, SecurityContextHolder.getContext().getAuthentication().getAuthorities().size());
