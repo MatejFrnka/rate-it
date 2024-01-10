@@ -3,7 +3,6 @@ package it.rate.webapp.config.security;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
