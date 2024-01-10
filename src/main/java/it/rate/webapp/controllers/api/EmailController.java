@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class EmailController {
 
-    private EmailService emailService;
+  private EmailService emailService;
 
-    @PostMapping("/scripts/email-test")
-    public ResponseEntity<?> sendEmail(@RequestBody EmailMessageDTO emailMessageDTO) {
-        emailService.sendEmail(emailMessageDTO);
-        return ResponseEntity.ok("Sent");
-    }
+  @PostMapping("/scripts/email-test")
+  public ResponseEntity<?> sendEmail(@RequestBody EmailMessageDTO emailMessageDTO) {
+    emailService.sendEmail(emailMessageDTO);
+    return ResponseEntity.ok("Sent");
+  }
 }

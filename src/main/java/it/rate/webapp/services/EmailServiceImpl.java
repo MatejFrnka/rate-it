@@ -21,6 +21,5 @@ public class EmailServiceImpl implements EmailService {
     smm.setText(emailMessage.getText());
 
     this.mailSender.send(smm);
-
   }
 }
