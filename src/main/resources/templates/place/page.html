@@ -9,7 +9,7 @@
     <header class="header">
         <div th:replace="~{fragments.html :: hamburger-menu}"></div>
         <div th:replace="~{fragments.html :: logo}"></div>
-        <div th:replace="${loggedUser != null && loggedUser.getCreatedPlaces().contains(place)} ?
+        <div th:replace="${loggedUser != null && place.creator.equals(loggedUser)} ?
          ~{fragments.html :: place-admin-menu} : ~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
