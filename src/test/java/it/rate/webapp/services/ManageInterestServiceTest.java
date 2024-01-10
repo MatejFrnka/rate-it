@@ -68,8 +68,7 @@ class ManageInterestServiceTest extends BaseTest {
   @Test
   void removeRoleRemoveCreatorRoleThrowsException() {
     Role roleToDelete = new Role(u1, i1, Role.RoleType.CREATOR);
-    when(roleService.findByAppUserIdAndInterestId(any(), any()))
-        .thenReturn(Optional.of(roleToDelete));
+    when(roleService.findById(any())).thenReturn(Optional.of(roleToDelete));
 
     Exception e1 =
         assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
@@ -78,7 +77,7 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void removeRoleNonExistentRoleForUser() {
-    when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.empty());
+    when(roleService.findById(any())).thenReturn(Optional.empty());
     Exception e4 =
         assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
 
@@ -88,8 +87,7 @@ class ManageInterestServiceTest extends BaseTest {
   @Test
   void removeRole() {
     Role roleToDelete = new Role(u1, i1, Role.RoleType.VOTER);
-    when(roleService.findByAppUserIdAndInterestId(any(), any()))
-        .thenReturn(Optional.of(roleToDelete));
+    when(roleService.findById(any())).thenReturn(Optional.of(roleToDelete));
     ArgumentCaptor<RoleId> argumentCaptor = ArgumentCaptor.forClass(RoleId.class);
 
     manageInterestService.removeRole(1L, 1L);
@@ -141,7 +139,7 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void adjustRoleNonExistentRoleForUser() {
-    when(roleService.findByAppUserIdAndInterestId(any(), any())).thenReturn(Optional.empty());
+    when(roleService.findById(any())).thenReturn(Optional.empty());
     Exception e =
         assertThrows(
             BadRequestException.class,
@@ -154,8 +152,7 @@ class ManageInterestServiceTest extends BaseTest {
   void adjustRole() throws BadRequestException {
     Role roleToAdjust = new Role(u1, i1, Role.RoleType.APPLICANT);
     Role.RoleType roleToApply = Role.RoleType.VOTER;
-    when(roleService.findByAppUserIdAndInterestId(any(), any()))
-        .thenReturn(Optional.of(roleToAdjust));
+    when(roleService.findById(any())).thenReturn(Optional.of(roleToAdjust));
 
     manageInterestService.adjustRole(1L, 1L, roleToApply);
 

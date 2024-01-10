@@ -49,22 +49,7 @@ public class PlaceService {
     return placeRepository.findById(id);
   }
 
-  public boolean isCreator(String loggedUserEmail, Long placeId) throws BadRequestException {
-
-    AppUser appUser =
-        userService
-            .findByEmail(loggedUserEmail)
-            .orElseThrow(() -> new BadRequestException("Email not found in database"));
-
-    Place place =
-        placeRepository
-            .findById(placeId)
-            .orElseThrow(() -> new BadRequestException("Place id not found in database"));
-
-    return place.getCreator().equals(appUser);
-  }
-
-  public Place getReferenceById(Long placeId) {
+  public Place getById(Long placeId) {
     return placeRepository.getReferenceById(placeId);
   }
 

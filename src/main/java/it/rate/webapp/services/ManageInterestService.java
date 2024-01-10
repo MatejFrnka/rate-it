@@ -24,7 +24,7 @@ public class ManageInterestService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameter");
     }
 
-    Optional<Role> optRole = roleService.findByAppUserIdAndInterestId(userId, interestId);
+    Optional<Role> optRole = roleService.findById(new RoleId(userId, interestId));
     if (optRole.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found");
     }
@@ -42,7 +42,7 @@ public class ManageInterestService {
     if (userId == null || interestId == null || roleType == null) {
       throw new BadRequestException("Missing parameter");
     }
-    Optional<Role> optRole = roleService.findByAppUserIdAndInterestId(userId, interestId);
+    Optional<Role> optRole = roleService.findById(new RoleId(userId, interestId));
     if (optRole.isEmpty()) {
       throw new BadRequestException("Role not found");
     }

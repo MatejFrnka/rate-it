@@ -19,8 +19,8 @@ public class RoleService {
     roleRepository.deleteById(roleId);
   }
 
-  public Optional<Role> findByAppUserIdAndInterestId(Long userId, Long interestId) {
-    return roleRepository.findByAppUserIdAndInterestId(userId, interestId);
+  public Optional<Role> findById(RoleId roleId) {
+    return roleRepository.findById(roleId);
   }
 
   public Role save(Role role) {

@@ -99,12 +99,12 @@ public class WebappApplication implements CommandLineRunner {
     interestRepository.saveAll(List.of(i1, i2));
 
     Role r1 = new Role(u1, i1, Role.RoleType.CREATOR);
-    Role r2 = new Role(u2, i1, Role.RoleType.VOTER);
+    //    Role r2 = new Role(u2, i1, Role.RoleType.VOTER);
     Role r3 = new Role(u3, i2, Role.RoleType.CREATOR);
     Role r4 = new Role(u3, i1, Role.RoleType.VOTER);
     //    Role r5 = new Role(u1, i2, Role.RoleType.VOTER);
     Role r6 = new Role(u4, i1, Role.RoleType.APPLICANT);
-    roleRepository.saveAll(List.of(r1, r2, r3, r4, r6));
+    roleRepository.saveAll(List.of(r1, r3, r4, r6));
 
     Like v1 = new Like(u1, i1);
     Like v2 = new Like(u2, i1);
