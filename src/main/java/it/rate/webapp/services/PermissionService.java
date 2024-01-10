@@ -30,8 +30,7 @@ public class PermissionService {
 
   @UpdateSecurityContext
   public boolean hasRatingPermission(AppUser user, Interest interest) {
-    Optional<Role> optRole =
-        roleRepository.findByAppUserIdAndInterestId(user.getId(), interest.getId());
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interest.getId()));
     if (!interest.isExclusive()) {
       return true;
     } else if (optRole.isPresent()) {
