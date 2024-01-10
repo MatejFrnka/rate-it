@@ -14,7 +14,7 @@ public class EmailController {
 
     private EmailService emailService;
 
-    @PostMapping("/email-test")
+    @PostMapping("/scripts/email-test")
     public ResponseEntity<?> sendEmail(@RequestBody EmailMessageDTO emailMessageDTO) {
         emailService.sendEmail(emailMessageDTO);
         return ResponseEntity.ok("Sent");

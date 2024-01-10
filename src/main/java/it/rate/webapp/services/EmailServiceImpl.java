@@ -15,7 +15,7 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendEmail(EmailMessageDTO emailMessage) {
     SimpleMailMessage smm = new SimpleMailMessage();
-    smm.setFrom("ratespottest@gmail.com");
+    smm.setFrom("ratespot.email@centrum.cz");
     smm.setTo(emailMessage.getTo());
     smm.setSubject(emailMessage.getSubject());
     smm.setText(emailMessage.getText());
