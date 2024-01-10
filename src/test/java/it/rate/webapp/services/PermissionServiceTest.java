@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
+import it.rate.webapp.config.security.UpdateSecurityContextAspect;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ class PermissionServiceTest extends BaseTest {
   @MockBean InterestRepository interestRepository;
   @MockBean UserRepository userRepository;
   @MockBean RoleRepository roleRepository;
+  @MockBean UpdateSecurityContextAspect updateSecurityContextAspect;
 
   @Autowired PermissionService permissionService;
 

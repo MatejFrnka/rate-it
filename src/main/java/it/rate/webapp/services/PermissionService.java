@@ -2,10 +2,7 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.config.security.UpdateSecurityContext;
-import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Place;
-import it.rate.webapp.models.Role;
+import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RoleRepository;
