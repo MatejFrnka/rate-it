@@ -23,10 +23,11 @@ public class BeanConfig {
 
   @Value("${CREDENTIALS_PATH}")
   private String path;
+
   @Bean
   public Drive getGoogleDriveService() throws IOException {
 
-    FileInputStream credentialFile = null;
+    FileInputStream credentialFile;
 
     try {
       credentialFile = new FileInputStream(path);
