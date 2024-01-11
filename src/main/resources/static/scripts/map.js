@@ -6,26 +6,35 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-console.log(latitude, longitude);
-
 let marker;
+let inputLat = document.getElementById("place-latitude");
+let inputLng = document.getElementById("place-longitude");
+
+if (latitude && longitude) {
+    createMarker(latitude, longitude);
+}
+
 map.on("click", function (e) {
-    marker ? marker.remove() : null;
     let latitude = e.latlng.lat;
     let longitude = e.latlng.lng;
+    createMarker(latitude, longitude);
+});
+
+function createMarker(latitude, longitude) {
+    if (marker) {
+        marker.remove();
+    }
+
+    fillInputFields(latitude, longitude);
 
     marker = new L.marker([latitude, longitude], {draggable: true, autoPan: true}).addTo(map);
-
     marker.on("dragend", function (event) {
         let updatedLatLng = event.target.getLatLng();
-        inputLat.value = updatedLatLng.lat;
-        inputLng.value = updatedLatLng.lng;
+        fillInputFields(updatedLatLng.lat, updatedLatLng.lng);
     });
+}
 
-    let inputLat = document.getElementById("place-latitude");
-    let inputLng = document.getElementById("place-longitude");
-
-    inputLat.value = latitude;
-    inputLng.value = longitude;
-})
-
+function fillInputFields(latitude, longitude) {
+    inputLat.value = latitude.toFixed(6);
+    inputLng.value = longitude.toFixed(6);
+}

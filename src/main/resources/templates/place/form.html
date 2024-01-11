@@ -55,10 +55,16 @@
                     <div id="map"></div>
                 </div>
                 <input type="number"
+                       hidden="hidden"
+                       inputmode="decimal"
+                       step="0.000001"
                        id="place-latitude"
                        th:field="*{latitude}"
                        required>
                 <input type="number"
+                       hidden="hidden"
+                       inputmode="decimal"
+                       step="0.000001"
                        id="place-longitude"
                        th:field="*{longitude}"
                        required>
