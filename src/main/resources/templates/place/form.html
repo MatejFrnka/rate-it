@@ -55,21 +55,22 @@
                     <div id="map"></div>
                 </div>
                 <input type="number"
-                       hidden="hidden"
                        inputmode="decimal"
                        step="0.000001"
                        id="place-latitude"
                        th:field="*{latitude}"
-                       required>
+                       required
+                       hidden>
                 <input type="number"
-                       hidden="hidden"
                        inputmode="decimal"
                        step="0.000001"
                        id="place-longitude"
                        th:field="*{longitude}"
-                       required>
-            </section>
+                       required
+                       hidden>
 
+                <button class="dark-button" type="button" onclick="locate()">Get Current location</button>
+            </section>
 
             <section class="input-param">
                 <h4>Description</h4>
@@ -82,7 +83,7 @@
                 </label>
             </section>
 
-            <button class="dark-button">Save</button>
+            <button class="dark-button" type="submit">Save</button>
         </form>
     </div>
 </div>

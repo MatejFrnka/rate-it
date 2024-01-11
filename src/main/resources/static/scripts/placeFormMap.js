@@ -34,6 +34,9 @@ map.on("click", function (e) {
     createMarker(latitude, longitude);
 });
 
+map.on('locationfound', onLocationFound);
+map.on('locationerror', onLocationError);
+
 function createMarker(latitude, longitude) {
     if (marker) {
         marker.remove();
@@ -49,4 +52,16 @@ function createMarker(latitude, longitude) {
 function fillInputFields(latitude, longitude) {
     inputLat.value = latitude.toFixed(6);
     inputLng.value = longitude.toFixed(6);
+}
+
+function locate() {
+    map.locate({setView: true, maxZoom: 16});
+}
+
+function onLocationFound(e) {
+    createMarker(e.latlng.lat, e.latlng.lng);
+}
+
+function onLocationError(e) {
+    alert(e.message);
 }
