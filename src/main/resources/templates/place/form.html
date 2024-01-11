@@ -43,10 +43,12 @@
                 </div>
             </section>
 
-<!--            <label for="lat">Latitude: (pin on map/get users location/manual)</label>-->
-<!--            <input type="number" id="lat" name="lat" th:field="*{latitude}" required>-->
-<!--            <label for="lng">Longitude: (pin on map/get users location/manual)</label>-->
-<!--            <input type="number" id="lng" name="lng" th:field="*{longitude}" required>-->
+            <label for="lat"></label>
+            <input type="number" id="lat" name="lat" th:field="*{latitude}" required>
+            <label for="lng"></label>
+            <input type="number" id="lng" name="lng" th:field="*{longitude}" required>
+            <button onclick="findMyLocation()" type="button">My location</button>
+            <p class="status"></p>
 
             <section class="input-param">
                 <h4>Description</h4>
