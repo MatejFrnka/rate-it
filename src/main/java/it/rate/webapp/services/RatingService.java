@@ -2,6 +2,7 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.*;
+import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RatingService {
   private final RatingRepository ratingRepository;
-  private final CriterionService criterionService;
+  private final CriterionRepository criterionRepository;
 
   public RatingsDTO getUsersRatingsDto(AppUser appUser, Place place) {
     List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(appUser, place);
@@ -56,7 +57,7 @@ public class RatingService {
     Set<Criterion> ratedCriteria =
         ratings.ratings().keySet().stream().map(this::getCriterion).collect(Collectors.toSet());
     if (!ratedCriteria.containsAll(placeCriteria)) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid criterion id in ratings");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid criteria in ratings");
     }
     ratings
         .ratings()
@@ -69,7 +70,7 @@ public class RatingService {
   }
 
   private Criterion getCriterion(Long criterionId) {
-    Optional<Criterion> optCriterion = criterionService.findById(criterionId);
+    Optional<Criterion> optCriterion = criterionRepository.findById(criterionId);
     if (optCriterion.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Criterion not found");
     }
