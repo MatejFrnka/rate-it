@@ -9,9 +9,6 @@ const findMyLocation = () => {
 
         lat.value = latitude;
         lng.value = longitude;
-
-        lat.dispatchEvent(new Event('input'));
-        lng.dispatchEvent(new Event('input'));
     }
 
     const error = () => {
