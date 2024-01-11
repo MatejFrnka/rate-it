@@ -14,4 +14,8 @@ public class CriterionService {
   public Optional<Criterion> findById(Long id) {
     return criterionRepository.findById(id);
   }
+
+  public boolean existsById(Long id) {
+    return criterionRepository.existsById(id);
+  }
 }

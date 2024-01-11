@@ -22,12 +22,12 @@ public class RatingService {
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(RatingsDTO rating, Place place, AppUser appUser) {
-    rating
+  public void updateRating(RatingsDTO ratings, Place place, AppUser appUser) {
+    validateRatings(ratings);
+    ratings
         .ratings()
         .forEach(
             (key, value) -> {
-              // todo: validate value to be between 0 and 10
               Criterion criterion = getCriterion(key);
               Optional<Rating> optRating =
                   ratingRepository.findById(
@@ -47,6 +47,21 @@ public class RatingService {
                 }
                 Rating newRating = new Rating(appUser, place, criterion, value);
                 ratingRepository.save(newRating);
+              }
+            });
+  }
+
+  private void validateRatings(RatingsDTO ratings) {
+    ratings
+        .ratings()
+        .forEach(
+            (key, value) -> {
+              if (!criterionService.existsById(key)) {
+                throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Invalid criterion id in ratings");
+              }
+              if (value < 1 || value > 10) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value");
               }
             });
   }
