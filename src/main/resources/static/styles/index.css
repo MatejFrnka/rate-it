@@ -45,7 +45,7 @@ body {
     margin-bottom: 0;
 }
 
-.topbar-menu {
+.top-bar-menu {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,7 +56,7 @@ body {
     border-radius: 50%;
 }
 
-.topbar-menu .dropdown-toggle {
+.top-bar-menu .dropdown-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,7 +65,7 @@ body {
     font-size: 1.5rem;
 }
 
-.topbar-menu .dropdown-toggle::after {
+.top-bar-menu .dropdown-toggle::after {
     display: none;
 }
 
@@ -101,7 +101,7 @@ body {
     padding-top: 0;
 }
 
-.mainpage-content {
+.main-page-content {
     gap: 2rem;
 }
 
@@ -596,7 +596,7 @@ h4 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.toggle-container div {
+.toggle-container span {
     padding: 6px;
     text-align: center;
     z-index: 1;
@@ -606,25 +606,25 @@ h4 {
     left: 50%;
 }
 
-.toggle-checkbox:checked + .toggle-container div:first-child {
+.toggle-checkbox:checked + .toggle-container span:first-child {
     color: #AAAAAA;
     transition: color 0.3s;
     font-weight: 600;
 }
 
-.toggle-checkbox:checked + .toggle-container div:last-child {
+.toggle-checkbox:checked + .toggle-container span:last-child {
     color: #568D73;
     transition: color 0.3s;
     font-weight: 600;
 }
 
-.toggle-checkbox + .toggle-container div:first-child {
+.toggle-checkbox + .toggle-container span:first-child {
     color: #568D73;
     transition: color 0.3s;
     font-weight: 600;
 }
 
-.toggle-checkbox + .toggle-container div:last-child {
+.toggle-checkbox + .toggle-container span:last-child {
     color: #AAAAAA;
     transition: color 0.3s;
     font-weight: 600;
