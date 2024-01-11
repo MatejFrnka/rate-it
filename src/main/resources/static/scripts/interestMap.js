@@ -16,7 +16,7 @@ if (places.length === 0) {
     L.tileLayer(mapUrl, tileLayerOptions).addTo(map);
 
     places.forEach(place => {
-        const popup = "<b><a href='/interests/1/places/" + place.id + "'>" + place.name + "</a></b>" +
+        const popup = "<b><a href='/interests/" + interestId + "/places/" + place.id + "'>" + place.name + "</a></b>" +
             "<br>" + "Rating: " + (place.avgRating / 2).toFixed(1) + "/5<br>Lat: " + place.latitude + "<br>Lng: " + place.longitude
 
         let latlng = L.latLng([place.latitude, place.longitude]);
