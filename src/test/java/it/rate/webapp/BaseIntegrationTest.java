@@ -64,7 +64,14 @@ public class BaseIntegrationTest extends BaseTest {
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.USER)
             .build();
-    userRepository.saveAll(List.of(u1, u2, u3, u4));
+
+    AppUser u5 = AppUser.builder()
+            .username("Hynek")
+            .email("hynek@hynek.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.USER)
+            .build();
+    userRepository.saveAll(List.of(u1, u2, u3, u4, u5));
 
     Interest i1 =
         Interest.builder()
