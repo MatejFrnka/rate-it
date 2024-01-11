@@ -17,7 +17,7 @@ if (places.length === 0) {
 
     places.forEach(place => {
         const popup = "<b><a href='/interests/1/places/" + place.id + "'>" + place.name + "</a></b>" +
-            "<br>" + "Rating: " + place.avgRating / 2 + "/5<br>Lat: " + place.latitude + "<br>Lng: " + place.longitude
+            "<br>" + "Rating: " + (place.avgRating / 2).toFixed(1) + "/5<br>Lat: " + place.latitude + "<br>Lng: " + place.longitude
 
         let latlng = L.latLng([place.latitude, place.longitude]);
         let marker = L.marker(latlng).addTo(map);

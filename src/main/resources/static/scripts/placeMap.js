@@ -11,4 +11,4 @@ let map = L.map('map').setView(latlng, defaultPlaceZoom);
 L.tileLayer(mapUrl, tileLayerOptions).addTo(map);
 
 let marker = L.marker(latlng).addTo(map);
-marker.bindPopup("<b>" + name + "</b><br>" + "Rating: " + rating / 2 + "/5<br>Lat: " + latitude + "<br>Lng: " + longitude);
+marker.bindPopup("<b>" + name + "</b><br>" + "Rating: " + (rating / 2).toFixed(1) + "/5<br>Lat: " + latitude + "<br>Lng: " + longitude);

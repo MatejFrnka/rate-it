@@ -17,14 +17,14 @@ import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/map")
+@RequestMapping("/interests/{interestId}/map")
 public class MapController {
   private final InterestService interestService;
   private final UserService userService;
   private final RoleService roleService;
   private final PlaceService placeService;
 
-  @GetMapping("/{interestId}")
+  @GetMapping()
   public String mapView(Model model, @PathVariable Long interestId, Principal principal) {
     Optional<Interest> interest = interestService.findInterestById(interestId);
     if (interest.isEmpty()) {
