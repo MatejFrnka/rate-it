@@ -37,11 +37,6 @@ public class RateItUserDetailsService implements UserDetailsService {
       username = appUser.getEmail();
       password = appUser.getPassword();
       authorities.add(new SimpleGrantedAuthority(appUser.getServerRole().name()));
-      for (Role role : appUser.getRoles()) {
-        authorities.add(
-            new SimpleGrantedAuthority(
-                String.format("ROLE_%s_%d", role.getRole().name(), role.getId().getInterestId())));
-      }
     }
     return new User(username, password, authorities);
   }

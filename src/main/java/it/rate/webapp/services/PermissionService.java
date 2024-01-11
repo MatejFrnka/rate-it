@@ -32,7 +32,7 @@ public class PermissionService {
       return true;
     } else if (optRole.isPresent()) {
       return optRole.get().getRole().equals(Role.RoleType.VOTER)
-          || optRole.get().getRole().equals(Role.RoleType.CREATOR);
+              || optRole.get().getRole().equals(Role.RoleType.CREATOR);
     }
     return false;
   }
@@ -47,55 +47,51 @@ public class PermissionService {
 
     if (i.isExclusive()) {
       return new String[] {
-        String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-        String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId())
+              String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
+              String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId())
       };
     } else {
       return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
     }
   }
 
-  @UpdateSecurityContext
-  public String[] manageCommunity(Long interestId) {
+  public boolean manageCommunity(Long interestId) {
     if (!interestRepository.existsById(interestId)) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
     }
-    return new String[] {
-      ServerRole.ADMIN.name(), String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), interestId)
-    };
-  }
-
-  @UpdateSecurityContext
-  public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication.getPrincipal().equals("anonymousUser")) {
+    AppUser user = authenticatedUser();
+    if (user == null) {
       return false;
     }
-    Optional<AppUser> optUser = userRepository.findByEmail(authentication.getName());
-    if (optUser.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+    if (optRole.isEmpty()) {
+      return false;
     }
-    AppUser user = optUser.get();
+    return optRole.get().getRole().equals(Role.RoleType.CREATOR) || user.getServerRole().equals(ServerRole.ADMIN);
+  }
+
+  public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
+    AppUser user = authenticatedUser();
+    if (user == null) {
+      return false;
+    }
     // Check if user is admin
     if (user.getServerRole().equals(ServerRole.ADMIN)) {
       return true;
     }
-    // Check if user is Interest creator
-    Optional<Role> optRole =
-        user.getRoles().stream()
-            .filter(r -> r.getRole().equals(Role.RoleType.CREATOR))
-            .filter(r -> r.getInterest().getId().equals(interestId))
-            .findFirst();
-    if (optRole.isPresent()) {
-      return true;
-    }
+
+    // Check if user is place creator
     Optional<Place> optPlace = placeRepository.findById(placeId);
     if (optPlace.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
     }
-    Place place = optPlace.get();
-    // Check if User is Place creator
-    return place.getCreator().getId().equals(user.getId());
+    if (optPlace.get().getCreator().equals(user)) {
+      return true;
+    }
+
+    // Check if user is Interest creator
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+    return optRole.map(role -> role.getRole().equals(Role.RoleType.CREATOR)).orElse(false);
   }
 
   @UpdateSecurityContext
@@ -108,12 +104,20 @@ public class PermissionService {
 
     if (i.isExclusive()) {
       return new String[] {
-        String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-        String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId()),
-        ServerRole.ADMIN.name()
+              String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
+              String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId()),
+              ServerRole.ADMIN.name()
       };
     } else {
       return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
     }
+  }
+
+  private AppUser authenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null &&!(authentication.getPrincipal().equals("anonymousUser"))) {
+      return userRepository.getByEmail(authentication.getName());
+    }
+    return null;
   }
 }

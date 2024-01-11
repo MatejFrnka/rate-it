@@ -26,7 +26,7 @@ public class InterestAdminController {
   private final UserService userService;
 
   @GetMapping("/edit")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
     model.addAttribute("interest", interestService.getById(interestId));
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
@@ -37,7 +37,7 @@ public class InterestAdminController {
     return "interest/form";
   }
 
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   @PutMapping("/edit")
   public String editInterest(
       @PathVariable Long interestId,
@@ -51,7 +51,7 @@ public class InterestAdminController {
   }
 
   @GetMapping("/users")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal) {
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
@@ -61,14 +61,14 @@ public class InterestAdminController {
   }
 
   @DeleteMapping("/users/{userId}")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String removeUser(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.removeRole(interestId, userId);
     return "redirect:/interests/{interestId}/admin/users";
   }
 
   @PutMapping("/users/{userId}")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId)
       throws BadRequestException {
     manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
@@ -76,7 +76,7 @@ public class InterestAdminController {
   }
 
   @GetMapping("/invite")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
@@ -86,7 +86,7 @@ public class InterestAdminController {
   }
 
   @PostMapping("/invite")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String inviteUser(
       @PathVariable Long interestId, String inviteBy, String user, RedirectAttributes ra) {
     try {
