@@ -52,12 +52,11 @@ public class PermissionService {
     if (user == null) {
       return false;
     }
-    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-    if (optRole.isEmpty()) {
-      return false;
+    if (user.getServerRole().equals(ServerRole.ADMIN)) {
+      return true;
     }
-    return optRole.get().getRole().equals(Role.RoleType.CREATOR)
-        || user.getServerRole().equals(ServerRole.ADMIN);
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+    return optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.CREATOR);
   }
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {

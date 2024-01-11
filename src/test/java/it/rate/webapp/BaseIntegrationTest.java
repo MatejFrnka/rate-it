@@ -29,7 +29,7 @@ public class BaseIntegrationTest extends BaseTest {
   @Autowired private RatingRepository ratingRepository;
   @Autowired private RoleRepository roleRepository;
   @Autowired private UserRepository userRepository;
-  @Autowired private LikeRepository voteRepository;
+  @Autowired private LikeRepository likeRepository;
 
   @BeforeAll
   void setupDatabase() {
@@ -102,7 +102,7 @@ public class BaseIntegrationTest extends BaseTest {
     Like v4 = new Like(u1, i2);
     Like v5 = new Like(u2, i2);
     Like v6 = new Like(u4, i1);
-    voteRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
+    likeRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
 
     Place p1 =
         Place.builder()

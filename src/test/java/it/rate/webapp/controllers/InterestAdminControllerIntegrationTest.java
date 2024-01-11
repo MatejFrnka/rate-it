@@ -378,7 +378,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
       authorities = {"USER"})
   void removeUserReturnsRedirectForCreator() throws Exception {
     Long interestId = 1L;
-    Long userId = 2L;
+    Long userId = 3L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
         .andExpect(status().is3xxRedirection())
@@ -452,8 +452,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
       username = "lojza@lojza.cz",
       authorities = {"USER"})
   void acceptUserReturnsForbiddenForCreatorOfDifferentInterest() throws Exception {
-    Long interestId = 1L;
-    Long userId = 1L;
+    Long interestId = 2L;
+    Long userId = 2L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
         .andExpect(status().isForbidden())
