@@ -25,34 +25,37 @@ public class PermissionService {
   private final RoleRepository roleRepository;
   private final UserRepository userRepository;
 
-  @UpdateSecurityContext
   public boolean hasRatingPermission(AppUser user, Interest interest) {
     Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interest.getId()));
     if (!interest.isExclusive()) {
       return true;
     } else if (optRole.isPresent()) {
       return optRole.get().getRole().equals(Role.RoleType.VOTER)
-              || optRole.get().getRole().equals(Role.RoleType.CREATOR);
+          || optRole.get().getRole().equals(Role.RoleType.CREATOR);
     }
     return false;
   }
 
-  @UpdateSecurityContext
-  public String[] ratePlace(Long placeId) {
+  public boolean ratePlace(Long placeId) {
     Optional<Place> optPlace = placeRepository.findById(placeId);
     if (optPlace.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
     }
     Interest i = optPlace.get().getInterest();
-
-    if (i.isExclusive()) {
-      return new String[] {
-              String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-              String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId())
-      };
-    } else {
-      return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
+    AppUser user = authenticatedUser();
+    if (user == null) {
+      return false;
     }
+    if (user.getServerRole().equals(ServerRole.ADMIN)) {
+      return true;
+    }
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
+    if (!i.isExclusive()) {
+      return true;
+    }
+    return optRole.isPresent()
+        && (optRole.get().getRole().equals(Role.RoleType.VOTER)
+            || optRole.get().getRole().equals(Role.RoleType.CREATOR));
   }
 
   public boolean manageCommunity(Long interestId) {
@@ -67,7 +70,8 @@ public class PermissionService {
     if (optRole.isEmpty()) {
       return false;
     }
-    return optRole.get().getRole().equals(Role.RoleType.CREATOR) || user.getServerRole().equals(ServerRole.ADMIN);
+    return optRole.get().getRole().equals(Role.RoleType.CREATOR)
+        || user.getServerRole().equals(ServerRole.ADMIN);
   }
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
@@ -104,9 +108,9 @@ public class PermissionService {
 
     if (i.isExclusive()) {
       return new String[] {
-              String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-              String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId()),
-              ServerRole.ADMIN.name()
+        String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
+        String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId()),
+        ServerRole.ADMIN.name()
       };
     } else {
       return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
@@ -115,7 +119,7 @@ public class PermissionService {
 
   private AppUser authenticatedUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication != null &&!(authentication.getPrincipal().equals("anonymousUser"))) {
+    if (authentication != null && !(authentication.getPrincipal().equals("anonymousUser"))) {
       return userRepository.getByEmail(authentication.getName());
     }
     return null;

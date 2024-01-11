@@ -81,7 +81,7 @@ public class PlaceController {
   }
 
   @PostMapping("/{placeId}/rate")
-  @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#placeId))")
+  @PreAuthorize("@permissionService.ratePlace(#placeId)")
   public String ratePlace(
       @PathVariable Long interestId,
       @PathVariable Long placeId,
