@@ -6,12 +6,28 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+console.log(latitude, longitude);
+
 let marker;
+
+
 map.on("click", function (e) {
-    if (marker != null) {
-        marker.remove();
-    }
-    marker = new L.marker([e.latlng.lat, e.latlng.lng], {draggable: true, autoPan: true}).addTo(map);
+    marker ? marker.remove() : null;
+    let latitude = e.latlng.lat;
+    let longitude = e.latlng.lng;
 
+    marker = new L.marker([latitude, longitude], {draggable: true, autoPan: true}).addTo(map);
 
+    let inputLat = document.getElementById("place-latitude");
+    let inputLng = document.getElementById("place-longitude");
+
+    inputLat.value = latitude;
+    inputLng.value = longitude;
+
+    marker.on("dragend", function (event) {
+        let updatedLatLng = event.target.getLatLng();
+        inputLat.value = updatedLatLng.lat;
+        inputLng.value = updatedLatLng.lng;
+    });
 })
+

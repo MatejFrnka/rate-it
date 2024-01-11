@@ -14,22 +14,38 @@
     </header>
 
     <div class="content">
-        <form th:method="${method}" th:action="${action}" th:object="${place}">
-            <h2 th:if="${place.id == null}" th:text="'New Place'"></h2>
-            <h2 th:unless="${place.id == null}" th:text="'Editing... ' + ${title}"></h2>
+        <form th:method="${method}"
+              th:action="${action}"
+              th:object="${place}">
+            <h2 th:if="${place.id == null}"
+                th:text="'New Place'">
+            </h2>
+            <h2 th:unless="${place.id == null}"
+                th:text="'Editing... ' + ${title}">
+            </h2>
 
             <section class="input-param">
                 <input type="hidden" th:field="*{id}"/>
                 <h4>Name</h4>
                 <label>
-                    <input class="input-text-field" type="text" name="name" th:field="*{name}" required autocomplete="off">
+                    <input class="input-text-field"
+                           type="text"
+                           name="name"
+                           th:field="*{name}"
+                           required
+                           autocomplete="off">
                 </label>
             </section>
 
             <section class="input-param">
                 <h4>Address</h4>
                 <label>
-                    <input class="input-text-field" type="text" id="address" name="address" th:field="*{address}" autocomplete="off">
+                    <input class="input-text-field"
+                           type="text"
+                           id="address"
+                           name="address"
+                           th:field="*{address}"
+                           autocomplete="off">
                 </label>
             </section>
 
@@ -37,11 +53,15 @@
                 <h4>Exact spot</h4>
                 <div class="place-map">
                     <div id="map"></div>
-                    <label for="lat"></label>
-                    <input type="number" id="lat" name="lat" th:field="*{latitude}" required>
-                    <label for="lng"></label>
-                    <input type="number" id="lng" name="lng" th:field="*{longitude}" required>
                 </div>
+                <input type="number"
+                       id="place-latitude"
+                       th:field="*{latitude}"
+                       required>
+                <input type="number"
+                       id="place-longitude"
+                       th:field="*{longitude}"
+                       required>
                 <div class="centered-button-wrapper">
                     <a class="light-button">Confirm</a>
                 </div>
@@ -51,7 +71,11 @@
             <section class="input-param">
                 <h4>Description</h4>
                 <label>
-                    <textarea class="input-text-field" id="description" name="description" th:field="*{description}"></textarea>
+                    <textarea class="input-text-field"
+                              id="description"
+                              name="description"
+                              th:field="*{description}">
+                    </textarea>
                 </label>
             </section>
 
@@ -63,6 +87,9 @@
 <script th:replace="~{fragments :: placeMap-script}"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
+
+    let latitude = [[${place.latitude}]];
+    let longitude = [[${place.longitude}]];
 
     /*]]>*/
 </script>
