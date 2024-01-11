@@ -1,7 +1,6 @@
 package it.rate.webapp.config.security;
 
 import it.rate.webapp.models.AppUser;
-import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

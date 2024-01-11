@@ -1,7 +1,6 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.config.security.ServerRole;
-import it.rate.webapp.config.security.UpdateSecurityContext;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.PlaceRepository;
@@ -42,20 +41,7 @@ public class PermissionService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
     }
     Interest i = optPlace.get().getInterest();
-    AppUser user = authenticatedUser();
-    if (user == null) {
-      return false;
-    }
-    if (user.getServerRole().equals(ServerRole.ADMIN)) {
-      return true;
-    }
-    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
-    if (!i.isExclusive()) {
-      return true;
-    }
-    return optRole.isPresent()
-        && (optRole.get().getRole().equals(Role.RoleType.VOTER)
-            || optRole.get().getRole().equals(Role.RoleType.CREATOR));
+    return canRateOrCreate(i);
   }
 
   public boolean manageCommunity(Long interestId) {
@@ -98,23 +84,13 @@ public class PermissionService {
     return optRole.map(role -> role.getRole().equals(Role.RoleType.CREATOR)).orElse(false);
   }
 
-  @UpdateSecurityContext
-  public String[] createPlace(Long interestId) {
+  public boolean createPlace(Long interestId) {
     Optional<Interest> optInterest = interestRepository.findById(interestId);
     if (optInterest.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
     }
     Interest i = optInterest.get();
-
-    if (i.isExclusive()) {
-      return new String[] {
-        String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-        String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId()),
-        ServerRole.ADMIN.name()
-      };
-    } else {
-      return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
-    }
+    return canRateOrCreate(i);
   }
 
   private AppUser authenticatedUser() {
@@ -123,5 +99,22 @@ public class PermissionService {
       return userRepository.getByEmail(authentication.getName());
     }
     return null;
+  }
+
+  private boolean canRateOrCreate(Interest i) {
+    AppUser user = authenticatedUser();
+    if (user == null) {
+      return false;
+    }
+    if (user.getServerRole().equals(ServerRole.ADMIN)) {
+      return true;
+    }
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
+    if (!i.isExclusive()) {
+      return true;
+    }
+    return optRole.isPresent()
+        && (optRole.get().getRole().equals(Role.RoleType.VOTER)
+            || optRole.get().getRole().equals(Role.RoleType.CREATOR));
   }
 }

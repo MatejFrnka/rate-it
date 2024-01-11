@@ -28,7 +28,7 @@ public class PlaceController {
   private final RoleService roleService;
 
   @GetMapping("/new")
-  @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
+  @PreAuthorize("@permissionService.createPlace(#interestId)")
   public String newPlacePage(@PathVariable Long interestId, Model model, Principal principal) {
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
@@ -41,7 +41,7 @@ public class PlaceController {
   }
 
   @PostMapping("/new")
-  @PreAuthorize("hasAnyAuthority(@permissionService.createPlace(#interestId))")
+  @PreAuthorize("@permissionService.createPlace(#interestId)")
   public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place)
       throws BadRequestException {
     Place createdPlace = placeService.savePlace(place, interestId);
@@ -105,7 +105,6 @@ public class PlaceController {
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
-
     return "place/form";
   }
 
