@@ -16,9 +16,9 @@ public class EmailServiceImpl implements EmailService {
   public void sendEmail(EmailMessageDTO emailMessage) {
     SimpleMailMessage smm = new SimpleMailMessage();
     smm.setFrom("ratespot.email@centrum.cz");
-    smm.setTo(emailMessage.getTo());
-    smm.setSubject(emailMessage.getSubject());
-    smm.setText(emailMessage.getText());
+    smm.setTo(emailMessage.to());
+    smm.setSubject(emailMessage.subject());
+    smm.setText(emailMessage.text());
 
     this.mailSender.send(smm);
   }
