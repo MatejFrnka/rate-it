@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,18 +16,15 @@ import java.util.Optional;
 public class RatingService {
   private final RatingRepository ratingRepository;
   private final PlaceService placeService;
-  private final UserService userService;
   private final CriterionService criterionService;
 
-  public RatingsDTO getUsersRatingsDto(Principal principal, Long placeId) {
-    AppUser loggedUser = getLoggedUser(principal);
+  public RatingsDTO getUsersRatingsDto(AppUser appUser, Long placeId) {
     Place place = getPlace(placeId);
-    List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(loggedUser, place);
+    List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(appUser, place);
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(RatingsDTO rating, Long placeId, Principal principal) {
-    AppUser loggedUser = getLoggedUser(principal);
+  public void updateRating(RatingsDTO rating, Long placeId, AppUser appUser) {
     Place place = getPlace(placeId);
     rating
         .ratings()
@@ -38,11 +34,11 @@ public class RatingService {
               Criterion criterion = getCriterion(key);
               Optional<Rating> optRating =
                   ratingRepository.findById(
-                      new RatingId(loggedUser.getId(), place.getId(), criterion.getId()));
+                      new RatingId(appUser.getId(), place.getId(), criterion.getId()));
               if (optRating.isPresent()) {
                 if (value == null) {
                   ratingRepository.deleteById(
-                      new RatingId(loggedUser.getId(), place.getId(), criterion.getId()));
+                      new RatingId(appUser.getId(), place.getId(), criterion.getId()));
                   return;
                 }
                 Rating existingRating = optRating.get();
@@ -52,17 +48,10 @@ public class RatingService {
                 if (value == null) {
                   return;
                 }
-                Rating newRating = new Rating(loggedUser, place, criterion, value);
+                Rating newRating = new Rating(appUser, place, criterion, value);
                 ratingRepository.save(newRating);
               }
             });
-  }
-
-  private AppUser getLoggedUser(Principal principal) {
-    if (principal == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
-    }
-    return userService.getByEmail(principal.getName());
   }
 
   private Place getPlace(Long placeId) {
