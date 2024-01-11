@@ -22,7 +22,7 @@ class GoogleImageServiceTest extends BaseTest {
   @MockBean Authentication authentication;
   @MockBean Drive drive;
   @MockBean Drive.Files files;
-  
+
   @Test
   void savePlaceImageHappyCase() throws IOException {
     Long mockPlaceId = 1L;
@@ -46,5 +46,4 @@ class GoogleImageServiceTest extends BaseTest {
     String id = googleImageService.savePlaceImage(imageMock, mockPlaceId);
     assertEquals(mockDiskId, id);
   }
-
 }

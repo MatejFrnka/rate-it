@@ -17,22 +17,22 @@ import org.springframework.web.server.ResponseStatusException;
 @Controller
 @RequiredArgsConstructor
 public class ImageController {
-  
+
   private final GoogleImageService googleImageService;
   private final PlaceService placeService;
 
-  
   @PostMapping("interests/{interestId}/places/{placeId}")
   @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#placeId))")
   public String uploadPlaceImage(
-          @RequestParam("picture") MultipartFile file,
-          @PathVariable Long interestId,
-          @PathVariable Long placeId) {
+      @RequestParam("picture") MultipartFile file,
+      @PathVariable Long interestId,
+      @PathVariable Long placeId) {
 
     try {
       placeService.addImage(placeId, googleImageService.savePlaceImage(file, placeId));
     } catch (IOException e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Upload was not successful");
+      throw new ResponseStatusException(
+          HttpStatus.INTERNAL_SERVER_ERROR, "Upload was not successful");
     }
 
     return "redirect:/interests/" + interestId + "/places/" + placeId;

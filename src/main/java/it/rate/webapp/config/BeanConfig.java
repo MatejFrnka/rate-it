@@ -19,34 +19,34 @@ import java.io.IOException;
 
 @Configuration
 public class BeanConfig {
-    @Bean
-    public Drive getGoogleDriveService() throws IOException {
+  @Bean
+  public Drive getGoogleDriveService() throws IOException {
 
-        FileInputStream credentialFile = null;
+    FileInputStream credentialFile = null;
 
-        try {
-            credentialFile = new FileInputStream("src/main/resources/credentials.json");
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Credentials not found");
-        }
-
-        GoogleCredentials credentials;
-        try {
-            credentials =
-                    ServiceAccountCredentials.fromStream(credentialFile)
-                            .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/drive"));
-
-        } catch (IOException e) {
-            throw new IOException(e.getMessage());
-        }
-
-        HttpTransport httpTransport = new NetHttpTransport();
-        HttpRequestInitializer httpRequestInitializer = new HttpCredentialsAdapter(credentials);
-
-        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
-        return new Drive.Builder(httpTransport, jsonFactory, httpRequestInitializer)
-                .setApplicationName("RateSpot")
-                .build();
+    try {
+      credentialFile = new FileInputStream("src/main/resources/credentials.json");
+    } catch (FileNotFoundException e) {
+      throw new FileNotFoundException("Credentials not found");
     }
+
+    GoogleCredentials credentials;
+    try {
+      credentials =
+          ServiceAccountCredentials.fromStream(credentialFile)
+              .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/drive"));
+
+    } catch (IOException e) {
+      throw new IOException(e.getMessage());
+    }
+
+    HttpTransport httpTransport = new NetHttpTransport();
+    HttpRequestInitializer httpRequestInitializer = new HttpCredentialsAdapter(credentials);
+
+    JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+
+    return new Drive.Builder(httpTransport, jsonFactory, httpRequestInitializer)
+        .setApplicationName("RateSpot")
+        .build();
+  }
 }
