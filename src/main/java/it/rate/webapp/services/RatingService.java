@@ -10,6 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class RatingService {
   }
 
   public void updateRating(RatingsDTO ratings, Place place, AppUser appUser) {
-    validateRatings(ratings);
+    validateRatings(ratings, place);
     ratings
         .ratings()
         .forEach(
@@ -51,16 +53,18 @@ public class RatingService {
             });
   }
 
-  private void validateRatings(RatingsDTO ratings) {
+  private void validateRatings(RatingsDTO ratings, Place place) {
+    List<Criterion> placeCriteria = place.getInterest().getCriteria();
+    Set<Criterion> ratedCriteria =
+        ratings.ratings().keySet().stream().map(this::getCriterion).collect(Collectors.toSet());
+    if (!ratedCriteria.containsAll(placeCriteria)) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid criterion id in ratings");
+    }
     ratings
         .ratings()
         .forEach(
             (key, value) -> {
-              if (!criterionService.existsById(key)) {
-                throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Invalid criterion id in ratings");
-              }
-              if (value < 1 || value > 10) {
+              if (value != null && (value < 1 || value > 10)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value");
               }
             });
@@ -69,7 +73,7 @@ public class RatingService {
   private Criterion getCriterion(Long criterionId) {
     Optional<Criterion> optCriterion = criterionService.findById(criterionId);
     if (optCriterion.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid argument");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Criterion not found");
     }
     return optCriterion.get();
   }
