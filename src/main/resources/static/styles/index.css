@@ -654,15 +654,6 @@ h4 {
     border: none;
 }
 
-.light-button {
-    margin: 0.2rem;
-    background-color: #bfd3c9;
-    color: #000000;
-    padding: 0.3rem 1rem;
-    border-radius: 2rem;
-    border: none;
-}
-
 .new-place-map {
     width: 100%;
     aspect-ratio: 16/3;
@@ -671,11 +662,6 @@ h4 {
     margin-bottom: 0.5rem;
     object-fit: contain;
     overflow: hidden;
-}
-
-.centered-button-wrapper {
-    display: flex;
-    justify-content: center;
 }
 
 .list-record {

@@ -1,18 +1,24 @@
+const defaultView = [49.8037633, 15.4749126];
+const defaultPlaceZoom = 14;
+const defaultZoom = 7;
+const mapUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const tileLayerOptions = {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+};
+
 let latlng;
 let map;
 
 if (latitude && longitude) {
     latlng = L.latLng([latitude, longitude]);
-    map = L.map('map').setView(latlng, 14);
+    map = L.map('map').setView(latlng, defaultPlaceZoom);
 } else {
-    latlng = L.latLng([49.8037633, 15.4749126]);
-    map = L.map('map').setView(latlng, 7);
+    latlng = L.latLng(defaultView);
+    map = L.map('map').setView(latlng, defaultZoom);
 }
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
+L.tileLayer(mapUrl, tileLayerOptions).addTo(map);
 
 let marker;
 let inputLat = document.getElementById("place-latitude");

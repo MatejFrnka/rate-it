@@ -21,7 +21,7 @@
                 th:text="'New Place'">
             </h2>
             <h2 th:unless="${place.id == null}"
-                th:text="'Edit ' + ${place.name}">
+                th:text="'Editing ' + ${place.name}">
             </h2>
 
             <section class="input-param">
@@ -68,9 +68,6 @@
                        id="place-longitude"
                        th:field="*{longitude}"
                        required>
-                <div class="centered-button-wrapper">
-                    <a class="light-button">Confirm</a>
-                </div>
             </section>
 
 

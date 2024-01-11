@@ -17,7 +17,7 @@
         <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
               th:method="${method}">
             <h2 th:if="${interest.id == null}">New Interest</h2>
-            <h2 th:unless="${interest.id == null}" th:text="'Editing... ' + ${interest.name}"></h2>
+            <h2 th:unless="${interest.id == null}" th:text="'Editing ' + ${interest.name}"></h2>
             <section class="input-param">
                 <h4>Name</h4>
                 <label>
