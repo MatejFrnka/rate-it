@@ -1,4 +1,8 @@
-let latlng = L.latLng([latitude, longitude]);
+
+
+
+
+let latlng = L.latLng([places[0].latitude, places[0].longitude]);
 let map = L.map('map').setView(latlng, 14);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -6,11 +10,13 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-let marker = L.marker(latlng).addTo(map);
-
-marker.bindPopup("<b>" + name + "</b><br>" + "Rating: " + rating / 2 + "/5");
-
-let popup = L.popup();
+//for each latlng, create a marker
+places.forEach(place => {
+    let latlng = L.latLng([place.latitude, place.longitude]);
+    let marker = L.marker(latlng).addTo(map);
+    marker.bindPopup("<b>" + place.name + "</b><br>" + "Rating: " + place.avgRating / 2 + "/5");
+    let popup = L.popup();
+});
 
 // function onMapClick(e) {
 //     popup
