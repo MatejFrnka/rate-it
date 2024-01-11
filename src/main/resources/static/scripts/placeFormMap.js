@@ -1,5 +1,13 @@
-let latlng = L.latLng([49.8037633, 15.4749126]);
-let map = L.map('map').setView(latlng, 7);
+let latlng;
+let map;
+
+if (latitude && longitude) {
+    latlng = L.latLng([latitude, longitude]);
+    map = L.map('map').setView(latlng, 14);
+} else {
+    latlng = L.latLng([49.8037633, 15.4749126]);
+    map = L.map('map').setView(latlng, 7);
+}
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -24,9 +32,7 @@ function createMarker(latitude, longitude) {
     if (marker) {
         marker.remove();
     }
-
     fillInputFields(latitude, longitude);
-
     marker = new L.marker([latitude, longitude], {draggable: true, autoPan: true}).addTo(map);
     marker.on("dragend", function (event) {
         let updatedLatLng = event.target.getLatLng();

@@ -21,7 +21,7 @@
                 th:text="'New Place'">
             </h2>
             <h2 th:unless="${place.id == null}"
-                th:text="'Editing... ' + ${title}">
+                th:text="'Edit ' + ${place.name}">
             </h2>
 
             <section class="input-param">
@@ -99,7 +99,7 @@
 
     /*]]>*/
 </script>
-<script src="/scripts/map.js"></script>
+<script src="/scripts/placeFormMap.js"></script>
 
 </body>
 </html>
