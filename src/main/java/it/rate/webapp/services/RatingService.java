@@ -31,13 +31,11 @@ public class RatingService {
         .forEach(
             (key, value) -> {
               Criterion criterion = getCriterion(key);
-              Optional<Rating> optRating =
-                  ratingRepository.findById(
-                      new RatingId(appUser.getId(), place.getId(), criterion.getId()));
+              RatingId ratingId = new RatingId(appUser.getId(), place.getId(), criterion.getId());
+              Optional<Rating> optRating = ratingRepository.findById(ratingId);
               if (optRating.isPresent()) {
                 if (value == null) {
-                  ratingRepository.deleteById(
-                      new RatingId(appUser.getId(), place.getId(), criterion.getId()));
+                  ratingRepository.deleteById(ratingId);
                   return;
                 }
                 Rating existingRating = optRating.get();
