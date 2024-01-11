@@ -21,8 +21,8 @@ public class Place {
 
   private String description;
   private String address;
-  private double latitude;
-  private double longitude;
+  private Double latitude;
+  private Double longitude;
 
   @ElementCollection @Builder.Default private List<String> imageNames = new ArrayList<>();
 

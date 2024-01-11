@@ -155,8 +155,8 @@ class PlaceServiceTest extends BaseTest {
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getAverageRating(),
-                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5),
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4)));
+                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D),
+                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D)));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
@@ -204,8 +204,8 @@ class PlaceServiceTest extends BaseTest {
     CriteriaOfPlaceDTO expectedResult =
         new CriteriaOfPlaceDTO(
             Arrays.asList(
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4),
-                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5)));
+                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D),
+                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D)));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
@@ -233,7 +233,7 @@ class PlaceServiceTest extends BaseTest {
     CriteriaOfPlaceDTO expectedResult =
         new CriteriaOfPlaceDTO(
             List.of(
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), -1)));
+                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), -1D)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
 

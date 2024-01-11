@@ -9,8 +9,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 console.log(latitude, longitude);
 
 let marker;
-
-
 map.on("click", function (e) {
     marker ? marker.remove() : null;
     let latitude = e.latlng.lat;
@@ -18,16 +16,16 @@ map.on("click", function (e) {
 
     marker = new L.marker([latitude, longitude], {draggable: true, autoPan: true}).addTo(map);
 
-    let inputLat = document.getElementById("place-latitude");
-    let inputLng = document.getElementById("place-longitude");
-
-    inputLat.value = latitude;
-    inputLng.value = longitude;
-
     marker.on("dragend", function (event) {
         let updatedLatLng = event.target.getLatLng();
         inputLat.value = updatedLatLng.lat;
         inputLng.value = updatedLatLng.lng;
     });
+
+    let inputLat = document.getElementById("place-latitude");
+    let inputLng = document.getElementById("place-longitude");
+
+    inputLat.value = latitude;
+    inputLng.value = longitude;
 })
 

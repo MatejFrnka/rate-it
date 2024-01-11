@@ -4,8 +4,8 @@ public record PlaceInfoDTO(
     Long id,
     String name,
     String address,
-    double latitude,
-    double longitude,
-    double avgRating,
+    Double latitude,
+    Double longitude,
+    Double avgRating,
     CriterionAvgRatingDTO bestRatedCriterion,
     CriterionAvgRatingDTO worstRatedCriterion) {}
