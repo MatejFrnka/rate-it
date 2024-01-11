@@ -15,17 +15,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class RatingService {
   private final RatingRepository ratingRepository;
-  private final PlaceService placeService;
   private final CriterionService criterionService;
 
-  public RatingsDTO getUsersRatingsDto(AppUser appUser, Long placeId) {
-    Place place = getPlace(placeId);
+  public RatingsDTO getUsersRatingsDto(AppUser appUser, Place place) {
     List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(appUser, place);
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(RatingsDTO rating, Long placeId, AppUser appUser) {
-    Place place = getPlace(placeId);
+  public void updateRating(RatingsDTO rating, Place place, AppUser appUser) {
     rating
         .ratings()
         .forEach(
@@ -52,14 +49,6 @@ public class RatingService {
                 ratingRepository.save(newRating);
               }
             });
-  }
-
-  private Place getPlace(Long placeId) {
-    Optional<Place> optPlace = placeService.findById(placeId);
-    if (optPlace.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid argument");
-    }
-    return optPlace.get();
   }
 
   private Criterion getCriterion(Long criterionId) {

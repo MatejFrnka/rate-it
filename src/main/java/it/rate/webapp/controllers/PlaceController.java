@@ -70,7 +70,7 @@ public class PlaceController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
-        model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, placeId));
+        model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
       }
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       if (optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.APPLICANT)) {
@@ -89,7 +89,8 @@ public class PlaceController {
       Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
-    ratingService.updateRating(rating, placeId, loggedUser);
+    Place place = placeService.getById(placeId);
+    ratingService.updateRating(rating, place, loggedUser);
 
     return String.format("redirect:/interests/%d/places/%d", interestId, placeId);
   }
