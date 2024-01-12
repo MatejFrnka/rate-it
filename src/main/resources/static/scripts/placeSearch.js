@@ -35,11 +35,11 @@ function loadPlaces(query) {
         clone.querySelector('.interest-place-title h4').textContent = place.address;
 
         const averageRating = place.averageRating / 2;
-        const formattedRating = new Intl.NumberFormat('en', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(averageRating);
+        const formattedRating = averageRating.toFixed(1);
         clone.querySelector('.rating').textContent = formattedRating;
 
-        const bestCriterionRating = place.bestRatedCriterionScore / 2;
-        const worstCriterionRating = place.worstRatedCriterionScore / 2;
+        const bestCriterionRating = (place.bestRatedCriterionScore / 2).toFixed(1);
+        const worstCriterionRating = (place.worstRatedCriterionScore / 2).toFixed(1);
 
         const ratingContainer = clone.querySelector('.interest-place-ratings');
 
