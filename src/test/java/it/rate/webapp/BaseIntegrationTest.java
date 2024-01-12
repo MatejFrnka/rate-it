@@ -29,7 +29,7 @@ public class BaseIntegrationTest extends BaseTest {
   @Autowired private RatingRepository ratingRepository;
   @Autowired private RoleRepository roleRepository;
   @Autowired private UserRepository userRepository;
-  @Autowired private LikeRepository voteRepository;
+  @Autowired private LikeRepository likeRepository;
 
   @BeforeAll
   void setupDatabase() {
@@ -64,7 +64,14 @@ public class BaseIntegrationTest extends BaseTest {
             .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
             .serverRole(ServerRole.USER)
             .build();
-    userRepository.saveAll(List.of(u1, u2, u3, u4));
+
+    AppUser u5 = AppUser.builder()
+            .username("Hynek")
+            .email("hynek@hynek.cz")
+            .password("$2a$10$9g1X9rp6meCML3g/h32MyeQ369SEh/hQpZb82eqjpvI71xCIdPAlG")
+            .serverRole(ServerRole.USER)
+            .build();
+    userRepository.saveAll(List.of(u1, u2, u3, u4, u5));
 
     Interest i1 =
         Interest.builder()
@@ -95,7 +102,7 @@ public class BaseIntegrationTest extends BaseTest {
     Like v4 = new Like(u1, i2);
     Like v5 = new Like(u2, i2);
     Like v6 = new Like(u4, i1);
-    voteRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
+    likeRepository.saveAll(List.of(v1, v2, v3, v4, v5, v6));
 
     Place p1 =
         Place.builder()
