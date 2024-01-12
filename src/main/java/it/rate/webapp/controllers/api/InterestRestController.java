@@ -7,9 +7,11 @@ import it.rate.webapp.services.InterestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -18,8 +20,11 @@ public class InterestRestController {
   private final InterestService interestService;
 
   @GetMapping("/suggestions")
-  public ResponseEntity<?> getAllSuggestions(CoordinatesDTO coordinates) {
-    System.out.println(coordinates);
+  public ResponseEntity<?> getAllSuggestions(
+      @Validated @RequestBody Optional<CoordinatesDTO> usersCoords) {
+    if (usersCoords.isPresent()) {
+      return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(usersCoords.get()));
+    }
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
   }
 

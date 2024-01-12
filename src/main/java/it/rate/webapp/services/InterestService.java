@@ -1,14 +1,13 @@
 package it.rate.webapp.services;
 
+import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
-
 import java.util.*;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -51,6 +50,15 @@ public class InterestService {
 
   public List<InterestSuggestionDTO> getAllSuggestionDtos() {
     return findAllInterests().stream().map(InterestSuggestionDTO::new).collect(Collectors.toList());
+  }
+
+  public List<InterestSuggestionDTO> getAllSuggestionDtos(CoordinatesDTO usersCoords) {
+    return findAllInterests().stream()
+        .sorted(
+            Comparator.comparingDouble(
+                interest -> getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
+        .map(InterestSuggestionDTO::new)
+        .collect(Collectors.toList());
   }
 
   public List<Interest> getLikedInterests(String loggedUser) {
@@ -101,5 +109,39 @@ public class InterestService {
         .map(InterestUserDTO::new)
         .sorted(Comparator.comparing(dto -> dto.userName().toLowerCase()))
         .collect(Collectors.toList());
+  }
+
+  private double getDistanceToNearestPlace(CoordinatesDTO usersCoords, List<Place> places) {
+    double minDistance = Double.MAX_VALUE;
+    for (Place place : places) {
+      double distance =
+          haversine(
+              usersCoords.latitude(),
+              usersCoords.longitude(),
+              place.getLatitude(),
+              place.getLongitude());
+      minDistance = Math.min(minDistance, distance);
+    }
+    return minDistance;
+  }
+
+  private double haversine(double lat1, double lon1, double lat2, double lon2) {
+    // Haversine formula
+    // https://www.geeksforgeeks.org/program-distance-two-points-earth/#:~:text=by%20Aayush%20Chaturvedi-,Java,-//%20Java%20program%20to
+    lon1 = Math.toRadians(lon1);
+    lat1 = Math.toRadians(lat1);
+    lon2 = Math.toRadians(lon2);
+    lat2 = Math.toRadians(lat2);
+
+    // Haversine formula
+    double dlon = lon2 - lon1;
+    double dlat = lat2 - lat1;
+    double a =
+        Math.pow(Math.sin(dlat / 2), 2)
+            + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+    double c = 2 * Math.asin(Math.sqrt(a));
+    // Radius of earth in kilometers.
+    final double r = 6371;
+    return (c * r); // Distance in kilometers
   }
 }
