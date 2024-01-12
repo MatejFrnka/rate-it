@@ -31,9 +31,18 @@ const uppy = new Uppy({
 
 uppy.on('complete', (result) => {
 
-    console.log('Upload complete:', result);
+    console.log('Upload status:', result);
 
-    window.location.reload();
+    if (result.failed.length > 0) {
+        return;
+    } else {
+        window.location.reload();
+    }
+});
+
+uppy.on('upload-error', (file, error, response) => {
+    console.log('error with file:', file.id);
+    console.log('error message:', error);
 });
 
 
