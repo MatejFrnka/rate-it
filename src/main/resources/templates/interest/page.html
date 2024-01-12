@@ -57,12 +57,12 @@
             <!--            TODO: add filters-->
             <div>Filter categories placeholder</div>
 
-            <!--            TODO: add search bar-->
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="loadPlaces(this.value)" autocomplete="off"
                        placeholder="Find places…">
                 <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
             </div>
+
             <div class="interest-places" id="suggestionList"></div>
             <template>
                 <a class="interest-place">
