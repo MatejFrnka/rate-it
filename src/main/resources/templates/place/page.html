@@ -21,7 +21,7 @@
 
         <div class="place-image">
             <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="placeholder"/>
-            <img th:unless="*{imageNames.isEmpty()}" th:src="'https://drive.google.com/uc?export=view&id=' + *{imageNames.get(0)}" alt="placeholder"/>
+            <img th:unless="*{imageNames.isEmpty()}" th:src="'https://drive.google.com/uc?export=view&id=' + *{imageNames.get(getImageNames().size - 1)}" alt="placeholder"/>
         </div>
 
         <header class="content-header place-header">
