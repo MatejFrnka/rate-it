@@ -83,8 +83,11 @@ public class PlaceService {
         place.getLatitude(),
         place.getLongitude(),
         place.getAverageRating(),
-        bestCriterion,
-        worstCriterion);
+        place.getInterest().getId(),
+        bestCriterion.name(),
+        bestCriterion.avgRating(),
+        worstCriterion.name(),
+        worstCriterion.avgRating());
   }
 
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
