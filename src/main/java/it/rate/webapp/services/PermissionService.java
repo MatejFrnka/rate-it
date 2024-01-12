@@ -35,79 +35,85 @@ public class PermissionService {
     return false;
   }
 
-  public String[] ratePlace(Long placeId) {
+  public boolean ratePlace(Long placeId) {
     Optional<Place> optPlace = placeRepository.findById(placeId);
     if (optPlace.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
     }
     Interest i = optPlace.get().getInterest();
-
-    if (i.isExclusive()) {
-      return new String[] {
-        String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-        String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId())
-      };
-    } else {
-      return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
-    }
+    return canRateOrCreate(i);
   }
 
-  public String[] manageCommunity(Long interestId) {
+  public boolean manageCommunity(Long interestId) {
     if (!interestRepository.existsById(interestId)) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
     }
-    return new String[] {
-      ServerRole.ADMIN.name(), String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), interestId)
-    };
+    AppUser user = authenticatedUser();
+    if (user == null) {
+      return false;
+    }
+    if (user.getServerRole().equals(ServerRole.ADMIN)) {
+      return true;
+    }
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+    return optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.CREATOR);
   }
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication.getPrincipal().equals("anonymousUser")) {
+    AppUser user = authenticatedUser();
+    if (user == null) {
       return false;
     }
-    Optional<AppUser> optUser = userRepository.findByEmail(authentication.getName());
-    if (optUser.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-    }
-    AppUser user = optUser.get();
     // Check if user is admin
     if (user.getServerRole().equals(ServerRole.ADMIN)) {
       return true;
     }
-    // Check if user is Interest creator
-    Optional<Role> optRole =
-        user.getRoles().stream()
-            .filter(r -> r.getRole().equals(Role.RoleType.CREATOR))
-            .filter(r -> r.getInterest().getId().equals(interestId))
-            .findFirst();
-    if (optRole.isPresent()) {
-      return true;
-    }
+
+    // Check if user is place creator
     Optional<Place> optPlace = placeRepository.findById(placeId);
     if (optPlace.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
     }
-    Place place = optPlace.get();
-    // Check if User is Place creator
-    return place.getCreator().getId().equals(user.getId());
+    if (optPlace.get().getCreator().equals(user)) {
+      return true;
+    }
+
+    // Check if user is Interest creator
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+    return optRole.map(role -> role.getRole().equals(Role.RoleType.CREATOR)).orElse(false);
   }
 
-  public String[] createPlace(Long interestId) {
+  public boolean createPlace(Long interestId) {
     Optional<Interest> optInterest = interestRepository.findById(interestId);
     if (optInterest.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
     }
     Interest i = optInterest.get();
+    return canRateOrCreate(i);
+  }
 
-    if (i.isExclusive()) {
-      return new String[] {
-        String.format("ROLE_%s_%d", Role.RoleType.VOTER.name(), i.getId()),
-        String.format("ROLE_%s_%d", Role.RoleType.CREATOR.name(), i.getId()),
-        ServerRole.ADMIN.name()
-      };
-    } else {
-      return new String[] {ServerRole.USER.toString(), ServerRole.ADMIN.toString()};
+  private AppUser authenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && !(authentication.getPrincipal().equals("anonymousUser"))) {
+      return userRepository.getByEmail(authentication.getName());
     }
+    return null;
+  }
+
+  private boolean canRateOrCreate(Interest i) {
+    AppUser user = authenticatedUser();
+    if (user == null) {
+      return false;
+    }
+    if (user.getServerRole().equals(ServerRole.ADMIN)) {
+      return true;
+    }
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
+    if (!i.isExclusive()) {
+      return true;
+    }
+    return optRole.isPresent()
+        && (optRole.get().getRole().equals(Role.RoleType.VOTER)
+            || optRole.get().getRole().equals(Role.RoleType.CREATOR));
   }
 }
