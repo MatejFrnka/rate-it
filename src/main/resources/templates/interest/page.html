@@ -20,7 +20,7 @@
 
     <div class="content content-interest">
         <div class="d-flex justify-content-around interest-button-bar">
-            <a class="button">Map</a>
+            <a class="button" th:href="@{/interests/{id}/map(id=*{id})}">Map</a>
             <span class="button pending"
                   th:if="${loggedUser != null && interest.isExclusive() && role != null && role.equals(role.APPLICANT)}">Pending Request</span>
             <a class="button"

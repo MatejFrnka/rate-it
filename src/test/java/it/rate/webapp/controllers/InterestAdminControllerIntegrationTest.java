@@ -5,19 +5,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import it.rate.webapp.BaseIntegrationTest;
 import it.rate.webapp.models.Interest;
-import it.rate.webapp.models.Role;
 import it.rate.webapp.repositories.InterestRepository;
 
-import it.rate.webapp.services.ManageInterestService;
-import it.rate.webapp.services.UserService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,65 +23,76 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private InterestRepository interestRepository;
-  @MockBean private ManageInterestService manageInterestService;
-  @MockBean private UserService userService;
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_VOTER_1"})
+      authorities = {"USER"})
   void editInterestPageReturnsForbiddenForVoter() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_APPLICANT_1"})
+      username = "franta@franta.cz",
+      authorities = {"USER"})
   void editInterestPageReturnsForbiddenForApplicant() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "hynek@hynek.cz",
       authorities = {"USER"})
   void editInterestPageReturnsForbiddenForNoRolesUser() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_2"})
+      authorities = {"USER"})
   void editInterestPageReturnsForbiddenForCreatorOfDifferentInterest() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
       authorities = {"ADMIN"})
@@ -93,138 +100,152 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = Long.MAX_VALUE;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isNotFound())
         .andReturn();
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_1"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void editInterestPageReturnsSuccessStatusForCreator() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(view().name("interest/form"))
         .andExpect(status().isOk())
         .andReturn();
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "karel@karel.cz",
       authorities = {"ADMIN"})
   void editInterestPageReturnsSuccessStatusForAdmin() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
+        .andExpect(view().name("interest/form"))
         .andExpect(status().isOk())
         .andReturn();
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_VOTER_1"})
+      authorities = {"USER"})
   void editUsersReturnsForbiddenForVoter() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_APPLICANT_1"})
+      username = "franta@franta.cz",
+      authorities = {"USER"})
   void editUsersReturnsForbiddenForApplicant() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "hynek@hynek.cz",
       authorities = {"USER"})
   void editUsersReturnsForbiddenForNoRolesUser() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_2"})
+      authorities = {"USER"})
   void editUsersReturnsForbiddenForCreatorOfDifferentInterest() throws Exception {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "karel@karel.cz",
       authorities = {"ADMIN"})
   void editUsersReturnsErrorForNonExistentInterest() throws Exception {
     Long interestId = Long.MAX_VALUE;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isNotFound())
         .andReturn();
-
-    verify(userService, times(0)).getByEmail(any());
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_1"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void editUsersReturnsSuccessStatusForCreator() throws Exception {
     Long interestId = 1L;
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
+        .andExpect(view().name("interest/users"))
         .andExpect(status().isOk())
         .andReturn();
-
-    verify(userService, times(1)).getByEmail(email);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "karel@karel.cz",
       authorities = {"ADMIN"})
   void editUsersReturnsSuccessForAdmin() throws Exception {
     Long interestId = 1L;
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
+        .andExpect(view().name("interest/users"))
         .andExpect(status().isOk())
         .andReturn();
-
-    verify(userService, times(1)).getByEmail(email);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_1"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void editInterestReturnsRedirectForInterestCreator() throws Exception {
     Long interestId = 1L;
     String interestName = "Zkusit Shushn";
@@ -251,12 +272,14 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_VOTER_1", "ROLE_CREATOR_2"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void editInterestReturnsForbiddenForInterestVoterAndCreatorOfDifferentInterest()
       throws Exception {
-    Long interestId = 1L;
+    Long interestId = 2L;
     String interestName = "Zkusit Shushn";
     String interestDescription = "Very gud vetr";
     String criterion1 = "Test criterion";
@@ -273,8 +296,10 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "karel@karel.cz",
       authorities = {"ADMIN"})
   void editInterestReturnsNotFoundForNonExistentInterest() throws Exception {
     Long interestId = Long.MAX_VALUE;
@@ -294,8 +319,10 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "karel@karel.cz",
       authorities = {"ADMIN"})
   void editInterestReturnsRedirectForAdmin() throws Exception {
     Long interestId = 1L;
@@ -322,128 +349,139 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_VOTER_1"})
+      authorities = {"USER"})
   void removeUserReturnsForbiddenForVoter() throws Exception {
     Long interestId = 1L;
     Long userId = 1L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).removeRole(interestId, userId);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_APPLICANT_1"})
+      username = "franta@franta.cz",
+      authorities = {"USER"})
   void removeUserReturnsForbiddenForApplicant() throws Exception {
     Long interestId = 1L;
     Long userId = 1L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).removeRole(interestId, userId);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "hynek@hynek.cz",
       authorities = {"USER"})
   void removeUserReturnsForbiddenForNoRolesUser() throws Exception {
     Long interestId = 1L;
     Long userId = 1L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).removeRole(interestId, userId);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_2"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void removeUserReturnsForbiddenForCreatorOfDifferentInterest() throws Exception {
-    Long interestId = 1L;
-    Long userId = 1L;
+    Long interestId = 2L;
+    Long userId = 2L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).removeRole(interestId, userId);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_1"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void removeUserReturnsRedirectForCreator() throws Exception {
     Long interestId = 1L;
-    Long userId = 1L;
+    Long userId = 3L;
+
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(view().name("redirect:/interests/{interestId}/admin/users"))
         .andExpect(status().is3xxRedirection())
         .andReturn();
-
-    verify(manageInterestService, times(1)).removeRole(interestId, userId);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "karel@karel.cz",
       authorities = {"ADMIN"})
   void removeUserReturnsRedirectForAdmin() throws Exception {
     Long interestId = 1L;
-    Long userId = 1L;
+    Long userId = 2L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(view().name("redirect:/interests/{interestId}/admin/users"))
         .andExpect(status().is3xxRedirection())
         .andReturn();
-
-    verify(manageInterestService, times(1)).removeRole(interestId, userId);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_VOTER_1"})
+      authorities = {"USER"})
   void acceptApplicantReturnsForbiddenForVoter() throws Exception {
     Long interestId = 1L;
-    Long userId = 1L;
+    Long userId = 4L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).adjustRole(interestId, userId, Role.RoleType.VOTER);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_APPLICANT_1"})
+      username = "franta@franta.cz",
+      authorities = {"USER"})
   void acceptUserReturnsForbiddenForApplicant() throws Exception {
     Long interestId = 1L;
-    Long userId = 1L;
+    Long userId = 4L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).adjustRole(interestId, userId, Role.RoleType.VOTER);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "hynek@hynek.cz",
       authorities = {"USER"})
   void acceptUserReturnsForbiddenForNoRolesUser() throws Exception {
     Long interestId = 1L;
@@ -452,52 +490,53 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).adjustRole(interestId, userId, Role.RoleType.VOTER);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_2"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void acceptUserReturnsForbiddenForCreatorOfDifferentInterest() throws Exception {
-    Long interestId = 1L;
-    Long userId = 1L;
+    Long interestId = 2L;
+    Long userId = 2L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(result -> assertNull(result.getModelAndView()))
         .andExpect(status().isForbidden())
         .andReturn();
-
-    verify(manageInterestService, times(0)).adjustRole(interestId, userId, Role.RoleType.VOTER);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_CREATOR_1"})
+      username = "lojza@lojza.cz",
+      authorities = {"USER"})
   void acceptUserReturnsRedirectForCreator() throws Exception {
     Long interestId = 1L;
-    Long userId = 1L;
+    Long userId = 4L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(view().name("redirect:/interests/{interestId}/admin/users"))
         .andExpect(status().is3xxRedirection())
         .andReturn();
-
-    verify(manageInterestService, times(1)).adjustRole(interestId, userId, Role.RoleType.VOTER);
   }
 
   @Test
+  @Transactional
+  @Rollback
   @WithMockUser(
-      username = "alfonz@alfonz.cz",
+      username = "karel@karel.cz",
       authorities = {"ADMIN"})
   void acceptUserReturnsRedirectForAdmin() throws Exception {
     Long interestId = 1L;
-    Long userId = 1L;
+    Long userId = 4L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .andExpect(view().name("redirect:/interests/{interestId}/admin/users"))
         .andExpect(status().is3xxRedirection())
         .andReturn();
-
-    verify(manageInterestService, times(1)).adjustRole(interestId, userId, Role.RoleType.VOTER);
   }
 }

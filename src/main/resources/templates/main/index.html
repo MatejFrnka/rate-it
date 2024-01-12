@@ -12,7 +12,7 @@
         <div th:replace="~{fragments.html :: login-menu}"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-    <div class="content mainpage-content">
+    <div class="content main-page-content">
         <section id="usersInterests" class="interests">
             <div th:unless="${likedInterests == null || likedInterests.isEmpty()}">
                 <div class="section-label">

@@ -45,7 +45,7 @@ body {
     margin-bottom: 0;
 }
 
-.topbar-menu {
+.top-bar-menu {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,7 +56,7 @@ body {
     border-radius: 50%;
 }
 
-.topbar-menu .dropdown-toggle {
+.top-bar-menu .dropdown-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,7 +65,7 @@ body {
     font-size: 1.5rem;
 }
 
-.topbar-menu .dropdown-toggle::after {
+.top-bar-menu .dropdown-toggle::after {
     display: none;
 }
 
@@ -101,7 +101,7 @@ body {
     padding-top: 0;
 }
 
-.mainpage-content {
+.main-page-content {
     gap: 2rem;
 }
 
@@ -178,7 +178,7 @@ h3 {
 
 .place-map {
     width: 100%;
-    aspect-ratio: 16/9;
+    aspect-ratio: 16/10;
     border-radius: 1rem;
     background: #FFFFFF;
     margin-bottom: 1.5rem;
@@ -413,6 +413,14 @@ h3 {
     }
 }
 
+.interest-map {
+    height: 75vh;
+    border-radius: 1rem;
+    background: #FFFFFF;
+    object-fit: contain;
+    overflow: hidden;
+}
+
 .filters {
     display: flex;
     flex-direction: row;
@@ -589,7 +597,7 @@ h4 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.toggle-container div {
+.toggle-container span {
     padding: 6px;
     text-align: center;
     z-index: 1;
@@ -599,25 +607,25 @@ h4 {
     left: 50%;
 }
 
-.toggle-checkbox:checked + .toggle-container div:first-child {
+.toggle-checkbox:checked + .toggle-container span:first-child {
     color: #AAAAAA;
     transition: color 0.3s;
     font-weight: 600;
 }
 
-.toggle-checkbox:checked + .toggle-container div:last-child {
+.toggle-checkbox:checked + .toggle-container span:last-child {
     color: #568D73;
     transition: color 0.3s;
     font-weight: 600;
 }
 
-.toggle-checkbox + .toggle-container div:first-child {
+.toggle-checkbox + .toggle-container span:first-child {
     color: #568D73;
     transition: color 0.3s;
     font-weight: 600;
 }
 
-.toggle-checkbox + .toggle-container div:last-child {
+.toggle-checkbox + .toggle-container span:last-child {
     color: #AAAAAA;
     transition: color 0.3s;
     font-weight: 600;
@@ -638,24 +646,6 @@ h4 {
     width: 100%;
 }
 
-.dark-button {
-    margin-top: 1rem;
-    background-color: #568D73;
-    color: #FFFFFF;
-    padding: 0.75rem 1.5rem;
-    border-radius: 2rem;
-    border: none;
-}
-
-.light-button {
-    margin: 0.2rem;
-    background-color: #bfd3c9;
-    color: #000000;
-    padding: 0.3rem 1rem;
-    border-radius: 2rem;
-    border: none;
-}
-
 .new-place-map {
     width: 100%;
     aspect-ratio: 16/3;
@@ -664,11 +654,6 @@ h4 {
     margin-bottom: 0.5rem;
     object-fit: contain;
     overflow: hidden;
-}
-
-.centered-button-wrapper {
-    display: flex;
-    justify-content: center;
 }
 
 .list-record {
@@ -780,4 +765,9 @@ h4 {
     align-items: center;
     gap: 1.5rem;
     margin-top: 2px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
 }

@@ -17,7 +17,7 @@
         <form th:object="${interest}" th:data-interest-id="*{id}" name="myForm" th:action="${action}"
               th:method="${method}">
             <h2 th:if="${interest.id == null}">New Interest</h2>
-            <h2 th:unless="${interest.id == null}" th:text="'Editing... ' + ${interest.name}"></h2>
+            <h2 th:unless="${interest.id == null}" th:text="'Editing ' + ${interest.name}"></h2>
             <section class="input-param">
                 <h4>Name</h4>
                 <label>
@@ -34,8 +34,8 @@
                 <h4>Visibility</h4>
                 <input type="checkbox" id="toggle" class="toggle-checkbox" name="exclusive" th:checked="*{exclusive}"/>
                 <label for="toggle" class="toggle-container">
-                    <div>Public</div>
-                    <div>Private</div>
+                    <span>Public</span>
+                    <span>Private</span>
                 </label>
             </section>
 
@@ -56,7 +56,7 @@
                                 <input class="input-text-field" type="text" name="criteriaNames"
                                        th:value="${criterion.name}" required/>
                                 <button class="role-option-button kick-button" type="button" onclick="removeCriteria(this, ${iterStat.index})">
-                                    <img src="/icons/cross.svg">
+                                    <img src="/icons/cross.svg" alt="Kick">
                                 </button>
                             </label>
                         </div>
@@ -64,9 +64,9 @@
                 </div>
 
                 <div class="add-criterion">
-                    <h7>Add criterion</h7>
+                    <span>Add criterion</span>
                     <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
-                        <img src="/icons/add.svg">
+                        <img src="/icons/add.svg" alt="Add Criterion">
                     </button>
                 </div>
 
@@ -79,7 +79,7 @@
                 </label>
             </section>
 
-            <button class="dark-button" type="submit">Save</button>
+            <button class="button" type="submit">Save</button>
         </form>
     </div>
 
