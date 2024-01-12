@@ -34,7 +34,7 @@ function loadPlaces(query) {
         clone.querySelector('.interest-place-title h3').textContent = place.name;
         clone.querySelector('.interest-place-title h4').textContent = place.address;
 
-        const averageRating = place.averageRating / 2;
+        const averageRating = place.avgRating / 2;
         const formattedRating = averageRating.toFixed(1);
         clone.querySelector('.rating').textContent = formattedRating;
 
