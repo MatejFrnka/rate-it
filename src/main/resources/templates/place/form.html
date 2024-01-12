@@ -14,50 +14,90 @@
     </header>
 
     <div class="content">
-        <form th:method="${method}" th:action="${action}" th:object="${place}">
-            <h2 th:if="${place.id == null}" th:text="'New Place'"></h2>
-            <h2 th:unless="${place.id == null}" th:text="'Editing... ' + ${title}"></h2>
+        <form th:method="${method}"
+              th:action="${action}"
+              th:object="${place}">
+            <h2 th:if="${place.id == null}"
+                th:text="'New Place'">
+            </h2>
+            <h2 th:unless="${place.id == null}"
+                th:text="'Editing ' + ${place.name}">
+            </h2>
 
             <section class="input-param">
                 <input type="hidden" th:field="*{id}"/>
                 <h4>Name</h4>
                 <label>
-                    <input class="input-text-field" type="text" name="name" th:field="*{name}" required autocomplete="off">
+                    <input class="input-text-field"
+                           type="text"
+                           name="name"
+                           th:field="*{name}"
+                           required
+                           autocomplete="off">
                 </label>
             </section>
 
             <section class="input-param">
                 <h4>Address</h4>
                 <label>
-                    <input class="input-text-field" type="text" id="address" name="address" th:field="*{address}" autocomplete="off">
+                    <input class="input-text-field"
+                           type="text"
+                           id="address"
+                           name="address"
+                           th:field="*{address}"
+                           autocomplete="off">
                 </label>
             </section>
 
             <section class="input-param">
                 <h4>Exact spot</h4>
-                <div class="new-place-map">
-                    Map placeholder
+                <div class="place-map">
+                    <div id="map"></div>
                 </div>
-                <div class="centered-button-wrapper">
-                    <a class="light-button">Confirm</a>
-                </div>
-            </section>
+                <input type="number"
+                       inputmode="decimal"
+                       step="0.000001"
+                       id="place-latitude"
+                       th:field="*{latitude}"
+                       required
+                       hidden>
+                <input type="number"
+                       inputmode="decimal"
+                       step="0.000001"
+                       id="place-longitude"
+                       th:field="*{longitude}"
+                       required
+                       hidden>
 
-<!--            <label for="lat">Latitude: (pin on map/get users location/manual)</label>-->
-<!--            <input type="number" id="lat" name="lat" th:field="*{latitude}" required>-->
-<!--            <label for="lng">Longitude: (pin on map/get users location/manual)</label>-->
-<!--            <input type="number" id="lng" name="lng" th:field="*{longitude}" required>-->
+                <button class="button" type="button" onclick="locate()">Get Current location</button>
+            </section>
 
             <section class="input-param">
                 <h4>Description</h4>
                 <label>
-                    <textarea class="input-text-field" id="description" name="description" th:field="*{description}"></textarea>
+                    <textarea class="input-text-field"
+                              id="description"
+                              name="description"
+                              th:field="*{description}">
+                    </textarea>
                 </label>
             </section>
 
-            <button class="dark-button">Save</button>
+            <button class="button" type="submit">Save</button>
         </form>
     </div>
 </div>
+
+<script th:replace="~{fragments :: placeMap-script}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    let latitude = [[${place.latitude}]];
+    let longitude = [[${place.longitude}]];
+
+    /*]]>*/
+</script>
+<script src="/scripts/placeFormMap.js"></script>
+
 </body>
 </html>
