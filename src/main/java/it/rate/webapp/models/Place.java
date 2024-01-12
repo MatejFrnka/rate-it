@@ -2,6 +2,7 @@ package it.rate.webapp.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,13 @@ public class Place {
 
   private String description;
   private String address;
+
+  @Column(precision = 6, nullable = false)
+  @Range(min = -90, max = 90)
   private Double latitude;
+
+  @Column(precision = 6, nullable = false)
+  @Range(min = -180, max = 180)
   private Double longitude;
 
   @ElementCollection @Builder.Default private List<String> imageNames = new ArrayList<>();

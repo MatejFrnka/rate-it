@@ -1,15 +1,13 @@
 package it.rate.webapp.controllers.api;
 
+import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -20,7 +18,8 @@ public class InterestRestController {
   private final InterestService interestService;
 
   @GetMapping("/suggestions")
-  public ResponseEntity<?> getAllSuggestions() {
+  public ResponseEntity<?> getAllSuggestions(CoordinatesDTO coordinates) {
+    System.out.println(coordinates);
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
   }
 
