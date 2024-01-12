@@ -7,12 +7,15 @@ import it.rate.webapp.BaseIntegrationTest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
 import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,6 +30,8 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private PlaceRepository placeRepository;
 
+  @Transactional
+  @Rollback
   @Test
   @WithMockUser(
       username = "alfonz@alfonz.cz",
@@ -46,10 +51,12 @@ class PlaceControllerIntegrationTest extends BaseIntegrationTest {
         .andReturn();
   }
 
+  @Transactional
+  @Rollback
   @Test
   @WithMockUser(
       username = "alfonz@alfonz.cz",
-      authorities = {"USER", "ROLE_VOTER_1"})
+      authorities = {"USER"})
   void testCreateNewPlace() throws Exception {
     Long interestId = 1L;
     String name = "Test name";
