@@ -19,13 +19,13 @@ import java.util.Optional;
 @RequestMapping("/interests")
 public class InterestController {
 
-  private InterestService interestService;
-  private CreateInterestService interestCreationService;
-  private UserService userService;
-  private RoleService roleService;
-  private PermissionService permissionService;
-  private PlaceService placeService;
-  private LikeService likeService;
+  private final InterestService interestService;
+  private final CreateInterestService interestCreationService;
+  private final UserService userService;
+  private final RoleService roleService;
+  private final PermissionService permissionService;
+  private final PlaceService placeService;
+  private final LikeService likeService;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")

@@ -20,8 +20,10 @@
         </a>
 
         <div class="place-image">
-            <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="placeholder"/>
-            <img th:unless="*{imageNames.isEmpty()}" th:src="'https://drive.google.com/uc?export=view&id=' + *{imageNames.get(getImageNames().size - 1)}" alt="placeholder"/>
+            <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="Generic Image"/>
+            <img th:unless="*{imageNames.isEmpty()}"
+                 th:src="'https://drive.google.com/uc?export=view&id=' + *{imageNames.get(getImageNames().size - 1)}"
+                 alt="Place Image"/>
         </div>
 
         <header class="content-header place-header">
@@ -41,7 +43,7 @@
                   name="rating">
                 <div class="place-rating-criteria">
                     <div class="place-rating-criterion" th:each="criterionDTO : ${placeCriteria.criteria()}">
-                        <div th:text="${criterionDTO.criterion.name}"/>
+                        <div th:text="${criterionDTO.name()}"/>
 
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
@@ -53,15 +55,15 @@
 
                             <div class="place-rating-stars">
                                 <th:block th:each="i: ${#numbers.sequence(0, 9)}">
-                                    <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.criterion.id) ? 'is-active' : ''}"
+                                    <i th:class="'place-rating-star star-' + ${i+1} + ' ' + ${i < usersRatings.ratings.get(criterionDTO.id) ? 'is-active' : ''}"
                                        th:attr="data-star=${i+1}"></i>
                                 </th:block>
                             </div>
 
                             <input type="number" hidden="hidden"
-                                   th:value="${usersRatings.ratings.containsKey(criterionDTO.criterion.id)} ?
-                                        ${usersRatings.ratings.get(criterionDTO.criterion.id)}"
-                                   th:field="*{ratings[__${criterionDTO.criterion.id}__]}">
+                                   th:value="${usersRatings.ratings.containsKey(criterionDTO.id)} ?
+                                        ${usersRatings.ratings.get(criterionDTO.id)}"
+                                   th:field="*{ratings[__${criterionDTO.id}__]}">
                         </div>
                     </div>
                 </div>
@@ -89,14 +91,25 @@
         </section>
 
         <div class="place-map">
-            Map placeholder
+            <div id="map"></div>
         </div>
     </div>
 </div>
 
+<script th:replace="~{fragments :: placeMap-script}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
 
-<script th:inline="javascript" src="/scripts/rating.js"></script>
-<script type="module" src="/scripts/imageUpload.js"></script>
+    let latitude = [[${place.latitude}]];
+    let longitude = [[${place.longitude}]];
+    let name = [[${place.name}]];
+    let rating = [[${place.getAverageRating()}]];
+
+    /*]]>*/
+</script>
+<script src="/scripts/placeMap.js"></script>
+<script th:if="${usersRatings}" src="/scripts/rating.js"></script>
+<script th:if="${usersRatings}" type="module" src="/scripts/imageUpload.js"></script>
 
 </body>
 </html>

@@ -26,8 +26,8 @@
                 <input type="checkbox" id="toggle" class="toggle-checkbox" onchange="getInviteType()"
                        th:checked="${isChecked}"/>
                 <label for="toggle" class="toggle-container">
-                    <div>E-mail</div>
-                    <div>Username</div>
+                    <span>E-mail</span>
+                    <span>Username</span>
                 </label>
                 <div class="send-invite">
                     <input type="hidden" id="type" name="inviteBy">
@@ -58,13 +58,13 @@
                     <form method="post">
                         <input type="hidden" name="_method" value="put">
                         <button class="role-option-button accept-button" type="submit">
-                            <img src="/icons/accept.svg">
+                            <img src="/icons/accept.svg" alt="Accept">
                         </button>
                     </form>
                     <form method="post">
                         <input type="hidden" name="_method" value="delete">
                         <button class="role-option-button kick-button" type="submit">
-                            <img src="/icons/cross.svg">
+                            <img src="/icons/cross.svg" alt="Deny">
                         </button>
                     </form>
                 </div>

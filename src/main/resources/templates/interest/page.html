@@ -20,7 +20,7 @@
 
     <div class="content content-interest">
         <div class="d-flex justify-content-around interest-button-bar">
-            <a class="button">Map</a>
+            <a class="button" th:href="@{/interests/{id}/map(id=*{id})}">Map</a>
             <span class="button pending"
                   th:if="${loggedUser != null && interest.isExclusive() && role != null && role.equals(role.APPLICANT)}">Pending Request</span>
             <a class="button"
@@ -63,7 +63,7 @@
             <div class="interest-places">
                 <a class="interest-place"
                    th:each="place : ${places}"
-                   th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.place().id})}"
+                   th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.id})}"
                 >
                     <div class="interest-place-img">
                         <img src="https://picsum.photos/400/300" alt="placeholder"/>
@@ -72,8 +72,8 @@
                     <div class="interest-place-content">
                         <header class="interest-place-header">
                             <div class="interest-place-title">
-                                <h3 th:text="${place.place().name}"></h3>
-                                <h4 th:text="${place.place().address}"></h4>
+                                <h3 th:text="${place.name}"></h3>
+                                <h4 th:text="${place.address}"></h4>
                             </div>
 
                             <div class="interest-place-distance">
@@ -85,7 +85,7 @@
                             <li>
                                 <i class="fas fa-star overall yellow"></i>
                                 <strong class="rating"
-                                        th:text="${#numbers.formatDecimal(place.place().getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}">
+                                        th:text="${#numbers.formatDecimal(place.avgRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}">
                                 </strong>
                                 <strong class="criterion">Overall</strong>
                             </li>
@@ -96,7 +96,7 @@
                                       th:text="${#numbers.formatDecimal(place.bestRatedCriterion().avgRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}">
                                 </span>
                                 <span class="criterion"
-                                      th:text="${place.bestRatedCriterion().criterion().name}">
+                                      th:text="${place.bestRatedCriterion().name()}">
                                 </span>
                             </li>
 
@@ -106,7 +106,7 @@
                                       th:text="${#numbers.formatDecimal(place.worstRatedCriterion().avgRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}">
                                 </span>
                                 <span class="criterion"
-                                      th:text="${place.worstRatedCriterion().criterion().name}">
+                                      th:text="${place.worstRatedCriterion().name()}">
                                 </span>
                             </li>
                         </ul>
