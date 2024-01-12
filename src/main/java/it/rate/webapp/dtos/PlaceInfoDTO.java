@@ -6,9 +6,12 @@ public record PlaceInfoDTO(
     Long id,
     String name,
     String address,
+    Long interestId,
     double averageRating,
-    double bestRatedCriterion,
-    double worstRatedCriterion) {
+    String bestRatedCriterionName,
+    double bestRatedCriterionScore,
+    String worstRatedCriterionName,
+    double worstRatedCriterionScore) {
 
   public PlaceInfoDTO(
       Place place,
@@ -18,8 +21,11 @@ public record PlaceInfoDTO(
         place.getId(),
         place.getName(),
         place.getAddress(),
+        place.getInterest().getId(),
         place.getAverageRating(),
+        bestRatedCriterion.criterion().getName(),
         bestRatedCriterion.avgRating(),
+        worstRatedCriterion.criterion().getName(),
         worstRatedCriterion.avgRating());
   }
 }
