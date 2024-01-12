@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -26,54 +23,72 @@ public class RatingService {
   }
 
   public void updateRating(RatingsDTO ratings, Place place, AppUser appUser) {
-    validateRatings(ratings, place);
+    Set<Criterion> ratedCriteria = validateRatings(ratings, place);
+
+    ratings
+        .ratings()
+        .forEach(
+            (key, value) -> {
+              Criterion criterion =
+                  ratedCriteria.stream()
+                      .filter(c -> Objects.equals(c.getId(), key))
+                      .findAny()
+                      .orElseThrow(
+                          () ->
+                              new ResponseStatusException(
+                                  HttpStatus.BAD_REQUEST, "Invalid criterion in ratings"));
+              updateOrCreateRating(appUser, place, criterion, value);
+            });
+  }
+
+  private void updateOrCreateRating(AppUser appUser, Place place, Criterion criterion, Integer value) {
+    RatingId ratingId = new RatingId(appUser.getId(), place.getId(), criterion.getId());
+    Optional<Rating> optRating = ratingRepository.findById(ratingId);
+
+    if (value == null) {
+      if (optRating.isPresent()) {
+        ratingRepository.deleteById(ratingId);
+      }
+      return;
+    }
+
+    if (optRating.isPresent()) {
+      Rating existingRating = optRating.get();
+      existingRating.setScore(value);
+      ratingRepository.save(existingRating);
+    } else {
+      Rating newRating = new Rating(appUser, place, criterion, value);
+      ratingRepository.save(newRating);
+    }
+  }
+
+  private Set<Criterion> validateRatings(RatingsDTO ratings, Place place) {
+    List<Criterion> placeCriteria = place.getInterest().getCriteria();
+    Set<Criterion> ratedCriteria = new HashSet<>();
+
     ratings
         .ratings()
         .forEach(
             (key, value) -> {
               Criterion criterion = getCriterion(key);
-              RatingId ratingId = new RatingId(appUser.getId(), place.getId(), criterion.getId());
-              Optional<Rating> optRating = ratingRepository.findById(ratingId);
-              if (optRating.isPresent()) {
-                if (value == null) {
-                  ratingRepository.deleteById(ratingId);
-                  return;
-                }
-                Rating existingRating = optRating.get();
-                existingRating.setScore(value);
-                ratingRepository.save(existingRating);
-              } else {
-                if (value == null) {
-                  return;
-                }
-                Rating newRating = new Rating(appUser, place, criterion, value);
-                ratingRepository.save(newRating);
-              }
-            });
-  }
-
-  private void validateRatings(RatingsDTO ratings, Place place) {
-    List<Criterion> placeCriteria = place.getInterest().getCriteria();
-    Set<Criterion> ratedCriteria =
-        ratings.ratings().keySet().stream().map(this::getCriterion).collect(Collectors.toSet());
-    if (!ratedCriteria.containsAll(placeCriteria)) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid criteria in ratings");
-    }
-    ratings
-        .ratings()
-        .forEach(
-            (key, value) -> {
+              ratedCriteria.add(criterion);
               if (value != null && (value < 1 || value > 10)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value");
               }
             });
+
+    if (!ratedCriteria.containsAll(placeCriteria)) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid criteria in ratings");
+    }
+
+    return ratedCriteria;
   }
 
   private Criterion getCriterion(Long criterionId) {
     Optional<Criterion> optCriterion = criterionRepository.findById(criterionId);
-    if (optCriterion.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Criterion not found");
-    }
-    return optCriterion.get();
+    return optCriterion.orElseThrow(
+        () ->
+            new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Criterion not found for ID: " + criterionId));
   }
 }
