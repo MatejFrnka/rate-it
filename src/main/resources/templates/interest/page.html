@@ -66,7 +66,11 @@
                    th:href="@{/interests/{intId}/places/{placeId}(intId=${interest.id}, placeId=${place.place().id})}"
                 >
                     <div class="interest-place-img">
-                        <img src="https://picsum.photos/400/300" alt="placeholder"/>
+                        <img th:if="${place.place().imageNames.isEmpty()}" src="https://picsum.photos/400/300"
+                             alt="placeholder"/>
+                        <img th:unless="${place.place().imageNames.isEmpty()}" id="picture-container"
+                             th:attr="data-image-id=${place.place().imageNames.get(place.place().getImageNames().size() - 1)}"
+                             alt="placeholder">
                     </div>
 
                     <div class="interest-place-content">
@@ -116,5 +120,7 @@
         </section>
     </div>
 </div>
+<script th:inline="javascript" src="/scripts/imageFetcher.js"></script>
+
 </body>
 </html>

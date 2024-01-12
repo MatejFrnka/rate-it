@@ -4,6 +4,7 @@ import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -51,6 +52,17 @@ public class GoogleImageService implements ImageService {
       throw new IOException(e.getMessage());
     }
   }
+
+  public byte[] getImageById(String imageId) throws IOException {
+
+    try {
+      try(InputStream imageStream = driveService.files().get(imageId).executeMediaAsInputStream()){
+        return imageStream.readAllBytes();
+      }
+    } catch (IOException e) {
+      throw new IOException("Could not retrieve image from server");
+  }
+    }
 
   @Override
   public String saveInterestImage(MultipartFile image, Long interestId) {

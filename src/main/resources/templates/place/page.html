@@ -21,7 +21,7 @@
 
         <div class="place-image">
             <img th:if="*{imageNames.isEmpty()}" src="https://picsum.photos/500/300" alt="placeholder"/>
-            <img th:unless="*{imageNames.isEmpty()}" th:src="'https://drive.google.com/uc?export=view&id=' + *{imageNames.get(getImageNames().size - 1)}" alt="placeholder"/>
+            <img th:unless="*{imageNames.isEmpty()}" id="picture-container" th:attr="data-image-id=*{imageNames.get(getImageNames().size() - 1)}" alt="placeholder"/>
         </div>
 
         <header class="content-header place-header">
@@ -96,6 +96,7 @@
 
 
 <script th:inline="javascript" src="/scripts/rating.js"></script>
+<script th:inline ="javascript" src="/scripts/imageFetcher.js"></script>
 <script type="module" src="/scripts/imageUpload.js"></script>
 
 </body>
