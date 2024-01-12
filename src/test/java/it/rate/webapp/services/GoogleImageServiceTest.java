@@ -20,7 +20,6 @@ class GoogleImageServiceTest extends BaseTest {
   @Autowired GoogleImageService googleImageService;
   @MockBean SecurityContext securityContext;
   @MockBean Authentication authentication;
-  @MockBean Drive drive;
   @MockBean Drive.Files files;
 
   @Test
