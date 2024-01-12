@@ -1,7 +1,5 @@
 package it.rate.webapp.dtos;
 
-import it.rate.webapp.models.Place;
-
 public record PlaceInfoDTO(
     Long id,
     String name,
@@ -9,27 +7,8 @@ public record PlaceInfoDTO(
     Double latitude,
     Double longitude,
     Double avgRating,
-    Long interestId,
     String bestRatedCriterionName,
     Double bestRatedCriterionRating,
     String worstRatedCriterionName,
     Double worstRatedCriterionRating) {
-
-  public PlaceInfoDTO(
-      Place place,
-      CriterionAvgRatingDTO bestRatedCriterion,
-      CriterionAvgRatingDTO worstRatedCriterion) {
-    this(
-        place.getId(),
-        place.getName(),
-        place.getAddress(),
-        place.getLatitude(),
-        place.getLongitude(),
-        place.getAverageRating(),
-        place.getInterest().getId(),
-        bestRatedCriterion.name(),
-        bestRatedCriterion.avgRating(),
-        worstRatedCriterion.name(),
-        worstRatedCriterion.avgRating());
-  }
 }

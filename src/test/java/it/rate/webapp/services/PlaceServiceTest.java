@@ -141,6 +141,11 @@ class PlaceServiceTest extends BaseTest {
             new Rating(userTwo, place, criteria.get(0), 5),
             new Rating(userTwo, place, criteria.get(1), 6));
 
+    CriterionAvgRatingDTO criterionAvgRatingOne = new CriterionAvgRatingDTO(
+            criteria.get(1).getId(), criteria.get(1).getName(), 5D);
+    CriterionAvgRatingDTO criterionAvgRatingTwo = new CriterionAvgRatingDTO(
+            criteria.get(0).getId(), criteria.get(0).getName(), 4D);
+
     interest.setPlaces(List.of(place));
     place.setRatings(ratings);
     place.setInterest(interest);
@@ -155,11 +160,10 @@ class PlaceServiceTest extends BaseTest {
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getAverageRating(),
-                place.getInterest().getId(),
-                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D).name(),
-                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D).avgRating(),
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D).name(),
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D).avgRating()));
+                criterionAvgRatingOne.name(),
+                criterionAvgRatingOne.avgRating(),
+                criterionAvgRatingTwo.name(),
+                criterionAvgRatingTwo.avgRating()));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
