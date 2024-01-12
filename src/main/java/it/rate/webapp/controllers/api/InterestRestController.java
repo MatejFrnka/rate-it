@@ -4,10 +4,10 @@ import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,8 +21,9 @@ public class InterestRestController {
 
   @GetMapping("/suggestions")
   public ResponseEntity<?> getAllSuggestions(
-      @Validated @RequestBody Optional<CoordinatesDTO> usersCoords) {
+      @Valid @RequestBody Optional<CoordinatesDTO> usersCoords) {
     if (usersCoords.isPresent()) {
+      System.out.println("jetotam");
       return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(usersCoords.get()));
     }
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
