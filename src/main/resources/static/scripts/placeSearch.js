@@ -38,8 +38,8 @@ function loadPlaces(query) {
         const formattedRating = averageRating.toFixed(1);
         clone.querySelector('.rating').textContent = formattedRating;
 
-        const bestCriterionRating = (place.bestRatedCriterionScore / 2).toFixed(1);
-        const worstCriterionRating = (place.worstRatedCriterionScore / 2).toFixed(1);
+        const bestCriterionRating = (place.bestRatedCriterionRating / 2).toFixed(1);
+        const worstCriterionRating = (place.worstRatedCriterionRating / 2).toFixed(1);
 
         const ratingContainer = clone.querySelector('.interest-place-ratings');
 
