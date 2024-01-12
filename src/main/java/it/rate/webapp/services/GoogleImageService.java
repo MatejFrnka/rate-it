@@ -56,13 +56,14 @@ public class GoogleImageService implements ImageService {
   public byte[] getImageById(String imageId) throws IOException {
 
     try {
-      try(InputStream imageStream = driveService.files().get(imageId).executeMediaAsInputStream()){
+      try (InputStream imageStream =
+          driveService.files().get(imageId).executeMediaAsInputStream()) {
         return imageStream.readAllBytes();
       }
     } catch (IOException e) {
       throw new IOException("Could not retrieve image from server");
-  }
     }
+  }
 
   @Override
   public String saveInterestImage(MultipartFile image, Long interestId) {

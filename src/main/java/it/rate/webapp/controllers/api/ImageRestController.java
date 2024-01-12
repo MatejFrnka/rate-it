@@ -1,6 +1,5 @@
 package it.rate.webapp.controllers.api;
 
-
 import it.rate.webapp.services.GoogleImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +15,15 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ImageRestController {
 
-    private final GoogleImageService googleImageService;
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getImage(@PathVariable String id) {
+  private final GoogleImageService googleImageService;
 
-        try {
-            return ResponseEntity.ok().body(googleImageService.getImageById(id));
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getImage(@PathVariable String id) {
+
+    try {
+      return ResponseEntity.ok().body(googleImageService.getImageById(id));
+    } catch (IOException e) {
+      return ResponseEntity.internalServerError().build();
     }
+  }
 }
