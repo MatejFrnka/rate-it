@@ -3,6 +3,7 @@ package it.rate.webapp.controllers.api;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.PlaceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import java.security.Principal;
 @RequestMapping("/api/v1/interests")
 public class InterestRestController {
   private final InterestService interestService;
+  private final PlaceService placeService;
 
   @GetMapping("/suggestions")
   public ResponseEntity<?> getAllSuggestions() {
@@ -45,5 +47,11 @@ public class InterestRestController {
   public ResponseEntity<?> getApplicantsByInterestId(@PathVariable Long interestId) {
     Interest interest = interestService.getById(interestId);
     return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.APPLICANT));
+  }
+
+  @GetMapping("/{interestId}/places")
+  public ResponseEntity<?> getAllPlaceInfoDTOs(@PathVariable Long interestId) {
+    Interest interest = interestService.getById(interestId);
+    return ResponseEntity.ok().body(placeService.getPlaceInfoDTOS(interest));
   }
 }
