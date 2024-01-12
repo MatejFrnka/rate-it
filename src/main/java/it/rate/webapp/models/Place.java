@@ -21,14 +21,12 @@ public class Place {
 
   private String description;
   private String address;
-  private double latitude;
-  private double longitude;
+  private Double latitude;
+  private Double longitude;
 
-  @ElementCollection
-  private List<String> imageNames = new ArrayList<>();
+  @ElementCollection @Builder.Default private List<String> imageNames = new ArrayList<>();
 
-  @Builder.Default
-  private boolean deleted = false;
+  @Builder.Default private boolean deleted = false;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

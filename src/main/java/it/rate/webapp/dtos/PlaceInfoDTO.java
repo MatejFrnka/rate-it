@@ -1,8 +1,11 @@
 package it.rate.webapp.dtos;
 
-import it.rate.webapp.models.Place;
-
 public record PlaceInfoDTO(
-    Place place,
+    Long id,
+    String name,
+    String address,
+    Double latitude,
+    Double longitude,
+    Double avgRating,
     CriterionAvgRatingDTO bestRatedCriterion,
     CriterionAvgRatingDTO worstRatedCriterion) {}

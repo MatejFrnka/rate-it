@@ -34,14 +34,14 @@ public class InterestRestController {
   }
 
   @GetMapping("/{interestId}/users")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public ResponseEntity<?> getVotersByInterestId(@PathVariable Long interestId) {
     Interest interest = interestService.getById(interestId);
     return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.VOTER));
   }
 
   @GetMapping("/{interestId}/applications")
-  @PreAuthorize("hasAnyAuthority(@permissionService.manageCommunity(#interestId))")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public ResponseEntity<?> getApplicantsByInterestId(@PathVariable Long interestId) {
     Interest interest = interestService.getById(interestId);
     return ResponseEntity.ok(interestService.getUsersDTO(interest, Role.RoleType.APPLICANT));
