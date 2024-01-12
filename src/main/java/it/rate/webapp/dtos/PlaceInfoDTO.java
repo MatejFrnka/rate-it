@@ -11,9 +11,9 @@ public record PlaceInfoDTO(
     Double avgRating,
     Long interestId,
     String bestRatedCriterionName,
-    Double bestRatedCriterionScore,
+    Double bestRatedCriterionRating,
     String worstRatedCriterionName,
-    Double worstRatedCriterionScore) {
+    Double worstRatedCriterionRating) {
 
   public PlaceInfoDTO(
       Place place,
