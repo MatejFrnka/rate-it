@@ -1,6 +1,6 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;

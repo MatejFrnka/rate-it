@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 
 import it.rate.webapp.BaseTest;
 import it.rate.webapp.dtos.SignupUserInDTO;
-import it.rate.webapp.exceptions.BadRequestException;
-import it.rate.webapp.exceptions.UserAlreadyExistsException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
 import it.rate.webapp.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

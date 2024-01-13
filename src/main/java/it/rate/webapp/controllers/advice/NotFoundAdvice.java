@@ -17,8 +17,8 @@ public class NotFoundAdvice {
   private final int statusCode = HttpStatus.NOT_FOUND.value();
 
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ModelAndView handleResourceNotFoundException(ResourceNotFoundException e, Model model) {
-    model.addAttribute("error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
-    return new ModelAndView( "error/page");
+  public ModelAndView handleResourceNotFoundException(ResourceNotFoundException e) {
+    return new ModelAndView(
+        "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
 }

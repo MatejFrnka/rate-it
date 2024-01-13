@@ -1,7 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;

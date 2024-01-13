@@ -86,7 +86,7 @@ public class PermissionService {
   public boolean createPlace(Long interestId) {
     Optional<Interest> optInterest = interestRepository.findById(interestId);
     if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
     }
     Interest i = optInterest.get();
     return canRateOrCreate(i);

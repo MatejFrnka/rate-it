@@ -3,7 +3,7 @@ package it.rate.webapp.services;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;

@@ -2,8 +2,8 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.dtos.SignupUserInDTO;
-import it.rate.webapp.exceptions.BadRequestException;
-import it.rate.webapp.exceptions.UserAlreadyExistsException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.repositories.UserRepository;
 import jakarta.validation.Validator;
