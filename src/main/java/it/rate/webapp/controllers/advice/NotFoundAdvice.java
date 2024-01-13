@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ResourceNotFoundExceptionHandler {
+public class NotFoundAdvice {
   private final String clientMessage = "Sorry, we couldn't quite find what you were looking for.";
   private final String simpleMessage = "Page not found";
   private final int statusCode = HttpStatus.NOT_FOUND.value();
