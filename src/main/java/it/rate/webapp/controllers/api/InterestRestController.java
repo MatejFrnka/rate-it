@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -51,7 +52,10 @@ public class InterestRestController {
 
   @GetMapping("/{interestId}/places")
   public ResponseEntity<?> getAllPlaceInfoDTOs(@PathVariable Long interestId) {
-    Interest interest = interestService.getById(interestId);
-    return ResponseEntity.ok().body(placeService.getPlaceInfoDTOS(interest));
+    Optional<Interest> optInterest = interestService.findInterestById(interestId);
+    if (optInterest.isPresent()) {
+      return ResponseEntity.ok().body(placeService.getPlaceInfoDTOS(optInterest.get()));
+    }
+    return ResponseEntity.badRequest().body("This interest doesn't exist");
   }
 }
