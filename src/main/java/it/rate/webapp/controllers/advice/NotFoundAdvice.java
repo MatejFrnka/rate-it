@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
@@ -18,6 +19,12 @@ public class NotFoundAdvice {
 
   @ExceptionHandler(ResourceNotFoundException.class)
   public ModelAndView handleResourceNotFoundException(ResourceNotFoundException e) {
+    return new ModelAndView(
+        "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ModelAndView handleNoResourceFoundException(NoResourceFoundException e) {
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
