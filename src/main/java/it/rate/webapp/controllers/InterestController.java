@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
@@ -62,8 +63,9 @@ public class InterestController {
   public String interestView(Model model, @PathVariable Long interestId, Principal principal) {
     Optional<Interest> interest = interestService.findInterestById(interestId);
     if (interest.isEmpty()) {
-      model.addAttribute("message", "This interest doesn't exist");
-      return "error/page";
+      throw new InterestNotFoundException();
+//      model.addAttribute("message", "This interest doesn't exist");
+//      return "error/page";
     }
 
     if (principal != null) {

@@ -3,6 +3,8 @@ package it.rate.webapp.controllers.advice;
 import it.rate.webapp.dtos.ErrorResponseDTO;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.exceptions.api.InvalidApiResponseException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
+@ConditionalOnProperty(name = "advice.enabled", havingValue = "true")
 @ControllerAdvice
 public class ApiRequestAdvice {
   private String clientMessage;
