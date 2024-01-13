@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.config.security.ServerRole;
+import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.PlaceRepository;
@@ -46,7 +47,7 @@ public class PermissionService {
 
   public boolean manageCommunity(Long interestId) {
     if (!interestRepository.existsById(interestId)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
+      throw new InterestNotFoundException();
     }
     AppUser user = authenticatedUser();
     if (user == null) {
