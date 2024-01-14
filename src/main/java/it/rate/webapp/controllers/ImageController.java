@@ -22,7 +22,7 @@ public class ImageController {
   private final PlaceService placeService;
 
   @PostMapping("interests/{interestId}/places/{placeId}")
-  @PreAuthorize("hasAnyAuthority(@permissionService.ratePlace(#placeId))")
+  @PreAuthorize("@permissionService.ratePlace(#placeId)")
   public String uploadPlaceImage(
       @RequestParam("picture") MultipartFile file,
       @PathVariable Long interestId,

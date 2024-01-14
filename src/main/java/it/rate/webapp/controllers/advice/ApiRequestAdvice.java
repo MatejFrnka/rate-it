@@ -5,6 +5,8 @@ import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.exceptions.api.InvalidApiResponseException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @ConditionalOnProperty(name = "advice.enabled", havingValue = "true")
 @ControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApiRequestAdvice {
   private String clientMessage;
   private String simpleMessage;
