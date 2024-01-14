@@ -49,15 +49,18 @@ public class InterestService {
   }
 
   public List<InterestSuggestionDTO> getAllSuggestionDtos() {
-    return findAllInterests().stream().map(InterestSuggestionDTO::new).collect(Collectors.toList());
+    return findAllInterests().stream()
+        .map(interest -> new InterestSuggestionDTO(interest, null))
+        .collect(Collectors.toList());
   }
 
   public List<InterestSuggestionDTO> getAllSuggestionDtos(CoordinatesDTO usersCoords) {
     return findAllInterests().stream()
-        .sorted(
-            Comparator.comparingDouble(
-                interest -> getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
-        .map(InterestSuggestionDTO::new)
+        .map(
+            interest ->
+                new InterestSuggestionDTO(
+                    interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
+        .sorted(Comparator.comparingDouble(InterestSuggestionDTO::distanceKm))
         .collect(Collectors.toList());
   }
 
