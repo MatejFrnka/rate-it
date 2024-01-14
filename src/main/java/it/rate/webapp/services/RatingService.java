@@ -4,6 +4,7 @@ import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class RatingService {
+
+  private final Validator validator;
   private final RatingRepository ratingRepository;
   private final CriterionRepository criterionRepository;
 
@@ -41,7 +44,8 @@ public class RatingService {
             });
   }
 
-  private void updateOrCreateRating(AppUser appUser, Place place, Criterion criterion, Integer value) {
+  private void updateOrCreateRating(
+      AppUser appUser, Place place, Criterion criterion, Integer value) {
     RatingId ratingId = new RatingId(appUser.getId(), place.getId(), criterion.getId());
     Optional<Rating> optRating = ratingRepository.findById(ratingId);
 
@@ -72,7 +76,7 @@ public class RatingService {
             (key, value) -> {
               Criterion criterion = getCriterion(key);
               ratedCriteria.add(criterion);
-              if (value != null && (value < 1 || value > 10)) {
+              if (!validator.validate(ratings).isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value");
               }
             });
