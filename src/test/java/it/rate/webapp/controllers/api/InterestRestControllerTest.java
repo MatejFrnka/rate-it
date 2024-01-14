@@ -21,6 +21,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Autowired MockMvc mockMvc;
 
+  // when RatingRepository is not mocked, the test will fail when running ./gradlew check
   @MockBean private RatingRepository ratingRepository;
 
   @Test
