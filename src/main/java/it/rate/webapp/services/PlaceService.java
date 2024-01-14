@@ -83,7 +83,7 @@ public class PlaceService {
         place.getAddress(),
         place.getLatitude(),
         place.getLongitude(),
-        place.getAverageRating()
+        place.getAverageRating(),
         bestCriterion.name(),
         bestCriterion.avgRating(),
         worstCriterion.name(),
