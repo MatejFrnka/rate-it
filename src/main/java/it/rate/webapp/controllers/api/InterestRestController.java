@@ -1,11 +1,12 @@
 package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
-import it.rate.webapp.dtos.ErrorMessageDTO;
+import it.rate.webapp.dtos.ErrorMessagesDTO;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.PlaceService;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -26,11 +27,7 @@ public class InterestRestController {
   @GetMapping("/suggestions")
   public ResponseEntity<?> getAllSuggestions(@RequestBody Optional<CoordinatesDTO> usersCoords) {
     if (usersCoords.isPresent()) {
-      if (validator.validate(usersCoords.get()).isEmpty()) {
-        return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(usersCoords.get()));
-      } else {
-        return ResponseEntity.badRequest().body(new ErrorMessageDTO("Invalid coordinates"));
-      }
+      return handleCoordinates(usersCoords.get());
     }
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
   }
@@ -65,5 +62,16 @@ public class InterestRestController {
       return ResponseEntity.ok().body(placeService.getPlaceInfoDTOS(optInterest.get()));
     }
     return ResponseEntity.badRequest().body("This interest doesn't exist");
+  }
+
+  private ResponseEntity<?> handleCoordinates(CoordinatesDTO coordinates) {
+    Set<ConstraintViolation<CoordinatesDTO>> validationErrors = validator.validate(coordinates);
+    if (validationErrors.isEmpty()) {
+      return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(coordinates));
+    }
+    return ResponseEntity.badRequest()
+        .body(
+            new ErrorMessagesDTO(
+                validationErrors.stream().map(ConstraintViolation::getMessage).toList()));
   }
 }
