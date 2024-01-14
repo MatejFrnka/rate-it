@@ -12,6 +12,8 @@ import lombok.Setter;
 @Table(name = "ratings")
 public class Rating {
   @EmbeddedId private RatingId id;
+
+  @Column(nullable = false)
   private int score;
 
   @ManyToOne
