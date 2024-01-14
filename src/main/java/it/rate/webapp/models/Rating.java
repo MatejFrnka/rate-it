@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 @Getter
 @Setter
@@ -13,6 +14,8 @@ import lombok.Setter;
 public class Rating {
   @EmbeddedId private RatingId id;
 
+  @Range(min = 1, max = 10)
+  @Column(nullable = false)
   private int rating;
 
   @ManyToOne
