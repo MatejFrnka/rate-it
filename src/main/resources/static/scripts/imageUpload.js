@@ -1,6 +1,6 @@
 import {Uppy, Dashboard, XHRUpload, Webcam} from "https://releases.transloadit.com/uppy/v3.21.0/uppy.min.mjs"
 
-let dynamicEndpoint = window.location.pathname;
+let dynamicEndpoint = window.location.pathname.concat('/new-image');
 
 const uppy = new Uppy({
     restrictions: {

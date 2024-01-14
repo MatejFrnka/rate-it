@@ -1,5 +1,7 @@
 package it.rate.webapp.dtos;
 
+import java.util.List;
+
 public record PlaceInfoDTO(
     Long id,
     String name,
@@ -8,4 +10,5 @@ public record PlaceInfoDTO(
     Double longitude,
     Double avgRating,
     CriterionAvgRatingDTO bestRatedCriterion,
-    CriterionAvgRatingDTO worstRatedCriterion) {}
+    CriterionAvgRatingDTO worstRatedCriterion,
+    List<String> imageNames) {}
