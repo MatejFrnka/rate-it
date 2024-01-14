@@ -6,11 +6,8 @@ import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RoleRepository;
-import it.rate.webapp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -85,12 +82,8 @@ public class PermissionService {
   }
 
   public boolean createPlace(Long interestId) {
-    Optional<Interest> optInterest = interestRepository.findById(interestId);
-    if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Interest not found");
-    }
-    Interest i = optInterest.get();
-    return canRateOrCreate(i);
+    Interest interest = interestRepository.findById(interestId).orElseThrow(InterestNotFoundException::new);
+    return canRateOrCreate(interest);
   }
 
   private boolean canRateOrCreate(Interest i) {

@@ -61,12 +61,8 @@ public class InterestController {
 
   @GetMapping("/{interestId}")
   public String interestView(Model model, @PathVariable Long interestId, Principal principal) {
-    Optional<Interest> interest = interestService.findInterestById(interestId);
-    if (interest.isEmpty()) {
-      throw new InterestNotFoundException();
-//      model.addAttribute("message", "This interest doesn't exist");
-//      return "error/page";
-    }
+    Interest interest =
+        interestService.findInterestById(interestId).orElseThrow(InterestNotFoundException::new);
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
@@ -75,13 +71,13 @@ public class InterestController {
       model.addAttribute(
           "liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
       model.addAttribute(
-          "ratingPermission", permissionService.hasRatingPermission(loggedUser, interest.get()));
+          "ratingPermission", permissionService.hasRatingPermission(loggedUser, interest));
 
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
     }
-    model.addAttribute("interest", interest.get());
-    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
+    model.addAttribute("interest", interest);
+    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));
     return "interest/page";
   }
 
