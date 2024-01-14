@@ -141,6 +141,11 @@ class PlaceServiceTest extends BaseTest {
             new Rating(userTwo, place, criteria.get(0), 5),
             new Rating(userTwo, place, criteria.get(1), 6));
 
+    CriterionAvgRatingDTO criterionAvgRatingOne = new CriterionAvgRatingDTO(
+            criteria.get(1).getId(), criteria.get(1).getName(), 5D);
+    CriterionAvgRatingDTO criterionAvgRatingTwo = new CriterionAvgRatingDTO(
+            criteria.get(0).getId(), criteria.get(0).getName(), 4D);
+
     interest.setPlaces(List.of(place));
     place.setRatings(ratings);
     place.setInterest(interest);
@@ -155,8 +160,10 @@ class PlaceServiceTest extends BaseTest {
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getAverageRating(),
-                new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D),
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D),
+                criterionAvgRatingOne.name(),
+                criterionAvgRatingOne.avgRating(),
+                criterionAvgRatingTwo.name(),
+                criterionAvgRatingTwo.avgRating(),
                 place.getImageNames()));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))

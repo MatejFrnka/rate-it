@@ -9,6 +9,10 @@ public record PlaceInfoDTO(
     Double latitude,
     Double longitude,
     Double avgRating,
-    CriterionAvgRatingDTO bestRatedCriterion,
-    CriterionAvgRatingDTO worstRatedCriterion,
-    List<String> imageNames) {}
+    String bestRatedCriterionName,
+    Double bestRatedCriterionRating,
+    String worstRatedCriterionName,
+    Double worstRatedCriterionRating,
+    List<String> imageNames) {
+}
+
