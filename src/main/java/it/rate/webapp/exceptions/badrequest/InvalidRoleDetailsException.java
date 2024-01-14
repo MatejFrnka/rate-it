@@ -6,7 +6,7 @@ public class InvalidRoleDetailsException extends BadRequestException {
   }
 
   public InvalidRoleDetailsException() {
-    super("Role with given details not found in database");
+    super("Role with given details not found");
   }
 
   public InvalidRoleDetailsException(String message, Throwable throwable) {

@@ -6,7 +6,7 @@ public class InvalidUserDetailsException extends BadRequestException {
   }
 
   public InvalidUserDetailsException() {
-    super("User with given details not found in database");
+    super("User with given details not found");
   }
 
   public InvalidUserDetailsException(String message, Throwable throwable) {

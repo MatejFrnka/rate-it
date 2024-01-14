@@ -2,6 +2,7 @@ package it.rate.webapp.controllers.advice;
 
 import it.rate.webapp.dtos.ErrorResponseDTO;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -30,6 +31,12 @@ public class BadRequestAdvice {
             + e.getBindingResult().getFieldError().getDefaultMessage();
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, errorMessage));
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ModelAndView handleConstraintViolationException(ConstraintViolationException e) {
+    return new ModelAndView(
+        "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
 
   @ExceptionHandler(BadRequestException.class)

@@ -2,6 +2,7 @@ package it.rate.webapp.controllers.advice;
 
 import it.rate.webapp.dtos.EmailMessageDTO;
 import it.rate.webapp.dtos.ErrorResponseDTO;
+import it.rate.webapp.exceptions.internalerror.InternalErrorException;
 import it.rate.webapp.services.EmailService;
 import it.rate.webapp.services.UserService;
 import lombok.AllArgsConstructor;
@@ -23,14 +24,16 @@ import java.util.Arrays;
 public class InternalErrorAdvice {
   private final EmailService emailService;
   private final UserService userService;
+  private final String devEmail = "rate.spot.dev@gmail.com";
   private final String clientMessage =
       "Something went wrong. Our developers were notified. Please try again later.";
   private final String simpleMessage = "Internal server error";
   private final int statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
 
-  @ExceptionHandler(Exception.class)
-  public ModelAndView unhandledExceptions(Exception ex) {
-    emailService.sendEmail(buildExceptionReport("rate.spot.dev@gmail.com", ex));
+
+  @ExceptionHandler({InternalErrorException.class, Exception.class})
+  public ModelAndView unhandledExceptions(Exception e) {
+    emailService.sendEmail(buildExceptionReport(devEmail, e));
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }

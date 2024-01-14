@@ -2,11 +2,15 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.BaseTest;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
+import it.rate.webapp.exceptions.badrequest.InvalidRoleDetailsException;
+import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.models.RoleId;
 import it.rate.webapp.repositories.RoleRepository;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -50,19 +54,12 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void removeRoleInvalidParams() {
-    Exception e1 =
-        assertThrows(
-            ResponseStatusException.class, () -> manageInterestService.removeRole(null, null));
-    Exception e2 =
-        assertThrows(
-            ResponseStatusException.class, () -> manageInterestService.removeRole(null, 1L));
-    Exception e3 =
-        assertThrows(
-            ResponseStatusException.class, () -> manageInterestService.removeRole(1L, null));
-
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e1.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e2.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e3.getMessage());
+    assertThrows(
+        ConstraintViolationException.class, () -> manageInterestService.removeRole(null, null));
+    assertThrows(
+        ConstraintViolationException.class, () -> manageInterestService.removeRole(null, 1L));
+    assertThrows(
+        ConstraintViolationException.class, () -> manageInterestService.removeRole(1L, null));
   }
 
   @Test
@@ -71,17 +68,19 @@ class ManageInterestServiceTest extends BaseTest {
     when(roleService.findById(any())).thenReturn(Optional.of(roleToDelete));
 
     Exception e1 =
-        assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
-    assertEquals("400 BAD_REQUEST \"Cannot remove creator role\"", e1.getMessage());
+        assertThrows(
+            InvalidRoleDetailsException.class, () -> manageInterestService.removeRole(1L, 1L));
+    assertEquals("Cannot remove creator role", e1.getMessage());
   }
 
   @Test
   void removeRoleNonExistentRoleForUser() {
     when(roleService.findById(any())).thenReturn(Optional.empty());
     Exception e4 =
-        assertThrows(ResponseStatusException.class, () -> manageInterestService.removeRole(1L, 1L));
+        assertThrows(
+            InvalidRoleDetailsException.class, () -> manageInterestService.removeRole(1L, 1L));
 
-    assertEquals("404 NOT_FOUND \"Role not found\"", e4.getMessage());
+    assertEquals("Role with given details not found", e4.getMessage());
   }
 
   @Test
@@ -103,38 +102,24 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void adjustRoleInvalidParameters() throws BadRequestException {
-    Exception e1 =
-        assertThrows(
-            BadRequestException.class, () -> manageInterestService.adjustRole(null, null, null));
-    Exception e2 =
-        assertThrows(
-            BadRequestException.class, () -> manageInterestService.adjustRole(1L, null, null));
-    Exception e3 =
-        assertThrows(
-            BadRequestException.class, () -> manageInterestService.adjustRole(null, 1L, null));
-    Exception e4 =
-        assertThrows(
-            BadRequestException.class,
-            () -> manageInterestService.adjustRole(null, null, Role.RoleType.APPLICANT));
-    Exception e5 =
-        assertThrows(
-            BadRequestException.class, () -> manageInterestService.adjustRole(1L, 1L, null));
-    Exception e6 =
-        assertThrows(
-            BadRequestException.class,
-            () -> manageInterestService.adjustRole(null, 1L, Role.RoleType.APPLICANT));
-    Exception e7 =
-        assertThrows(
-            BadRequestException.class,
-            () -> manageInterestService.adjustRole(1L, null, Role.RoleType.APPLICANT));
-
-    assertEquals("Missing parameter", e1.getMessage());
-    assertEquals("Missing parameter", e2.getMessage());
-    assertEquals("Missing parameter", e3.getMessage());
-    assertEquals("Missing parameter", e4.getMessage());
-    assertEquals("Missing parameter", e5.getMessage());
-    assertEquals("Missing parameter", e6.getMessage());
-    assertEquals("Missing parameter", e7.getMessage());
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.adjustRole(null, null, null));
+    assertThrows(
+        ConstraintViolationException.class, () -> manageInterestService.adjustRole(1L, null, null));
+    assertThrows(
+        ConstraintViolationException.class, () -> manageInterestService.adjustRole(null, 1L, null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.adjustRole(null, null, Role.RoleType.APPLICANT));
+    assertThrows(
+        ConstraintViolationException.class, () -> manageInterestService.adjustRole(1L, 1L, null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.adjustRole(null, 1L, Role.RoleType.APPLICANT));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.adjustRole(1L, null, Role.RoleType.APPLICANT));
   }
 
   @Test
@@ -142,10 +127,10 @@ class ManageInterestServiceTest extends BaseTest {
     when(roleService.findById(any())).thenReturn(Optional.empty());
     Exception e =
         assertThrows(
-            BadRequestException.class,
+            InvalidRoleDetailsException.class,
             () -> manageInterestService.adjustRole(1L, 1L, Role.RoleType.APPLICANT));
 
-    assertEquals("Role not found", e.getMessage());
+    assertEquals("Role with given details not found", e.getMessage());
   }
 
   @Test
@@ -162,67 +147,44 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void inviteUserInvalidParameters() {
-    Exception e1 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(null, null, null, null));
-    Exception e2 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(1L, null, null, null));
-    Exception e3 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(null, "email", null, null));
-    Exception e4 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(null, null, "franta", null));
-    Exception e5 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(null, null, null, Role.RoleType.APPLICANT));
-    Exception e6 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(1L, "email", null, null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(null, null, null, null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, null, null, null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(null, "email", null, null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(null, null, "franta", null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(null, null, null, Role.RoleType.APPLICANT));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, "email", null, null));
 
-    Exception e7 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(1L, null, "franta", null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, null, "franta", null));
 
-    Exception e8 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(1L, null, null, Role.RoleType.APPLICANT));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, null, null, Role.RoleType.APPLICANT));
 
-    Exception e9 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(1L, "email", "franta", null));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, "email", "franta", null));
 
-    Exception e10 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(1L, "email", null, Role.RoleType.APPLICANT));
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, "email", null, Role.RoleType.APPLICANT));
 
-    Exception e11 =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> manageInterestService.inviteUser(1L, null, "franta", Role.RoleType.APPLICANT));
-
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e1.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e2.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e3.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e4.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e5.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e6.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e7.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e8.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e9.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e10.getMessage());
-    assertEquals("400 BAD_REQUEST \"Missing parameter\"", e11.getMessage());
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, null, "franta", Role.RoleType.APPLICANT));
   }
 
   @Test
@@ -230,10 +192,10 @@ class ManageInterestServiceTest extends BaseTest {
     when(interestService.findInterestById(any())).thenReturn(Optional.empty());
     Exception e =
         assertThrows(
-            ResponseStatusException.class,
+            InvalidInterestDetailsException.class,
             () -> manageInterestService.inviteUser(1L, "username", "franta", Role.RoleType.VOTER));
 
-    assertEquals("404 NOT_FOUND \"Interest not found\"", e.getMessage());
+    assertEquals("Interest with given details not found", e.getMessage());
   }
 
   @Test
@@ -241,25 +203,20 @@ class ManageInterestServiceTest extends BaseTest {
     when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
-    Exception e1 =
-        assertThrows(
-            ResponseStatusException.class,
-            () ->
-                manageInterestService.inviteUser(
-                    1L, "username", "franta", Role.RoleType.APPLICANT));
-    Exception e2 =
-        assertThrows(
-            ResponseStatusException.class,
-            () ->
-                manageInterestService.inviteUser(
-                    1L, "email", "test@test.cz", Role.RoleType.APPLICANT));
 
-    assertEquals("404 NOT_FOUND \"User not found\"", e1.getMessage());
-    assertEquals("404 NOT_FOUND \"User not found\"", e2.getMessage());
+    assertThrows(
+        InvalidUserDetailsException.class,
+        () -> manageInterestService.inviteUser(1L, "username", "franta", Role.RoleType.APPLICANT));
+
+    assertThrows(
+        InvalidUserDetailsException.class,
+        () ->
+            manageInterestService.inviteUser(1L, "email", "test@test.cz", Role.RoleType.APPLICANT));
   }
 
   @Test
-  void inviteUserReturnsRoleForValidParameters() {
+  void inviteUserReturnsRoleForValidParameters()
+      throws InvalidInterestDetailsException, InvalidUserDetailsException {
     AppUser userWithoutRole = new AppUser();
     Role.RoleType roleToCreate = Role.RoleType.VOTER;
     when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
@@ -278,18 +235,15 @@ class ManageInterestServiceTest extends BaseTest {
   @Test
   void inviteUserThrowsBadRequestForInvalidInviteForm() {
     when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
-    Exception e1 =
-        assertThrows(
-            ResponseStatusException.class,
-            () ->
-                manageInterestService.inviteUser(1L, "usernaaame", "franta", Role.RoleType.VOTER));
-    Exception e2 =
-        assertThrows(
-            ResponseStatusException.class,
-            () ->
-                manageInterestService.inviteUser(
-                    1L, "emaail", "franta@franta.cz", Role.RoleType.VOTER));
-    assertEquals("400 BAD_REQUEST \"Invalid parameter\"", e1.getMessage());
-    assertEquals("400 BAD_REQUEST \"Invalid parameter\"", e2.getMessage());
+
+    assertThrows(
+        ConstraintViolationException.class,
+        () -> manageInterestService.inviteUser(1L, "usernaaame", "franta", Role.RoleType.VOTER));
+
+    assertThrows(
+        ConstraintViolationException.class,
+        () ->
+            manageInterestService.inviteUser(
+                1L, "emaail", "franta@franta.cz", Role.RoleType.VOTER));
   }
 }

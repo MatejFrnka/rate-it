@@ -6,7 +6,7 @@ public class InvalidInterestDetailsException extends BadRequestException {
   }
 
   public InvalidInterestDetailsException() {
-    super("Interest with given details not found in database");
+    super("Interest with given details not found");
   }
 
   public InvalidInterestDetailsException(String message, Throwable throwable) {

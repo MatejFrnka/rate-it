@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -69,8 +68,7 @@ public class InterestAdminController {
 
   @PutMapping("/users/{userId}")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
-  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId)
-      throws BadRequestException {
+  public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) {
     manageInterestService.adjustRole(interestId, userId, Role.RoleType.VOTER);
     return "redirect:/interests/{interestId}/admin/users";
   }
@@ -94,8 +92,8 @@ public class InterestAdminController {
       ra.addFlashAttribute("status", "Invite successfully sent");
       ra.addFlashAttribute("statusClass", "successful");
       ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
-    } catch (ResponseStatusException e) {
-      ra.addFlashAttribute("status", e.getReason());
+    } catch (BadRequestException e) {
+      ra.addFlashAttribute("status", e.getMessage());
       ra.addFlashAttribute("statusClass", "error");
       ra.addFlashAttribute("user", user);
       ra.addFlashAttribute("isChecked", inviteBy.equals("username"));
