@@ -1,11 +1,12 @@
 package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
+import it.rate.webapp.dtos.ErrorMessageDTO;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
-import jakarta.validation.Valid;
 import it.rate.webapp.services.PlaceService;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,14 +19,18 @@ import java.util.Optional;
 @AllArgsConstructor
 @RequestMapping("/api/v1/interests")
 public class InterestRestController {
+  private final Validator validator;
   private final InterestService interestService;
   private final PlaceService placeService;
 
   @GetMapping("/suggestions")
-  public ResponseEntity<?> getAllSuggestions(
-      @Valid @RequestBody Optional<CoordinatesDTO> usersCoords) {
+  public ResponseEntity<?> getAllSuggestions(@RequestBody Optional<CoordinatesDTO> usersCoords) {
     if (usersCoords.isPresent()) {
-      return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(usersCoords.get()));
+      if (validator.validate(usersCoords.get()).isEmpty()) {
+        return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(usersCoords.get()));
+      } else {
+        return ResponseEntity.badRequest().body(new ErrorMessageDTO("Invalid coordinates"));
+      }
     }
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
   }
