@@ -46,6 +46,6 @@ public class Place {
   private List<Rating> ratings = new ArrayList<>();
 
   public double getAverageRating() {
-    return ratings.stream().mapToDouble(Rating::getScore).average().orElse(-1);
+    return ratings.stream().mapToDouble(Rating::getRating).average().orElse(-1);
   }
 }

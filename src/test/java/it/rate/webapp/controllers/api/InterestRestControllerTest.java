@@ -3,12 +3,12 @@ package it.rate.webapp.controllers.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.rate.webapp.BaseIntegrationTest;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
+import it.rate.webapp.repositories.*;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -16,11 +16,12 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Autowired MockMvc mockMvc;
+
+  @MockBean private RatingRepository ratingRepository;
 
   @Test
   void getAllSuggestionsOk() throws Exception {

@@ -82,7 +82,7 @@ public class PlaceService {
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
     double avgRating =
         ratingRepository.findAllByCriterionAndPlace(criterion, place).stream()
-            .mapToDouble(Rating::getScore)
+            .mapToDouble(Rating::getRating)
             .average()
             .orElse(-1);
 

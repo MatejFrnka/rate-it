@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public record RatingsDTO(Map<Long, @Min(value = 1) @Max(value = 10) Integer> ratings) {
   public RatingsDTO(List<Rating> ratings) {
-    this(ratings.stream().collect(Collectors.toMap(Rating::getCriterionId, Rating::getScore)));
+    this(ratings.stream().collect(Collectors.toMap(Rating::getCriterionId, Rating::getRating)));
   }
 
   public RatingsDTO() {
