@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.UserService;
 import java.security.Principal;
@@ -17,13 +18,12 @@ public class MainPageController {
 
   @GetMapping({"/", "/index"})
   public String index(Model model, Principal principal) {
-
     if (principal != null) {
       model.addAttribute(
           "loggedUser",
           userService
               .findByEmail(principal.getName())
-              .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+              .orElseThrow(InvalidUserDetailsException::new));
       model.addAttribute("likedInterests", interestService.getLikedInterests(principal.getName()));
     }
 

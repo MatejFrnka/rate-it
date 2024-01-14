@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
@@ -107,7 +108,7 @@ public class InterestController {
           "loggedUser",
           userService
               .findByEmail(principal.getName())
-              .orElseThrow(() -> new RuntimeException("Email not found in the database")));
+              .orElseThrow(InvalidUserDetailsException::new));
       model.addAttribute(
           "likedInterests", interestService.getLikedInterestsDTOS(principal.getName()));
     }

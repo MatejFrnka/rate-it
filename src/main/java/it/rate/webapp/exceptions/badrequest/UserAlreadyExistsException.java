@@ -6,7 +6,7 @@ public class UserAlreadyExistsException extends BadRequestException {
   }
 
   public UserAlreadyExistsException() {
-    super("Ambiguous user record in database");
+    super("User with these details already exists");
   }
 
   public UserAlreadyExistsException(String message, Throwable throwable) {
