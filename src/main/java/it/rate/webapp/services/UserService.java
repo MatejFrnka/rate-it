@@ -9,6 +9,8 @@ import it.rate.webapp.repositories.UserRepository;
 import jakarta.validation.Validator;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,14 @@ public class UserService {
 
   public Optional<AppUser> findByUsernameIgnoreCase(String username) {
     return userRepository.findByUsernameIgnoreCase(username);
+  }
+
+  public AppUser authenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && !(authentication.getPrincipal().equals("anonymousUser"))) {
+      return userRepository.getByEmail(authentication.getName());
+    }
+    return null;
   }
 
   public Optional<AppUser> findByEmailIgnoreCase(String email) {

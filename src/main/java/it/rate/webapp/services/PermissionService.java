@@ -23,7 +23,7 @@ public class PermissionService {
   private final PlaceRepository placeRepository;
   private final InterestRepository interestRepository;
   private final RoleRepository roleRepository;
-  private final UserRepository userRepository;
+  private final UserService userService;
 
   public boolean hasRatingPermission(AppUser user, Interest interest) {
     Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interest.getId()));
@@ -49,7 +49,7 @@ public class PermissionService {
     if (!interestRepository.existsById(interestId)) {
       throw new InterestNotFoundException();
     }
-    AppUser user = authenticatedUser();
+    AppUser user = userService.authenticatedUser();
     if (user == null) {
       return false;
     }
@@ -61,7 +61,7 @@ public class PermissionService {
   }
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
-    AppUser user = authenticatedUser();
+    AppUser user = userService.authenticatedUser();
     if (user == null) {
       return false;
     }
@@ -93,16 +93,8 @@ public class PermissionService {
     return canRateOrCreate(i);
   }
 
-  private AppUser authenticatedUser() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication != null && !(authentication.getPrincipal().equals("anonymousUser"))) {
-      return userRepository.getByEmail(authentication.getName());
-    }
-    return null;
-  }
-
   private boolean canRateOrCreate(Interest i) {
-    AppUser user = authenticatedUser();
+    AppUser user = userService.authenticatedUser();
     if (user == null) {
       return false;
     }

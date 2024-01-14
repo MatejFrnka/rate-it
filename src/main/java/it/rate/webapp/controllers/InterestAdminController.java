@@ -77,12 +77,13 @@ public class InterestAdminController {
 
   @GetMapping("/invite")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
-  public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
+  public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) throws Exception {
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     }
-    model.addAttribute("interest", interestService.getById(interestId));
-    return "interest/invite";
+    throw new Exception("Unexpected retard");
+//    model.addAttribute("interest", interestService.getById(interestId));
+//    return "interest/invite";
   }
 
   @PostMapping("/invite")
