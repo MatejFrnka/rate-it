@@ -141,10 +141,10 @@ class PlaceServiceTest extends BaseTest {
             new Rating(userTwo, place, criteria.get(0), 5),
             new Rating(userTwo, place, criteria.get(1), 6));
 
-    CriterionAvgRatingDTO criterionAvgRatingOne = new CriterionAvgRatingDTO(
-            criteria.get(1).getId(), criteria.get(1).getName(), 5D);
-    CriterionAvgRatingDTO criterionAvgRatingTwo = new CriterionAvgRatingDTO(
-            criteria.get(0).getId(), criteria.get(0).getName(), 4D);
+    CriterionAvgRatingDTO criterionAvgRatingOne =
+        new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D);
+    CriterionAvgRatingDTO criterionAvgRatingTwo =
+        new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D);
 
     interest.setPlaces(List.of(place));
     place.setRatings(ratings);
@@ -152,18 +152,7 @@ class PlaceServiceTest extends BaseTest {
     interest.setCriteria(criteria);
 
     List<PlaceInfoDTO> expectedResult =
-        List.of(
-            new PlaceInfoDTO(
-                place.getId(),
-                place.getName(),
-                place.getAddress(),
-                place.getLatitude(),
-                place.getLongitude(),
-                place.getAverageRating(),
-                criterionAvgRatingOne.name(),
-                criterionAvgRatingOne.avgRating(),
-                criterionAvgRatingTwo.name(),
-                criterionAvgRatingTwo.avgRating()));
+        List.of(new PlaceInfoDTO(place, criterionAvgRatingOne, criterionAvgRatingTwo));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
@@ -240,7 +229,8 @@ class PlaceServiceTest extends BaseTest {
     CriteriaOfPlaceDTO expectedResult =
         new CriteriaOfPlaceDTO(
             List.of(
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), -1D)));
+                new CriterionAvgRatingDTO(
+                    criteria.get(0).getId(), criteria.get(0).getName(), -1D)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
 

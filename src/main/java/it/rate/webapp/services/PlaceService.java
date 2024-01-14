@@ -76,17 +76,7 @@ public class PlaceService {
             .collect(Collectors.toSet());
     CriterionAvgRatingDTO bestCriterion = getBestRatedCriterion(criteria);
     CriterionAvgRatingDTO worstCriterion = getWorstRatedCriterion(criteria);
-    return new PlaceInfoDTO(
-        place.getId(),
-        place.getName(),
-        place.getAddress(),
-        place.getLatitude(),
-        place.getLongitude(),
-        place.getAverageRating(),
-        bestCriterion.name(),
-        bestCriterion.avgRating(),
-        worstCriterion.name(),
-        worstCriterion.avgRating());
+    return new PlaceInfoDTO(place, bestCriterion, worstCriterion);
   }
 
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
