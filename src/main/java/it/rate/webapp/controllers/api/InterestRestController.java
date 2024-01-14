@@ -23,7 +23,6 @@ public class InterestRestController {
   public ResponseEntity<?> getAllSuggestions(
       @Valid @RequestBody Optional<CoordinatesDTO> usersCoords) {
     if (usersCoords.isPresent()) {
-      System.out.println("jetotam");
       return ResponseEntity.ok().body(interestService.getAllSuggestionDtos(usersCoords.get()));
     }
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
