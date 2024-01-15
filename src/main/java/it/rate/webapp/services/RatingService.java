@@ -2,76 +2,90 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidCriterionDetailsException;
-import it.rate.webapp.exceptions.badrequest.InvalidPlaceDetailsException;
-import it.rate.webapp.exceptions.unauthorised.ForbiddenOperationException;
+import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.models.*;
+import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class RatingService {
-  private final RatingRepository ratingRepository;
-  private final PlaceService placeService;
-  private final UserService userService;
-  private final CriterionService criterionService;
 
-  public RatingsDTO getUsersRatingsDto(Principal principal, Long placeId) {
-    AppUser loggedUser = getLoggedUser(principal);
-    Place place = getPlace(placeId);
-    List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(loggedUser, place);
+  private final Validator validator;
+  private final RatingRepository ratingRepository;
+  private final CriterionRepository criterionRepository;
+
+  public RatingsDTO getUsersRatingsDto(AppUser appUser, Place place) {
+    List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(appUser, place);
     return new RatingsDTO(ratings);
   }
 
-  public void updateRating(RatingsDTO rating, Long placeId, Principal principal) {
-    AppUser loggedUser = getLoggedUser(principal);
-    Place place = getPlace(placeId);
-    rating
+  public void updateRating(RatingsDTO ratings, Place place, AppUser appUser) {
+    Set<Criterion> ratedCriteria = validateRatings(ratings, place);
+
+    ratings
         .ratings()
         .forEach(
             (key, value) -> {
-              // todo: validate value to be between 0 and 10
-              Criterion criterion = getCriterion(key);
-              Optional<Rating> optRating =
-                  ratingRepository.findById(
-                      new RatingId(loggedUser.getId(), place.getId(), criterion.getId()));
-              if (optRating.isPresent()) {
-                if (value == null) {
-                  ratingRepository.deleteById(
-                      new RatingId(loggedUser.getId(), place.getId(), criterion.getId()));
-                  return;
-                }
-                Rating existingRating = optRating.get();
-                existingRating.setScore(value);
-                ratingRepository.save(existingRating);
-              } else {
-                if (value == null) {
-                  return;
-                }
-                Rating newRating = new Rating(loggedUser, place, criterion, value);
-                ratingRepository.save(newRating);
-              }
+              Criterion criterion =
+                  ratedCriteria.stream()
+                      .filter(c -> Objects.equals(c.getId(), key))
+                      .findAny()
+                      .orElseThrow(InvalidCriterionDetailsException::new);
+              updateOrCreateRating(appUser, place, criterion, value);
             });
   }
 
-  private AppUser getLoggedUser(Principal principal) {
-    if (principal == null) {
-      throw new ForbiddenOperationException("User not authenticated");
+  private void updateOrCreateRating(
+      AppUser appUser, Place place, Criterion criterion, Integer value) {
+    RatingId ratingId = new RatingId(appUser.getId(), place.getId(), criterion.getId());
+    Optional<Rating> optRating = ratingRepository.findById(ratingId);
+
+    if (value == null) {
+      if (optRating.isPresent()) {
+        ratingRepository.deleteById(ratingId);
+      }
+      return;
     }
-    return userService.getByEmail(principal.getName());
+
+    if (optRating.isPresent()) {
+      Rating existingRating = optRating.get();
+      existingRating.setScore(value);
+      ratingRepository.save(existingRating);
+    } else {
+      Rating newRating = new Rating(appUser, place, criterion, value);
+      ratingRepository.save(newRating);
+    }
   }
 
-  private Place getPlace(Long placeId) {
-    return placeService.findById(placeId).orElseThrow(InvalidPlaceDetailsException::new);
+  private Set<Criterion> validateRatings(RatingsDTO ratings, Place place) {
+    List<Criterion> placeCriteria = place.getInterest().getCriteria();
+    Set<Criterion> ratedCriteria = new HashSet<>();
+
+    ratings
+        .ratings()
+        .forEach(
+            (key, value) -> {
+              Criterion criterion = getCriterion(key);
+              ratedCriteria.add(criterion);
+              if (!validator.validate(ratings).isEmpty()) {
+                throw new InvalidRatingException();
+              }
+            });
+    if (!ratedCriteria.containsAll(placeCriteria)) {
+      throw new InvalidRatingException();
+    }
+
+    return ratedCriteria;
   }
 
   private Criterion getCriterion(Long criterionId) {
-    return criterionService
+    return criterionRepository
         .findById(criterionId)
         .orElseThrow(InvalidCriterionDetailsException::new);
   }
