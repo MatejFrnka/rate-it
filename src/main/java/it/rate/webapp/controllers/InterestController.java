@@ -22,7 +22,7 @@ import java.util.Optional;
 public class InterestController {
 
   private final InterestService interestService;
-  private final CreateInterestService interestCreationService;
+  private final CreateInterestService createInterestService;
   private final UserService userService;
   private final RoleService roleService;
   private final PermissionService permissionService;
@@ -51,7 +51,7 @@ public class InterestController {
       @RequestParam List<String> criteriaNames,
       RedirectAttributes ra,
       Principal principal) {
-    Interest savedInterest = interestCreationService.save(name, description, criteriaNames);
+    Interest savedInterest = createInterestService.save(name, description, criteriaNames);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);

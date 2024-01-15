@@ -8,6 +8,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,14 +34,8 @@ public class BadRequestAdvice {
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, errorMessage));
   }
 
-  @ExceptionHandler(ConstraintViolationException.class)
-  public ModelAndView handleConstraintViolationException(ConstraintViolationException e) {
-    return new ModelAndView(
-        "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
-  }
-
-  @ExceptionHandler(BadRequestException.class)
-  public ModelAndView handleBadRequestException(BadRequestException e) {
+  @ExceptionHandler({BadRequestException.class, ConstraintViolationException.class, MissingServletRequestParameterException.class})
+  public ModelAndView handleConstraintViolationException(Exception e) {
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
