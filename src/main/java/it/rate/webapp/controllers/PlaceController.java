@@ -1,6 +1,5 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.dtos.RatingsDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidPlaceDetailsException;
 import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
