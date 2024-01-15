@@ -60,16 +60,16 @@ public class ManageInterestService {
             .findInterestById(interestId)
             .orElseThrow(InvalidInterestDetailsException::new);
 
-    AppUser appUser =
-        switch (inviteBy) {
-          case "username" -> userService
-              .findByUsernameIgnoreCase(user)
-              .orElseThrow(InvalidUserDetailsException::new);
-          case "email" -> userService
-              .findByEmailIgnoreCase(user)
-              .orElseThrow(InvalidUserDetailsException::new);
-          default -> throw new InternalErrorException("Invalid inviteBy parameter");
-        };
+    AppUser appUser;
+    if (inviteBy.equals("username")) {
+      appUser =
+          userService.findByUsernameIgnoreCase(user).orElseThrow(InvalidUserDetailsException::new);
+    } else if (inviteBy.equals("email")) {
+      appUser =
+          userService.findByEmailIgnoreCase(user).orElseThrow(InvalidUserDetailsException::new);
+    } else {
+      throw new InternalErrorException("Invalid inviteBy parameter");
+    }
 
     Role role = new Role(appUser, interest, roleType);
     return roleService.save(role);
