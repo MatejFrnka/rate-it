@@ -30,7 +30,13 @@ function loadPlaces(query) {
     dataSet.forEach(place => {
         const clone = document.importNode(template.content, true);
         clone.querySelector('.interest-place').href = `/interests/${interestId}/places/${place.id}`;
-        clone.querySelector('.interest-place-img img').src = 'https://picsum.photos/400/300';
+
+        if (place.imagePlaces && place.imagePlaces.length > 0) {
+            clone.querySelector('.interest-place-img img').src = place.imagePlaces[0];
+        } else {
+            clone.querySelector('.interest-place-img img').src = 'https://picsum.photos/400/300';
+        }
+
         clone.querySelector('.interest-place-title h3').textContent = place.name;
         clone.querySelector('.interest-place-title h4').textContent = place.address;
 

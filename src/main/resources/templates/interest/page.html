@@ -67,16 +67,8 @@
             <template>
                 <a class="interest-place">
 
-                    <div class="interest-place-img">
 
-
-                        <img th:if="${place.imageNames().isEmpty()}" src="https://picsum.photos/400/300"
-                             alt="Random place image"/>
-                        <img th:unless="${place.imageNames().isEmpty()}" id="picture-container"
-                             th:attr="data-image-id=${place.imageNames().get(place.imageNames().size() - 1)}"
-                             th:alt="${place.name()} + ' thumbnail'">
-
-                    </div>
+                    <img class="interest-place-title" alt="Place image">
 
                     <div class="interest-place-content">
                         <header class="interest-place-header">
