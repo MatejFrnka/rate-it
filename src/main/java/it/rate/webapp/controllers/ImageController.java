@@ -18,7 +18,7 @@ public class ImageController {
   private final GoogleImageService googleImageService;
   private final PlaceService placeService;
 
-  @PostMapping("interests/{interestId}/places/{placeId}")
+  @PostMapping("interests/{interestId}/places/{placeId}/new-image")
   @PreAuthorize("@permissionService.ratePlace(#placeId)")
   public String uploadPlaceImage(
       @RequestParam("picture") MultipartFile file,

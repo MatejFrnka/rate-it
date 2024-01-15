@@ -3,6 +3,7 @@ package it.rate.webapp.services;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
+import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.exceptions.api.InvalidApiResponseException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,15 +51,12 @@ public class GoogleImageService implements ImageService {
     }
   }
 
-  public byte[] getImageById(String imageId) throws IOException {
+  public byte[] getImageById(String imageId) {
 
-    try {
-      try (InputStream imageStream =
-          driveService.files().get(imageId).executeMediaAsInputStream()) {
-        return imageStream.readAllBytes();
-      }
+    try (InputStream imageStream = driveService.files().get(imageId).executeMediaAsInputStream()) {
+      return imageStream.readAllBytes();
     } catch (IOException e) {
-      throw new IOException("Could not retrieve image from server");
+      throw new ApiServiceUnavailableException("Could not retrieve image from server");
     }
   }
 
