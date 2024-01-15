@@ -1,12 +1,13 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.RatingsDTO;
+import it.rate.webapp.exceptions.badrequest.InvalidCriterionDetailsException;
+import it.rate.webapp.exceptions.badrequest.InvalidPlaceDetailsException;
+import it.rate.webapp.exceptions.unauthorised.ForbiddenOperationException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.RatingRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -60,24 +61,18 @@ public class RatingService {
 
   private AppUser getLoggedUser(Principal principal) {
     if (principal == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
+      throw new ForbiddenOperationException("User not authenticated");
     }
     return userService.getByEmail(principal.getName());
   }
 
   private Place getPlace(Long placeId) {
-    Optional<Place> optPlace = placeService.findById(placeId);
-    if (optPlace.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid argument");
-    }
-    return optPlace.get();
+    return placeService.findById(placeId).orElseThrow(InvalidPlaceDetailsException::new);
   }
 
   private Criterion getCriterion(Long criterionId) {
-    Optional<Criterion> optCriterion = criterionService.findById(criterionId);
-    if (optCriterion.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid argument");
-    }
-    return optCriterion.get();
+    return criterionService
+        .findById(criterionId)
+        .orElseThrow(InvalidCriterionDetailsException::new);
   }
 }
