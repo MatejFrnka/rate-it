@@ -34,7 +34,7 @@ public class PlaceService {
         userService.findByEmail(loggedInUserName).orElseThrow(InvalidUserDetailsException::new);
     Interest interest =
         interestService
-            .findInterestById(interestId)
+            .findById(interestId)
             .orElseThrow(InvalidInterestDetailsException::new);
 
     loggedUser.getCreatedPlaces().add(place);
@@ -76,25 +76,13 @@ public class PlaceService {
             .collect(Collectors.toSet());
     CriterionAvgRatingDTO bestCriterion = getBestRatedCriterion(criteria);
     CriterionAvgRatingDTO worstCriterion = getWorstRatedCriterion(criteria);
-
-    return new PlaceInfoDTO(
-        place.getId(),
-        place.getName(),
-        place.getAddress(),
-        place.getLatitude(),
-        place.getLongitude(),
-        place.getAverageRating(),
-        bestCriterion.name(),
-        bestCriterion.avgRating(),
-        worstCriterion.name(),
-        worstCriterion.avgRating(),
-        place.getImageNames());
+    return new PlaceInfoDTO(place, bestCriterion, worstCriterion);
   }
 
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
     double avgRating =
         ratingRepository.findAllByCriterionAndPlace(criterion, place).stream()
-            .mapToDouble(Rating::getScore)
+            .mapToDouble(Rating::getRating)
             .average()
             .orElse(-1);
 

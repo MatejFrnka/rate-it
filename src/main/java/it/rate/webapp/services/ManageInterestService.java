@@ -15,8 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.*;
-
 @Service
 @AllArgsConstructor
 @Validated
@@ -57,7 +55,7 @@ public class ManageInterestService {
 
     Interest interest =
         interestService
-            .findInterestById(interestId)
+            .findById(interestId)
             .orElseThrow(InvalidInterestDetailsException::new);
 
     AppUser appUser;

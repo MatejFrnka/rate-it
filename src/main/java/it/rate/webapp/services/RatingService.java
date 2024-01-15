@@ -55,7 +55,7 @@ public class RatingService {
 
     if (optRating.isPresent()) {
       Rating existingRating = optRating.get();
-      existingRating.setScore(value);
+      existingRating.setRating(value);
       ratingRepository.save(existingRating);
     } else {
       Rating newRating = new Rating(appUser, place, criterion, value);

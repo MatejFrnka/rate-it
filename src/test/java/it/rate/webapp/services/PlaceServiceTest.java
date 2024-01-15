@@ -59,7 +59,7 @@ class PlaceServiceTest extends BaseTest {
     // Mock the interestService to return an empty Optional when findInterestById is called with the
     // specified interestId
     // This simulates the scenario where no interest is found for the given ID
-    when(interestService.findInterestById(eq(interestId))).thenReturn(Optional.empty());
+    when(interestService.findById(eq(interestId))).thenReturn(Optional.empty());
 
     // Execute the test and verify that a BadRequestException is thrown
     // The assertThrows method checks that the specified exception is thrown when the lambda
@@ -82,7 +82,7 @@ class PlaceServiceTest extends BaseTest {
 
     // Mock the interestService to return the created Interest when findInterestById is called with
     // the specific interestId
-    when(interestService.findInterestById(eq(interestId))).thenReturn(Optional.of(interest));
+    when(interestService.findById(eq(interestId))).thenReturn(Optional.of(interest));
 
     // Mock the placeRepository to return whatever Place object it receives
     when(placeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -141,10 +141,10 @@ class PlaceServiceTest extends BaseTest {
             new Rating(userTwo, place, criteria.get(0), 5),
             new Rating(userTwo, place, criteria.get(1), 6));
 
-    CriterionAvgRatingDTO criterionAvgRatingOne = new CriterionAvgRatingDTO(
-            criteria.get(1).getId(), criteria.get(1).getName(), 5D);
-    CriterionAvgRatingDTO criterionAvgRatingTwo = new CriterionAvgRatingDTO(
-            criteria.get(0).getId(), criteria.get(0).getName(), 4D);
+    CriterionAvgRatingDTO criterionAvgRatingOne =
+        new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D);
+    CriterionAvgRatingDTO criterionAvgRatingTwo =
+        new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D);
 
     interest.setPlaces(List.of(place));
     place.setRatings(ratings);
@@ -152,19 +152,7 @@ class PlaceServiceTest extends BaseTest {
     interest.setCriteria(criteria);
 
     List<PlaceInfoDTO> expectedResult =
-        List.of(
-            new PlaceInfoDTO(
-                place.getId(),
-                place.getName(),
-                place.getAddress(),
-                place.getLatitude(),
-                place.getLongitude(),
-                place.getAverageRating(),
-                criterionAvgRatingOne.name(),
-                criterionAvgRatingOne.avgRating(),
-                criterionAvgRatingTwo.name(),
-                criterionAvgRatingTwo.avgRating(),
-                place.getImageNames()));
+        List.of(new PlaceInfoDTO(place, criterionAvgRatingOne, criterionAvgRatingTwo));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));

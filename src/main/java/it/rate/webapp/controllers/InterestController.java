@@ -63,7 +63,7 @@ public class InterestController {
   @GetMapping("/{interestId}")
   public String interestView(Model model, @PathVariable Long interestId, Principal principal) {
     Interest interest =
-        interestService.findInterestById(interestId).orElseThrow(InterestNotFoundException::new);
+        interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());

@@ -188,7 +188,7 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void inviteUserNonExistentInterestThrowsNotFound() {
-    when(interestService.findInterestById(any())).thenReturn(Optional.empty());
+    when(interestService.findById(any())).thenReturn(Optional.empty());
     Exception e =
         assertThrows(
             InvalidInterestDetailsException.class,
@@ -199,7 +199,7 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void createNewRoleNonExistentUser() {
-    when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
+    when(interestService.findById(any())).thenReturn(Optional.of(i1));
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.empty());
 
@@ -218,7 +218,7 @@ class ManageInterestServiceTest extends BaseTest {
       throws InvalidInterestDetailsException, InvalidUserDetailsException {
     AppUser userWithoutRole = new AppUser();
     Role.RoleType roleToCreate = Role.RoleType.VOTER;
-    when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
+    when(interestService.findById(any())).thenReturn(Optional.of(i1));
     when(userService.findByUsernameIgnoreCase(any())).thenReturn(Optional.of(userWithoutRole));
     when(roleService.save(any())).then(i -> roleRepository.save(i.getArgument(0)));
     when(roleRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -233,7 +233,7 @@ class ManageInterestServiceTest extends BaseTest {
 
   @Test
   void inviteUserThrowsBadRequestForInvalidInviteForm() {
-    when(interestService.findInterestById(any())).thenReturn(Optional.of(i1));
+    when(interestService.findById(any())).thenReturn(Optional.of(i1));
 
     assertThrows(
         ConstraintViolationException.class,

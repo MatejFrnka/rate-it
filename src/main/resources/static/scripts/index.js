@@ -28,7 +28,7 @@ function loadInterests(query) {
     dataSet.forEach(record => {
         const clone = template.content.cloneNode(true);
         clone.querySelector('.interest-card-link').href = `/interests/${record.id}`;
-        clone.querySelector('p').textContent = `${record.name} (${record.rating})`;
+        clone.querySelector('p').textContent = `${record.name} (${record.likes})`;
         container.appendChild(clone);
     })
 }
