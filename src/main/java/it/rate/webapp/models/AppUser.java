@@ -17,7 +17,7 @@ import java.util.List;
 public class AppUser {
   @Id @GeneratedValue private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String username;
 
   @Column(nullable = false, unique = true)

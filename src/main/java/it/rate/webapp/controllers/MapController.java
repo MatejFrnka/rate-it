@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.PlaceService;
@@ -26,11 +27,8 @@ public class MapController {
 
   @GetMapping()
   public String mapView(Model model, @PathVariable Long interestId, Principal principal) {
-    Optional<Interest> interest = interestService.findInterestById(interestId);
-    if (interest.isEmpty()) {
-      model.addAttribute("message", "This interest doesn't exist");
-      return "error/page";
-    }
+    Interest interest =
+        interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
 
@@ -38,8 +36,8 @@ public class MapController {
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
     }
-    model.addAttribute("interest", interest.get());
-    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest.get()));
+    model.addAttribute("interest", interest);
+    model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));
     return "interest/map";
   }
 }

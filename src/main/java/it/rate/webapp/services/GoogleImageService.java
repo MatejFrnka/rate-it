@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+
+import it.rate.webapp.exceptions.api.InvalidApiResponseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,13 +33,9 @@ public class GoogleImageService implements ImageService {
     FileContent mediaContent;
     String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    try {
-      Path tempFilePath = Files.createTempFile("temp_" + currentUser, null);
-      image.transferTo(tempFilePath);
-      mediaContent = new FileContent("image/*", tempFilePath.toFile());
-    } catch (IOException e) {
-      throw new IOException(e.getMessage());
-    }
+    Path tempFilePath = Files.createTempFile("temp_" + currentUser, null);
+    image.transferTo(tempFilePath);
+    mediaContent = new FileContent("image/*", tempFilePath.toFile());
 
     String fileName = currentUser + "_" + placeId + "_" + UUID.randomUUID();
 
@@ -48,7 +46,7 @@ public class GoogleImageService implements ImageService {
     try {
       return driveService.files().create(fileMeta, mediaContent).execute().getId();
     } catch (IOException e) {
-      throw new IOException(e.getMessage());
+      throw new InvalidApiResponseException();
     }
   }
 

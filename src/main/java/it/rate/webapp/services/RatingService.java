@@ -1,14 +1,14 @@
 package it.rate.webapp.services;
 
 import it.rate.webapp.dtos.RatingsDTO;
+import it.rate.webapp.exceptions.badrequest.InvalidCriterionDetailsException;
+import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -36,10 +36,7 @@ public class RatingService {
                   ratedCriteria.stream()
                       .filter(c -> Objects.equals(c.getId(), key))
                       .findAny()
-                      .orElseThrow(
-                          () ->
-                              new ResponseStatusException(
-                                  HttpStatus.BAD_REQUEST, "Invalid criterion in ratings"));
+                      .orElseThrow(InvalidCriterionDetailsException::new);
               updateOrCreateRating(appUser, place, criterion, value);
             });
   }
@@ -77,22 +74,19 @@ public class RatingService {
               Criterion criterion = getCriterion(key);
               ratedCriteria.add(criterion);
               if (!validator.validate(ratings).isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value");
+                throw new InvalidRatingException();
               }
             });
-
     if (!ratedCriteria.containsAll(placeCriteria)) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid criteria in ratings");
+      throw new InvalidRatingException();
     }
 
     return ratedCriteria;
   }
 
   private Criterion getCriterion(Long criterionId) {
-    Optional<Criterion> optCriterion = criterionRepository.findById(criterionId);
-    return optCriterion.orElseThrow(
-        () ->
-            new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Criterion not found for ID: " + criterionId));
+    return criterionRepository
+        .findById(criterionId)
+        .orElseThrow(InvalidCriterionDetailsException::new);
   }
 }

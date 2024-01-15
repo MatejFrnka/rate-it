@@ -57,7 +57,7 @@ public class InterestRestController {
 
   @GetMapping("/{interestId}/places")
   public ResponseEntity<?> getAllPlaceInfoDTOs(@PathVariable Long interestId) {
-    Optional<Interest> optInterest = interestService.findInterestById(interestId);
+    Optional<Interest> optInterest = interestService.findById(interestId);
     if (optInterest.isPresent()) {
       return ResponseEntity.ok().body(placeService.getPlaceInfoDTOS(optInterest.get()));
     }

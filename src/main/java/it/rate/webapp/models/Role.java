@@ -11,6 +11,7 @@ import lombok.*;
 public class Role {
   @EmbeddedId private RoleId id;
 
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private RoleType role;
 

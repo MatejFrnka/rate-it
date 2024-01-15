@@ -2,7 +2,7 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.dtos.SignupUserInDTO;
 import it.rate.webapp.dtos.SignupUserOutDTO;
-import it.rate.webapp.models.AppUser;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,8 +28,8 @@ public class UserController {
   @PostMapping("/signup")
   public String newUser(SignupUserInDTO userDTO, Model model) {
     try {
-      AppUser user = userService.registerUser(userDTO);
-    } catch (Exception e) {
+      userService.registerUser(userDTO);
+    } catch (BadRequestException e) {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("userDTO", new SignupUserOutDTO(userDTO));
       return "user/signupForm";

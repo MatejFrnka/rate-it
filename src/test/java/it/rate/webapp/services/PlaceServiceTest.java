@@ -12,7 +12,7 @@ import it.rate.webapp.BaseTest;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
@@ -59,7 +59,7 @@ class PlaceServiceTest extends BaseTest {
     // Mock the interestService to return an empty Optional when findInterestById is called with the
     // specified interestId
     // This simulates the scenario where no interest is found for the given ID
-    when(interestService.findInterestById(eq(interestId))).thenReturn(Optional.empty());
+    when(interestService.findById(eq(interestId))).thenReturn(Optional.empty());
 
     // Execute the test and verify that a BadRequestException is thrown
     // The assertThrows method checks that the specified exception is thrown when the lambda
@@ -82,7 +82,7 @@ class PlaceServiceTest extends BaseTest {
 
     // Mock the interestService to return the created Interest when findInterestById is called with
     // the specific interestId
-    when(interestService.findInterestById(eq(interestId))).thenReturn(Optional.of(interest));
+    when(interestService.findById(eq(interestId))).thenReturn(Optional.of(interest));
 
     // Mock the placeRepository to return whatever Place object it receives
     when(placeRepository.save(any())).thenAnswer(i -> i.getArgument(0));

@@ -1,7 +1,8 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.exceptions.BadRequestException;
 import it.rate.webapp.dtos.RatingsDTO;
+import it.rate.webapp.exceptions.badrequest.InvalidPlaceDetailsException;
+import it.rate.webapp.exceptions.notfound.PlaceNotFoundException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.models.Role;
@@ -42,8 +43,7 @@ public class PlaceController {
 
   @PostMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place)
-      throws BadRequestException {
+  public String createNewPlace(@PathVariable Long interestId, @ModelAttribute Place place) {
     Place createdPlace = placeService.savePlace(place, interestId);
     return String.format("redirect:/interests/%d/places/%d", interestId, createdPlace.getId());
   }
@@ -56,13 +56,7 @@ public class PlaceController {
       Principal principal,
       HttpServletResponse response) {
 
-    if (placeService.findById(placeId).isEmpty()) {
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      model.addAttribute("message", "This place doesn't exist");
-      return "error/page";
-    }
-
-    Place place = placeService.getById(placeId);
+    Place place = placeService.findById(placeId).orElseThrow(PlaceNotFoundException::new);
     model.addAttribute("place", place);
     model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
 
@@ -113,11 +107,10 @@ public class PlaceController {
   @PutMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlace(
-      @PathVariable Long interestId, @PathVariable Long placeId, @ModelAttribute Place place)
-      throws BadRequestException {
+      @PathVariable Long interestId, @PathVariable Long placeId, @ModelAttribute Place place) {
 
     if (!placeId.equals(place.getId())) {
-      throw new BadRequestException("Invalid place id");
+      throw new InvalidPlaceDetailsException("Invalid place id");
     }
     placeService.savePlace(place, interestId);
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());

@@ -2,13 +2,18 @@ package it.rate.webapp.services;
 
 import it.rate.webapp.config.security.ServerRole;
 import it.rate.webapp.dtos.SignupUserInDTO;
-import it.rate.webapp.exceptions.BadRequestException;
-import it.rate.webapp.exceptions.UserAlreadyExistsException;
+import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
+import it.rate.webapp.exceptions.badrequest.UserAlreadyExistsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.repositories.UserRepository;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.util.Optional;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +28,16 @@ public class UserService {
     return userRepository.save(appUser);
   }
 
-  public AppUser registerUser(SignupUserInDTO userDTO) throws BadRequestException {
-    if (!validator.validate(userDTO).isEmpty()) {
-      throw new BadRequestException("Invalid registration data");
+  public AppUser registerUser(SignupUserInDTO userDTO) {
+    Set<ConstraintViolation<SignupUserInDTO>> violations = validator.validate(userDTO);
+    if (!violations.isEmpty()) {
+      throw new InvalidUserDetailsException(violations.stream().findFirst().get().getMessage());
     }
-    if (userRepository.existsByEmail(userDTO.email())) {
+    if (userRepository.existsByEmailIgnoreCase(userDTO.email())) {
       throw new UserAlreadyExistsException(
           "User with email " + userDTO.email() + " already exists");
     }
-    if (userRepository.existsByUsername(userDTO.username())) {
+    if (userRepository.existsByUsernameIgnoreCase(userDTO.username())) {
       throw new UserAlreadyExistsException(
           "User with username " + userDTO.username() + " already exists");
     }
@@ -53,6 +59,14 @@ public class UserService {
 
   public Optional<AppUser> findByUsernameIgnoreCase(String username) {
     return userRepository.findByUsernameIgnoreCase(username);
+  }
+
+  public AppUser authenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && !(authentication.getPrincipal().equals("anonymousUser"))) {
+      return userRepository.getByEmail(authentication.getName());
+    }
+    return null;
   }
 
   public Optional<AppUser> findByEmailIgnoreCase(String email) {

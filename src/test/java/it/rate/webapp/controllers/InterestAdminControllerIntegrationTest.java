@@ -40,7 +40,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -55,7 +55,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -70,7 +70,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -85,7 +85,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -100,7 +100,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = Long.MAX_VALUE;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/edit"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isNotFound())
         .andReturn();
   }
@@ -145,7 +145,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -160,7 +160,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -175,7 +175,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -190,7 +190,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -205,7 +205,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = Long.MAX_VALUE;
     mockMvc
         .perform(get("/interests/" + interestId + "/admin/users"))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isNotFound())
         .andReturn();
   }
@@ -292,6 +292,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
                     .param("description", interestDescription)
                     .param("criteriaNames", criterion1))
             .andExpect(status().isForbidden())
+            .andExpect(view().name("error/page"))
             .andReturn();
   }
 
@@ -314,6 +315,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
                     .param("name", interestName)
                     .param("description", interestDescription)
                     .param("criteriaNames", criterion1))
+            .andExpect(view().name("error/page"))
             .andExpect(status().isNotFound())
             .andReturn();
   }
@@ -359,7 +361,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long userId = 1L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -375,7 +377,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long userId = 1L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -391,7 +393,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long userId = 1L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -407,7 +409,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long userId = 2L;
     mockMvc
         .perform(delete("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -456,7 +458,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long userId = 4L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -472,7 +474,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long userId = 4L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
@@ -489,6 +491,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
         .andExpect(status().isForbidden())
+        .andExpect(view().name("error/page"))
         .andReturn();
   }
 
@@ -503,7 +506,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long userId = 2L;
     mockMvc
         .perform(put("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(result -> assertNull(result.getModelAndView()))
+        .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
   }
