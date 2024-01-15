@@ -3,7 +3,9 @@ package it.rate.webapp.services;
 import it.rate.webapp.dtos.CriteriaOfPlaceDTO;
 import it.rate.webapp.dtos.CriterionAvgRatingDTO;
 import it.rate.webapp.dtos.PlaceInfoDTO;
-import it.rate.webapp.exceptions.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
+import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
@@ -29,13 +31,11 @@ public class PlaceService {
     String loggedInUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
     AppUser loggedUser =
-        userService
-            .findByEmail(loggedInUserName)
-            .orElseThrow(() -> new BadRequestException("User email not found in the database"));
+        userService.findByEmail(loggedInUserName).orElseThrow(InvalidUserDetailsException::new);
     Interest interest =
         interestService
             .findInterestById(interestId)
-            .orElseThrow(() -> new BadRequestException("Interest ID not found in the database"));
+            .orElseThrow(InvalidInterestDetailsException::new);
 
     loggedUser.getCreatedPlaces().add(place);
     interest.getPlaces().add(place);

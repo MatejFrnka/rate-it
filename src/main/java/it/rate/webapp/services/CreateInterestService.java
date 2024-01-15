@@ -9,15 +9,18 @@ import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
 import it.rate.webapp.repositories.UserRepository;
 import java.util.List;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
-
-import java.util.List;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class CreateInterestService {
 
@@ -26,7 +29,11 @@ public class CreateInterestService {
   private UserRepository userRepository;
   private RoleRepository roleRepository;
 
-  public Interest save(String name, String description, List<String> receivedCriteria) {
+  public Interest save(
+      @NotBlank String name,
+      @NotBlank String description,
+      @NotEmpty List<@NotBlank String> receivedCriteria) {
+
     List<Criterion> criteria =
         receivedCriteria.stream().map(c -> Criterion.builder().name(c).build()).toList();
 
@@ -35,10 +42,7 @@ public class CreateInterestService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
-    Interest newInterest = Interest.builder()
-            .name(name)
-            .description(description)
-            .build();
+    Interest newInterest = Interest.builder().name(name).description(description).build();
 
     interestRepository.save(newInterest);
     criteria.forEach(c -> c.setInterest(newInterest));

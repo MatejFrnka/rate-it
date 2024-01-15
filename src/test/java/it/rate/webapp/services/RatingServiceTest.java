@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import it.rate.webapp.BaseTest;
 import it.rate.webapp.dtos.RatingsDTO;
+import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
@@ -15,7 +16,6 @@ import java.util.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.web.server.ResponseStatusException;
 
 class RatingServiceTest extends BaseTest {
   @MockBean RatingRepository ratingRepository;
@@ -55,7 +55,7 @@ class RatingServiceTest extends BaseTest {
     when(criterionRepository.findById(eq(c3.getId()))).thenReturn(Optional.of(c3));
 
     assertThrows(
-        ResponseStatusException.class, () -> ratingService.updateRating(ratingsDTO, p, appUser));
+        InvalidRatingException.class, () -> ratingService.updateRating(ratingsDTO, p, appUser));
   }
 
   @Test
@@ -92,7 +92,7 @@ class RatingServiceTest extends BaseTest {
     when(criterionRepository.findById(eq(c3.getId()))).thenReturn(Optional.of(c3));
 
     assertThrows(
-        ResponseStatusException.class, () -> ratingService.updateRating(ratingsDTO, p, appUser));
+        InvalidRatingException.class, () -> ratingService.updateRating(ratingsDTO, p, appUser));
   }
 
   @Test
