@@ -3,13 +3,14 @@ package it.rate.webapp.services;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
+import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
+import it.rate.webapp.exceptions.api.InvalidApiResponseException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
-
-import it.rate.webapp.exceptions.api.InvalidApiResponseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,15 @@ public class GoogleImageService implements ImageService {
       return driveService.files().create(fileMeta, mediaContent).execute().getId();
     } catch (IOException e) {
       throw new InvalidApiResponseException();
+    }
+  }
+
+  public byte[] getImageById(String imageId) {
+
+    try (InputStream imageStream = driveService.files().get(imageId).executeMediaAsInputStream()) {
+      return imageStream.readAllBytes();
+    } catch (IOException e) {
+      throw new ApiServiceUnavailableException("Could not retrieve image from server");
     }
   }
 

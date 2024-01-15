@@ -242,6 +242,7 @@ class PlaceServiceTest extends BaseTest {
     Place place = new Place();
     place.setName("name");
     place.setDescription("description");
+    place.setImageNames(List.of("image"));
     return place;
   }
 }
