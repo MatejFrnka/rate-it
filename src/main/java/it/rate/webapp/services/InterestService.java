@@ -3,20 +3,23 @@ package it.rate.webapp.services;
 import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.dtos.InterestUserDTO;
 import it.rate.webapp.dtos.LikedInterestsDTO;
+import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @AllArgsConstructor
 public class InterestService {
 
@@ -34,11 +37,8 @@ public class InterestService {
   }
 
   public void setApplicantRole(Long interestId) {
-    Optional<Interest> optInterest = interestRepository.findById(interestId);
-    if (optInterest.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Interest not found");
-    }
-    Interest interest = optInterest.get();
+    Interest interest =
+        interestRepository.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
@@ -81,7 +81,7 @@ public class InterestService {
     return interestRepository.save(interest);
   }
 
-  public List<LikedInterestsDTO> getLikedInterestsDTOS(String loggedUser) {
+  public List<LikedInterestsDTO> getLikedInterestsDTOS(@NotBlank String loggedUser) {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser).stream()
         .sorted(Comparator.comparing(i -> i.getName().toLowerCase()))
         .map(LikedInterestsDTO::new)
@@ -92,10 +92,8 @@ public class InterestService {
     return interestRepository.save(interest);
   }
 
-  public List<InterestUserDTO> getUsersDTO(Interest interest, Role.RoleType role) {
-    if (interest == null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid interest");
-    }
+  public List<InterestUserDTO> getUsersDTO(Interest interest, @NotNull Role.RoleType role) {
+
     return interest.getRoles().stream()
         .filter(r -> r.getRole().equals(role))
         .map(InterestUserDTO::new)
