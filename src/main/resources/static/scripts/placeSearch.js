@@ -1,5 +1,6 @@
 let data = [];
 const interestId = extractInterestIdFromUrl();
+let imageUrls = [];
 
 window.addEventListener('load', async () => {
     try {
@@ -7,14 +8,17 @@ window.addEventListener('load', async () => {
         const response = await fetch(fetchUrl);
         const jsonData = await response.json();
         data = jsonData;
-        loadPlaces()
+
+        imageUrls = await Promise.all(data.map(place => fetchImageUrl(place)));
+
+        loadPlaces();
     } catch (error) {
         console.error('Error fetching places info:', error);
     }
-})
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadPlaces()
+    loadPlaces();
 });
 
 function loadPlaces(query) {
@@ -27,10 +31,11 @@ function loadPlaces(query) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    dataSet.forEach(place => {
+    dataSet.forEach((place, index) => {
+        const imageUrl = imageUrls[index];
         const clone = document.importNode(template.content, true);
         clone.querySelector('.interest-place').href = `/interests/${interestId}/places/${place.id}`;
-        clone.querySelector('.interest-place-img img').src = 'https://picsum.photos/400/300';
+        clone.querySelector('.interest-place-img img').src = imageUrl;
         clone.querySelector('.interest-place-title h3').textContent = place.name;
         clone.querySelector('.interest-place-title h4').textContent = place.address;
 

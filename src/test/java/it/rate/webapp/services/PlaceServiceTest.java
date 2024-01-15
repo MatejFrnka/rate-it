@@ -163,7 +163,8 @@ class PlaceServiceTest extends BaseTest {
                 criterionAvgRatingOne.name(),
                 criterionAvgRatingOne.avgRating(),
                 criterionAvgRatingTwo.name(),
-                criterionAvgRatingTwo.avgRating()));
+                criterionAvgRatingTwo.avgRating(),
+                place.getImageNames()));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
@@ -240,7 +241,8 @@ class PlaceServiceTest extends BaseTest {
     CriteriaOfPlaceDTO expectedResult =
         new CriteriaOfPlaceDTO(
             List.of(
-                new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), -1D)));
+                new CriterionAvgRatingDTO(
+                    criteria.get(0).getId(), criteria.get(0).getName(), -1D)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
 
@@ -252,6 +254,7 @@ class PlaceServiceTest extends BaseTest {
     Place place = new Place();
     place.setName("name");
     place.setDescription("description");
+    place.setImageNames(List.of("image"));
     return place;
   }
 }
