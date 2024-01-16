@@ -49,12 +49,12 @@
                 <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
             </div>
 
-            <div class="filters">
-                <button id="location-button" class="filter-button">Location</button>
-                <button class="filter-button">Drink</button>
-                <button class="filter-button">Food</button>
-                <button class="filter-button">Outdoor</button>
-            </div>
+<!--            <div class="filters">-->
+<!--                <button id="location-button" class="filter-button">Location</button>-->
+<!--                <button class="filter-button">Drink</button>-->
+<!--                <button class="filter-button">Food</button>-->
+<!--                <button class="filter-button">Outdoor</button>-->
+<!--            </div>-->
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="loadInterests(this.value)" autocomplete="off"
                        placeholder="Find interests…">
