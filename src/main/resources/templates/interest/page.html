@@ -55,10 +55,12 @@
             <h2>Places</h2>
 
             <div class="filters">
-                <button class="filter-button selected">Nearest</button>
-                <button class="filter-button">Best</button>
+                <label class="filter-container">
+                    <input type="checkbox" class="filter-checkbox" onchange="toggleNearest()"/>
+                    <span>Nearest</span>
+                </label>
                 <button class="filter-button">Worst</button>
-                <button class="filter-button selected">Křupavost</button>
+                <button class="filter-button">Křupavost</button>
                 <button class="filter-button">Trvanlivost</button>
                 <button class="filter-button">Množství tvarohu</button>
             </div>

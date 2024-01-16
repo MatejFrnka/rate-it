@@ -1,6 +1,7 @@
 let data = [];
 let imageUrls = [];
 let usersCoords;
+let sortByNearest = false;
 navigator.geolocation.getCurrentPosition(success, error);
 
 window.addEventListener('load', async () => {
@@ -29,6 +30,10 @@ function loadPlaces(query) {
 
     if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    if (sortByNearest) {
+        dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) - distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
     }
 
     dataSet.forEach((place, index) => {
@@ -110,4 +115,10 @@ function distance(lat1, lon1, lat2, lon2) {
     dist = dist * 180 / Math.PI;
     dist = dist * 60 * 1.85316;
     return dist;
+}
+
+function toggleNearest() {
+    sortByNearest = !sortByNearest;
+    console.log(sortByNearest);
+    loadPlaces();
 }
