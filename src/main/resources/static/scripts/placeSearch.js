@@ -9,7 +9,10 @@ window.addEventListener('load', async () => {
         const jsonData = await response.json();
         data = jsonData;
 
-        imageUrls = await Promise.all(data.map(place => fetchImageUrl(place)));
+        data = await Promise.all(jsonData.map(async (place) => {
+            place.imageUrl = await fetchImageUrl(place);
+            return place;
+        }));
 
         loadPlaces();
     } catch (error) {
@@ -31,11 +34,12 @@ function loadPlaces(query) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    dataSet.forEach((place, index) => {
-        const imageUrl = imageUrls[index];
+    dataSet.forEach((place) => {
+
+
         const clone = document.importNode(template.content, true);
         clone.querySelector('.interest-place').href = `/interests/${interestId}/places/${place.id}`;
-        clone.querySelector('.interest-place-img img').src = imageUrl;
+        clone.querySelector('.interest-place-img img').src = place.imageUrl;
         clone.querySelector('.interest-place-title h3').textContent = place.name;
         clone.querySelector('.interest-place-title h4').textContent = place.address;
 
