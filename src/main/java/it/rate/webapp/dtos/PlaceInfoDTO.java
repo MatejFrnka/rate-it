@@ -3,7 +3,6 @@ package it.rate.webapp.dtos;
 import it.rate.webapp.models.Place;
 
 import java.util.List;
-import java.util.Objects;
 
 public record PlaceInfoDTO(
     Long id,

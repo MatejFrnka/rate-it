@@ -230,7 +230,7 @@ class PlaceServiceTest extends BaseTest {
         new CriteriaOfPlaceDTO(
             List.of(
                 new CriterionAvgRatingDTO(
-                    criteria.get(0).getId(), criteria.get(0).getName(), -1D)));
+                    criteria.get(0).getId(), criteria.get(0).getName(), null)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(place);
 
