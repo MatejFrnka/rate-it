@@ -30,10 +30,9 @@ public class InternalErrorAdvice {
   private final String simpleMessage = "Internal server error";
   private final int statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
 
-
   @ExceptionHandler({InternalErrorException.class, Exception.class})
   public ModelAndView unhandledExceptions(Exception e) {
-//    emailService.sendEmail(buildExceptionReport(devEmail, e));
+    //    emailService.sendEmail(buildExceptionReport(devEmail, e));
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
