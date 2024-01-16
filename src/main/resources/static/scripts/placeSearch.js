@@ -1,5 +1,4 @@
 let data = [];
-const interestId = extractInterestIdFromUrl();
 let imageUrls = [];
 
 window.addEventListener('load', async () => {
@@ -60,11 +59,6 @@ function loadPlaces(query) {
 
 function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
-}
-
-function extractInterestIdFromUrl() {
-    const urlParts = window.location.pathname.split('/');
-    return urlParts[urlParts.indexOf('interests') + 1];
 }
 
 function createRatingItem(iconClass, ratingValue, criterionName) {

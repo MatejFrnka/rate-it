@@ -441,7 +441,7 @@ h3 {
     color: #888585;
 }
 
-#location-button {
+.filter-button.selected {
     color: #478363;
     font-weight: 700;
     background-color: rgba(86, 141, 115, 0.1);

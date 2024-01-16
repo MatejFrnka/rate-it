@@ -95,7 +95,6 @@
     </div>
 </div>
 
-
 <script th:replace="~{fragments :: placeMap-script}"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -107,12 +106,10 @@
 
     /*]]>*/
 </script>
-
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/imageUpload.js"></script>
-
 
 </body>
 </html>

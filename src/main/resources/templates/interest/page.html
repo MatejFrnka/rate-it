@@ -54,8 +54,14 @@
                  th:unless="${places.isEmpty()}">
             <h2>Places</h2>
 
-            <!--            TODO: add filters-->
-            <div>Filter categories placeholder</div>
+            <div class="filters">
+                <button class="filter-button selected">Nearest</button>
+                <button class="filter-button">Best</button>
+                <button class="filter-button">Worst</button>
+                <button class="filter-button selected">Křupavost</button>
+                <button class="filter-button">Trvanlivost</button>
+                <button class="filter-button">Množství tvarohu</button>
+            </div>
 
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="loadPlaces(this.value)" autocomplete="off"
@@ -109,7 +115,13 @@
     </div>
 </div>
 
+<script th:inline="javascript">
+    /*<![CDATA[*/
 
+    const interestId = [[${interest.id}]];
+
+    /*]]>*/
+</script>
 <script src="/scripts/placeSearch.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 
