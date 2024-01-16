@@ -88,7 +88,8 @@ public class InterestRestController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       Interest interest = interestService.getById(interestId);
       likeService.changeLike(loggedUser, interest, like.liked());
+      return ResponseEntity.ok().body(like);
     }
-    return ResponseEntity.ok().build();
+    return ResponseEntity.badRequest().body("???"); //TODO
   }
 }
