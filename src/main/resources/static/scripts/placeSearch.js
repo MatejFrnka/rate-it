@@ -39,34 +39,44 @@ function loadPlaces(query) {
     dataSet.forEach((place, index) => {
         const imageUrl = imageUrls[index];
         const clone = document.importNode(template.content, true);
-        clone.querySelector('.interest-place').href = `/interests/${interestId}/places/${place.id}`;
-        clone.querySelector('.interest-place-img img').src = imageUrl;
-        clone.querySelector('.interest-place-title h3').textContent = place.name;
-        clone.querySelector('.interest-place-title h4').textContent = place.address;
+
+        const elements = {
+            placeLink: clone.querySelector('.interest-place'),
+            placeImg: clone.querySelector('.interest-place-img img'),
+            titleH3: clone.querySelector('.interest-place-title h3'),
+            titleH4: clone.querySelector('.interest-place-title h4'),
+            distanceSpan: clone.querySelector('.interest-place-distance span'),
+            rating: clone.querySelector('.rating'),
+            ratingContainer: clone.querySelector('.interest-place-ratings')
+        };
+
+        elements.placeLink.href = `/interests/${interestId}/places/${place.id}`;
+        elements.placeImg.src = imageUrl;
+        elements.titleH3.textContent = place.name;
+        elements.titleH4.textContent = place.address;
+
         if (usersCoords !== undefined) {
-            clone.querySelector('.interest-place-distance span')
-                .textContent = distance(usersCoords[0], usersCoords[1], place.latitude, place.longitude).toFixed(1) + ' km';
+            elements.distanceSpan.textContent = distance(usersCoords[0], usersCoords[1], place.latitude, place.longitude).toFixed(1) + ' km';
         }
 
-        const averageRating = place.avgRating / 2;
-        const formattedRating = averageRating.toFixed(1);
-        clone.querySelector('.rating').textContent = formattedRating;
+        const averageRating = (place.avgRating / 2).toFixed(1);
+        elements.rating.textContent = averageRating;
 
-        const bestCriterion = place.criteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
-        const worstCriterion = place.criteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
-        const bestCriterionRating = (bestCriterion.avgRating / 2).toFixed(1);
-        const worstCriterionRating = (worstCriterion.avgRating / 2).toFixed(1);
+        const { bestCriterion, worstCriterion } = getBestAndWorstCriteria(place.criteria);
 
-        const ratingContainer = clone.querySelector('.interest-place-ratings');
-
-        ratingContainer.innerHTML = '';
-
-        ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', formattedRating, 'Overall'));
-        ratingContainer.appendChild(createRatingItem('fas fa-star yellow', bestCriterionRating, bestCriterion.name));
-        ratingContainer.appendChild(createRatingItem('fas fa-star', worstCriterionRating, worstCriterion.name));
+        elements.ratingContainer.innerHTML = '';
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterion.avgRating / 2).toFixed(1), bestCriterion.name));
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterion.avgRating / 2).toFixed(1), worstCriterion.name));
 
         container.appendChild(clone);
     });
+}
+
+function getBestAndWorstCriteria(criteria) {
+    const bestCriterion = criteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
+    const worstCriterion = criteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
+    return { bestCriterion, worstCriterion };
 }
 
 function isEmptyOrSpaces(str) {
@@ -119,6 +129,6 @@ function distance(lat1, lon1, lat2, lon2) {
 
 function toggleNearest() {
     sortByNearest = !sortByNearest;
-    console.log(sortByNearest);
+    navigator.geolocation.getCurrentPosition(success, error);
     loadPlaces();
 }
