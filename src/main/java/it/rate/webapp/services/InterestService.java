@@ -10,7 +10,9 @@ import it.rate.webapp.repositories.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -72,7 +74,7 @@ public class InterestService {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
   }
 
-  public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
+  public Interest saveEditedInterest(@Valid Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
     List<String> oldCriteriaNames =
         interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
             .map(Criterion::getName)
