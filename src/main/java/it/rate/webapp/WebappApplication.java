@@ -192,9 +192,9 @@ public class WebappApplication implements CommandLineRunner {
     Rating rat11 = new Rating(u3, p1, c4, 6);
     Rating rat12 = new Rating(u3, p4, c1, 8);
     Rating rat13 = new Rating(u3, p4, c2, 7);
-    Rating rat14 = new Rating(u1, p4, c3, 10);
-    Rating rat15 = new Rating(u1, p4, c3, 5);
-    Rating rat16 = new Rating(u1, p5, c3, 7);
+    Rating rat14 = new Rating(u1, p4, c4, 10);
+    Rating rat15 = new Rating(u1, p4, c4, 5);
+    Rating rat16 = new Rating(u1, p5, c4, 7);
     Rating rat17 = new Rating(u1, p5, c4, 8);
 
     // Quiet spots

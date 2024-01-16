@@ -72,9 +72,7 @@ public class PlaceService {
         place.getInterest().getCriteria().stream()
             .map(criterion -> getCriterionAvgRatingDTO(criterion, place))
             .collect(Collectors.toSet());
-    CriterionAvgRatingDTO bestCriterion = getBestRatedCriterion(criteria);
-    CriterionAvgRatingDTO worstCriterion = getWorstRatedCriterion(criteria);
-    return new PlaceInfoDTO(place, bestCriterion, worstCriterion);
+    return new PlaceInfoDTO(place, criteria);
   }
 
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
@@ -92,28 +90,6 @@ public class PlaceService {
     }
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
-  }
-
-  private CriterionAvgRatingDTO getBestRatedCriterion(
-      Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
-    if (!criteriaAvgRatingDTOs.isEmpty()) {
-      return criteriaAvgRatingDTOs.stream()
-          .filter(cr -> cr.avgRating() != null)
-          .max(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
-          .orElse(null);
-    }
-    throw new IllegalStateException("No criteria found");
-  }
-
-  private CriterionAvgRatingDTO getWorstRatedCriterion(
-      Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
-    if (!criteriaAvgRatingDTOs.isEmpty()) {
-      return criteriaAvgRatingDTOs.stream()
-          .filter(cr -> cr.avgRating() != null)
-          .min(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
-          .orElse(null);
-    }
-    throw new IllegalStateException("No criteria found");
   }
 
   public void addImage(Place place, String imageId) {

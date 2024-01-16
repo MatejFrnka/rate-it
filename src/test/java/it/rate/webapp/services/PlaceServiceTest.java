@@ -1,6 +1,7 @@
 package it.rate.webapp.services;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
@@ -16,10 +17,9 @@ import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,7 +152,7 @@ class PlaceServiceTest extends BaseTest {
     interest.setCriteria(criteria);
 
     List<PlaceInfoDTO> expectedResult =
-        List.of(new PlaceInfoDTO(place, criterionAvgRatingOne, criterionAvgRatingTwo));
+        List.of(new PlaceInfoDTO(place, Set.of(criterionAvgRatingOne, criterionAvgRatingTwo)));
 
     when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), place))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
@@ -174,7 +174,9 @@ class PlaceServiceTest extends BaseTest {
     interest.setPlaces(List.of(place));
     place.setInterest(interest);
 
-    assertThrows(IllegalStateException.class, () -> placeService.getPlaceInfoDTOS(interest));
+    List<PlaceInfoDTO> expectedResult = List.of(new PlaceInfoDTO(place, Set.of()));
+
+    assertEquals(expectedResult, placeService.getPlaceInfoDTOS(interest));
   }
 
   @Test

@@ -47,16 +47,18 @@ function loadPlaces(query) {
         const formattedRating = averageRating.toFixed(1);
         clone.querySelector('.rating').textContent = formattedRating;
 
-        const bestCriterionRating = (place.bestRatedCriterionRating / 2).toFixed(1);
-        const worstCriterionRating = (place.worstRatedCriterionRating / 2).toFixed(1);
+        const bestCriterion = place.criteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
+        const worstCriterion = place.criteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
+        const bestCriterionRating = (bestCriterion.avgRating / 2).toFixed(1);
+        const worstCriterionRating = (worstCriterion.avgRating / 2).toFixed(1);
 
         const ratingContainer = clone.querySelector('.interest-place-ratings');
 
         ratingContainer.innerHTML = '';
 
         ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', formattedRating, 'Overall'));
-        ratingContainer.appendChild(createRatingItem('fas fa-star yellow', bestCriterionRating, place.bestRatedCriterionName));
-        ratingContainer.appendChild(createRatingItem('fas fa-star', worstCriterionRating, place.worstRatedCriterionName));
+        ratingContainer.appendChild(createRatingItem('fas fa-star yellow', bestCriterionRating, bestCriterion.name));
+        ratingContainer.appendChild(createRatingItem('fas fa-star', worstCriterionRating, worstCriterion.name));
 
         container.appendChild(clone);
     });
