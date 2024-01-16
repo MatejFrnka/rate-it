@@ -80,11 +80,18 @@ public class PlaceService {
   }
 
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
-    double avgRating =
+    OptionalDouble optAvgRating =
         ratingRepository.findAllByCriterionAndPlace(criterion, place).stream()
             .mapToDouble(Rating::getRating)
-            .average()
-            .orElse(-1);
+            .average();
+
+    Double avgRating;
+
+    if (optAvgRating.isPresent()) {
+      avgRating = optAvgRating.getAsDouble();
+    } else {
+      avgRating = null;
+    }
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
