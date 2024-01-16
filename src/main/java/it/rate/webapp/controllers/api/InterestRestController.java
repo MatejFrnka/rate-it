@@ -2,10 +2,14 @@ package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.dtos.ErrorMessagesDTO;
+import it.rate.webapp.dtos.LikeDTO;
+import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
 import it.rate.webapp.services.InterestService;
+import it.rate.webapp.services.LikeService;
 import it.rate.webapp.services.PlaceService;
+import it.rate.webapp.services.UserService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
@@ -23,6 +27,8 @@ public class InterestRestController {
   private final Validator validator;
   private final InterestService interestService;
   private final PlaceService placeService;
+  private final UserService userService;
+  private final LikeService likeService;
 
   @GetMapping("/suggestions")
   public ResponseEntity<?> getAllSuggestions(@RequestBody Optional<CoordinatesDTO> usersCoords) {
@@ -73,5 +79,16 @@ public class InterestRestController {
         .body(
             new ErrorMessagesDTO(
                 validationErrors.stream().map(ConstraintViolation::getMessage).toList()));
+  }
+
+  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+  @PostMapping("/{interestId}/like")
+  public ResponseEntity<?> like(@PathVariable Long interestId, @RequestBody LikeDTO like, Principal principal) {
+    if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      Interest interest = interestService.getById(interestId);
+      likeService.changeLike(loggedUser, interest, like.liked());
+    }
+    return ResponseEntity.ok().build();
   }
 }
