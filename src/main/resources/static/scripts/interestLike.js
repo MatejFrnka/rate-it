@@ -4,13 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const buttons = document.querySelectorAll('.like-button');
     buttons.forEach(function (button) {
         button.addEventListener('click', function () {
-            const isLiked = button.classList.contains('liked');
-            updateLikeButton(button, !isLiked);
+            likeInterest(button)
         });
     });
 });
 
-function likeInterest(button, value) {
+function likeInterest(button) {
+    const isLiked = button.classList.contains('liked');
+    const value = isLiked ? 0 : 1;
     fetch(`/api/v1/interests/${id}/like`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

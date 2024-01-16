@@ -87,10 +87,10 @@
 </div>
 
 <div th:fragment="like-button" class="header-right col-2">
-    <button th:if="${liked}" class="like-button liked" onclick="likeInterest(this, 0)" title="Dislike">
+    <button th:if="${liked}" class="like-button liked" title="Dislike">
         <i class="fa-solid fa-heart"></i>
     </button>
-    <button th:unless="${liked}" class="like-button disliked" onclick="likeInterest(this, 1)" title="Like">
+    <button th:unless="${liked}" class="like-button disliked" title="Like">
         <i class="fa-solid fa-heart"></i>
     </button>
 </div>

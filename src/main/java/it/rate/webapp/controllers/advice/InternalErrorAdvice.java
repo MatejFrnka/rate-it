@@ -33,7 +33,7 @@ public class InternalErrorAdvice {
 
   @ExceptionHandler({InternalErrorException.class, Exception.class})
   public ModelAndView unhandledExceptions(Exception e) {
-    emailService.sendEmail(buildExceptionReport(devEmail, e));
+//    emailService.sendEmail(buildExceptionReport(devEmail, e));
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));
   }
