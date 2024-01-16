@@ -1,12 +1,21 @@
 let data = [];
 let imageUrls = [];
 
+navigator.geolocation.getCurrentPosition(success, error);
+
+function success(position) {
+    console.log(position.coords.latitude, position.coords.longitude);
+}
+
+function error() {
+    console.log("Unable to retrieve your location");
+}
+
 window.addEventListener('load', async () => {
     try {
         const fetchUrl = `/api/v1/interests/${interestId}/places`;
         const response = await fetch(fetchUrl);
-        const jsonData = await response.json();
-        data = jsonData;
+        data = await response.json();
 
         imageUrls = await Promise.all(data.map(place => fetchImageUrl(place)));
 
