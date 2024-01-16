@@ -3,6 +3,7 @@ package it.rate.webapp.dtos;
 import it.rate.webapp.models.Place;
 
 import java.util.List;
+import java.util.Objects;
 
 public record PlaceInfoDTO(
     Long id,
@@ -27,9 +28,9 @@ public record PlaceInfoDTO(
         place.getLongitude(),
         place.getImageNames(),
         place.getAverageRating(),
-        bestCriterion.name(),
-        bestCriterion.avgRating(),
-        worstCriterion.name(),
-        worstCriterion.avgRating());
+        bestCriterion == null ? null : bestCriterion.name(),
+        bestCriterion == null ? null : bestCriterion.avgRating(),
+        worstCriterion == null ? null : worstCriterion.name(),
+        worstCriterion == null ? null : worstCriterion.avgRating());
   }
 }

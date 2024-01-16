@@ -33,9 +33,7 @@ public class PlaceService {
     AppUser loggedUser =
         userService.findByEmail(loggedInUserName).orElseThrow(InvalidUserDetailsException::new);
     Interest interest =
-        interestService
-            .findById(interestId)
-            .orElseThrow(InvalidInterestDetailsException::new);
+        interestService.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
 
     loggedUser.getCreatedPlaces().add(place);
     interest.getPlaces().add(place);
@@ -100,8 +98,9 @@ public class PlaceService {
       Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
     if (!criteriaAvgRatingDTOs.isEmpty()) {
       return criteriaAvgRatingDTOs.stream()
+          .filter(cr -> cr.avgRating() != null)
           .max(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
-          .get();
+          .orElse(null);
     }
     throw new IllegalStateException("No criteria found");
   }
@@ -110,8 +109,9 @@ public class PlaceService {
       Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
     if (!criteriaAvgRatingDTOs.isEmpty()) {
       return criteriaAvgRatingDTOs.stream()
+          .filter(cr -> cr.avgRating() != null)
           .min(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
-          .get();
+          .orElse(null);
     }
     throw new IllegalStateException("No criteria found");
   }
