@@ -49,9 +49,12 @@ public class InterestController {
       @RequestParam String name,
       @RequestParam String description,
       @RequestParam List<String> criteriaNames,
+      @RequestParam(required = false) String imageId,
       RedirectAttributes ra,
       Principal principal) {
     Interest savedInterest = createInterestService.save(name, description, criteriaNames);
+    interestService.addNewImage(savedInterest.getId(), imageId);
+
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);

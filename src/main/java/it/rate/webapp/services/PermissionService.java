@@ -52,6 +52,10 @@ public class PermissionService {
     return optRole.isPresent() && optRole.get().getRole().equals(Role.RoleType.CREATOR);
   }
 
+  public boolean canCreateInterest() {
+    return userService.authenticatedUser() != null;
+  }
+
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
     AppUser user = userService.authenticatedUser();
     if (user == null) {

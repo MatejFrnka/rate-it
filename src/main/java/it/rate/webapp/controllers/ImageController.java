@@ -26,7 +26,7 @@ public class ImageController {
       @PathVariable Long placeId)
       throws IOException {
 
-    placeService.addImage(placeId, googleImageService.savePlaceImage(file, placeId));
+    placeService.addImage(placeId, googleImageService.saveImage(file));
 
     return "redirect:/interests/" + interestId + "/places/" + placeId;
   }

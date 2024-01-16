@@ -7,11 +7,10 @@ import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -145,5 +144,14 @@ public class InterestService {
     // Radius of earth in kilometers.
     final double r = 6371;
     return (c * r); // Distance in kilometers
+  }
+
+  public void addNewImage(Long interestId, String imageId) {
+    if (imageId == null) {
+      return;
+    }
+    Interest interest = interestRepository.getReferenceById(interestId);
+    interest.setImageName(imageId);
+    interestRepository.save(interest);
   }
 }

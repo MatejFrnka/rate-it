@@ -24,6 +24,8 @@ public class Interest {
   private boolean deleted = false;
   private boolean exclusive;
 
+  private String imageName;
+
   @OneToMany(mappedBy = "interest")
   @Builder.Default
   private List<Place> places = new ArrayList<>();

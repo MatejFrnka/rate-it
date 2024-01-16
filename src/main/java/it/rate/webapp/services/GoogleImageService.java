@@ -4,7 +4,6 @@ import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
-import it.rate.webapp.exceptions.api.InvalidApiResponseException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -29,7 +28,7 @@ public class GoogleImageService implements ImageService {
   }
 
   @Override
-  public String savePlaceImage(MultipartFile image, Long placeId) throws IOException {
+  public String saveImage(MultipartFile image) throws IOException {
 
     FileContent mediaContent;
     String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -38,7 +37,7 @@ public class GoogleImageService implements ImageService {
     image.transferTo(tempFilePath);
     mediaContent = new FileContent("image/*", tempFilePath.toFile());
 
-    String fileName = currentUser + "_" + placeId + "_" + UUID.randomUUID();
+    String fileName = currentUser + "_" + UUID.randomUUID();
 
     File fileMeta = new File();
     fileMeta.setName(fileName);
@@ -47,7 +46,15 @@ public class GoogleImageService implements ImageService {
     try {
       return driveService.files().create(fileMeta, mediaContent).execute().getId();
     } catch (IOException e) {
-      throw new InvalidApiResponseException();
+      throw new ApiServiceUnavailableException("Could save image to the server");
+    }
+  }
+
+  public void deleteById(String imageId) {
+    try {
+      driveService.files().delete(imageId).execute();
+    } catch (IOException e) {
+      throw new ApiServiceUnavailableException("Could not delete image from server");
     }
   }
 
@@ -58,11 +65,6 @@ public class GoogleImageService implements ImageService {
     } catch (IOException e) {
       throw new ApiServiceUnavailableException("Could not retrieve image from server");
     }
-  }
-
-  @Override
-  public String saveInterestImage(MultipartFile image, Long interestId) {
-    return null;
   }
 
   @Override
