@@ -34,6 +34,8 @@ function loadPlaces(query) {
 
     if (sortByNearest) {
         dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) - distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
+    } else {
+        dataSet = dataSet.sort((a, b) => a.id - b.id);
     }
 
     dataSet.forEach((place, index) => {
