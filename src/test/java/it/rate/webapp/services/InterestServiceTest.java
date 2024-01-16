@@ -33,7 +33,7 @@ class InterestServiceTest extends BaseTest {
 
     List<Criterion> updatedCriteria = getNewCriteria();
 
-    Interest interest = Interest.builder().id(1L).criteria(getOldCriteria()).build();
+    Interest interest = Interest.builder().id(1L).name("test").criteria(getOldCriteria()).build();
 
     when(interestRepository.getReferenceById(anyLong())).thenReturn(interest);
     when(interestRepository.save(any()))
@@ -55,7 +55,7 @@ class InterestServiceTest extends BaseTest {
     List<Criterion> updatedCriteria = new ArrayList<>(getNewCriteria());
     updatedCriteria.add(Criterion.builder().name("c1").build());
 
-    Interest interest = Interest.builder().id(1L).criteria(getOldCriteria()).build();
+    Interest interest = Interest.builder().id(1L).name("test").criteria(getOldCriteria()).build();
 
     when(interestRepository.getReferenceById(anyLong())).thenReturn(interest);
     when(interestRepository.save(any()))
@@ -73,7 +73,7 @@ class InterestServiceTest extends BaseTest {
   void saveInterestWithoutChangingCriteria() {
     List<String> criteriaNames = getOldCriteria().stream().map(Criterion::getName).toList();
 
-    Interest interest = Interest.builder().id(1L).criteria(getOldCriteria()).build();
+    Interest interest = Interest.builder().id(1L).name("test").criteria(getOldCriteria()).build();
 
     when(interestRepository.getReferenceById(anyLong())).thenReturn(interest);
     when(interestRepository.save(any())).thenReturn(interest);
