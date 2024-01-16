@@ -147,7 +147,29 @@ public class WebappApplication implements CommandLineRunner {
             .interest(i2)
             .build();
 
-    placeRepository.saveAll(List.of(p1, p2, p3));
+    Place p4 =
+            Place.builder()
+                    .name("Pekařství Pana Koláčka")
+                    .latitude(50.130587)
+                    .longitude(14.505279)
+                    .description("Super koláčky")
+                    .address("Kytlická 756, 190 00 Praha 9-Prosek")
+                    .creator(u2)
+                    .interest(i1)
+                    .build();
+
+    Place p5 =
+            Place.builder()
+                    .name("Merhautovo pekařství")
+                    .latitude(50.425784)
+                    .longitude(14.909763)
+                    .description("Super pekařství")
+                    .address("U Stadionu 1231, 293 01 Mladá Boleslav II")
+                    .creator(u2)
+                    .interest(i1)
+                    .build();
+
+    placeRepository.saveAll(List.of(p1, p2, p3, p4, p5));
 
     Criterion c1 = Criterion.builder().name("Křupavost").interest(i1).build();
 
@@ -155,16 +177,34 @@ public class WebappApplication implements CommandLineRunner {
 
     Criterion c3 = Criterion.builder().name("Zastínění").interest(i2).build();
 
-    criterionRepository.saveAll(List.of(c1, c2, c3));
+    Criterion c4 = Criterion.builder().name("Množství tvarohu").interest(i1).build();
 
+    criterionRepository.saveAll(List.of(c1, c2, c3, c4));
+
+    // Koláčky
     Rating rat1 = new Rating(u1, p1, c1, 5);
     Rating rat2 = new Rating(u1, p1, c2, 6);
     Rating rat3 = new Rating(u2, p2, c1, 4);
     Rating rat4 = new Rating(u2, p2, c2, 7);
     Rating rat5 = new Rating(u3, p1, c1, 1);
+    Rating rat9 = new Rating(u1, p1, c4, 2);
+    Rating rat10 = new Rating(u1, p2, c4, 10);
+    Rating rat11 = new Rating(u3, p1, c4, 6);
+    Rating rat12 = new Rating(u3, p4, c1, 8);
+    Rating rat13 = new Rating(u3, p4, c2, 7);
+    Rating rat14 = new Rating(u1, p4, c3, 10);
+    Rating rat15 = new Rating(u1, p4, c3, 5);
+    Rating rat16 = new Rating(u1, p5, c3, 7);
+    Rating rat17 = new Rating(u1, p5, c4, 8);
+
+    // Quiet spots
     Rating rat6 = new Rating(u1, p3, c3, 10);
     Rating rat7 = new Rating(u2, p3, c3, 8);
     Rating rat8 = new Rating(u3, p3, c3, 9);
-    ratingRepository.saveAll(List.of(rat1, rat2, rat3, rat4, rat5, rat6, rat7, rat8));
+
+
+
+    ratingRepository.saveAll(List.of(rat1, rat2, rat3, rat4, rat5, rat6, rat7, rat8, rat9, rat10,
+            rat11, rat12, rat13, rat14, rat15, rat16, rat17));
   }
 }
