@@ -1,15 +1,7 @@
 let data = [];
 let imageUrls = [];
-
+let usersCoords;
 navigator.geolocation.getCurrentPosition(success, error);
-
-function success(position) {
-    console.log(position.coords.latitude, position.coords.longitude);
-}
-
-function error() {
-    console.log("Unable to retrieve your location");
-}
 
 window.addEventListener('load', async () => {
     try {
@@ -46,6 +38,10 @@ function loadPlaces(query) {
         clone.querySelector('.interest-place-img img').src = imageUrl;
         clone.querySelector('.interest-place-title h3').textContent = place.name;
         clone.querySelector('.interest-place-title h4').textContent = place.address;
+        if (usersCoords !== undefined) {
+            clone.querySelector('.interest-place-distance span')
+                .textContent = distance(usersCoords[0], usersCoords[1], place.latitude, place.longitude).toFixed(1) + ' km';
+        }
 
         const averageRating = place.avgRating / 2;
         const formattedRating = averageRating.toFixed(1);
@@ -88,4 +84,28 @@ function createRatingItem(iconClass, ratingValue, criterionName) {
     li.appendChild(criterionSpan);
 
     return li;
+}
+
+function success(position) {
+    usersCoords = [position.coords.latitude, position.coords.longitude];
+    loadPlaces();
+}
+
+function error() {
+    console.log("Unable to retrieve your location");
+}
+
+function distance(lat1, lon1, lat2, lon2) {
+    let radlat1 = Math.PI * lat1 / 180;
+    let radlat2 = Math.PI * lat2 / 180;
+    let theta = lon1 - lon2;
+    let radtheta = Math.PI * theta / 180;
+    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+        dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = dist * 180 / Math.PI;
+    dist = dist * 60 * 1.85316;
+    return dist;
 }
