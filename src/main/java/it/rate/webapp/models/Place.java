@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalDouble;
 
 @Getter
 @Setter
@@ -45,7 +46,12 @@ public class Place {
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 
-  public double getAverageRating() {
-    return ratings.stream().mapToDouble(Rating::getRating).average().orElse(-1);
+  public Double getAverageRating() {
+    Double averageRating = null;
+    OptionalDouble optAverageRating = ratings.stream().mapToDouble(Rating::getRating).average();
+    if (optAverageRating.isPresent()) {
+      averageRating = optAverageRating.getAsDouble();
+    }
+    return averageRating;
   }
 }

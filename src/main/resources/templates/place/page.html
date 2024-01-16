@@ -29,7 +29,8 @@
             <h1 th:text="*{name}"></h1>
             <div class="rating">
                 <i class="fas fa-star"></i>
-                <span th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+                <span th:unless="${place.getAverageRating() == null}" th:text="${#numbers.formatDecimal(place.getAverageRating() / 2, 1, 'DEFAULT', 1, 'DEFAULT')}"></span>
+                <span th:if="${place.getAverageRating() == null}">N/A</span>
             </div>
         </header>
 
