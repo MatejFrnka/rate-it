@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.ModelAndView;
 
 @ConditionalOnProperty(name = "advice.enabled", havingValue = "true")
@@ -34,7 +36,13 @@ public class BadRequestAdvice {
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, errorMessage));
   }
 
-  @ExceptionHandler({BadRequestException.class, ConstraintViolationException.class, MissingServletRequestParameterException.class})
+  @ExceptionHandler({
+    BadRequestException.class,
+    ConstraintViolationException.class,
+    MissingServletRequestParameterException.class,
+    HttpRequestMethodNotSupportedException.class,
+    MethodArgumentTypeMismatchException.class
+  })
   public ModelAndView handleConstraintViolationException(Exception e) {
     return new ModelAndView(
         "error/page", "error", new ErrorResponseDTO(statusCode, simpleMessage, clientMessage));

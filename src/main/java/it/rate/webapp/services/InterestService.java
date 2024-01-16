@@ -41,8 +41,11 @@ public class InterestService {
         interestRepository.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
-
-    roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
+    if (interest.isExclusive()) {
+      roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
+    } else {
+      throw new InvalidInterestDetailsException("Cannot set role for non-exclusive interest");
+    }
   }
 
   public List<Interest> findAllSortByLikes() {
