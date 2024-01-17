@@ -10,6 +10,7 @@ import it.rate.webapp.repositories.RoleRepository;
 import it.rate.webapp.repositories.UserRepository;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -30,8 +31,7 @@ public class CreateInterestService {
   private RoleRepository roleRepository;
 
   public Interest save(
-      @NotBlank String name,
-      @NotBlank String description,
+      @Valid Interest interest,
       @NotEmpty List<@NotBlank String> receivedCriteria) {
 
     List<Criterion> criteria =
@@ -42,15 +42,13 @@ public class CreateInterestService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
-    Interest newInterest = Interest.builder().name(name).description(description).build();
+    interestRepository.save(interest);
+    criteria.forEach(c -> c.setInterest(interest));
 
-    interestRepository.save(newInterest);
-    criteria.forEach(c -> c.setInterest(newInterest));
-
-    Role newRole = new Role(currentUser, newInterest, Role.RoleType.CREATOR);
-    newInterest.setRoles(List.of(newRole));
+    Role newRole = new Role(currentUser, interest, Role.RoleType.CREATOR);
+    interest.setRoles(List.of(newRole));
     roleRepository.save(newRole);
 
-    return newInterest;
+    return interest;
   }
 }
