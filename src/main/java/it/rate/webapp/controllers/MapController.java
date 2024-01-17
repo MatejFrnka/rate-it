@@ -2,10 +2,7 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
-import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.PlaceService;
-import it.rate.webapp.services.RoleService;
-import it.rate.webapp.services.UserService;
+import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +21,7 @@ public class MapController {
   private final UserService userService;
   private final RoleService roleService;
   private final PlaceService placeService;
+  private final LikeService likeService;
 
   @GetMapping()
   public String mapView(Model model, @PathVariable Long interestId, Principal principal) {
@@ -35,6 +33,7 @@ public class MapController {
       model.addAttribute("loggedUser", loggedUser);
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       optRole.ifPresent(role -> model.addAttribute("role", role.getRole()));
+      model.addAttribute("liked", likeService.existsById(new LikeId(loggedUser.getId(), interestId)));
     }
     model.addAttribute("interest", interest);
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));

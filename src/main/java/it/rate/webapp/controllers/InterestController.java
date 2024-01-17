@@ -82,17 +82,6 @@ public class InterestController {
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-  @PostMapping("/{interestId}/like")
-  public String like(@PathVariable Long interestId, boolean like, Principal principal) {
-    if (principal != null) {
-      AppUser loggedUser = userService.getByEmail(principal.getName());
-      Interest interest = interestService.getById(interestId);
-      likeService.changeLike(loggedUser, interest, like);
-    }
-    return "redirect:/interests/" + interestId;
-  }
-
-  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{interestId}/request")
   public String applyForVoterAuthority(@PathVariable Long interestId) {
     interestService.setApplicantRole(interestId);
