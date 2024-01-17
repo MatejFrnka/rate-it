@@ -99,6 +99,16 @@ public class InterestService {
         .collect(Collectors.toList());
   }
 
+  public void addNewImage(Long interestId, String imageId) {
+
+    if (imageId == null) {
+      return;
+    }
+    Interest interest = interestRepository.getReferenceById(interestId);
+    interest.setImageName(imageId);
+    interestRepository.save(interest);
+  }
+
   public Interest save(Interest interest) {
     return interestRepository.save(interest);
   }
@@ -146,12 +156,6 @@ public class InterestService {
     return (c * r); // Distance in kilometers
   }
 
-  public void addNewImage(Long interestId, String imageId) {
-    if (imageId == null) {
-      return;
-    }
-    Interest interest = interestRepository.getReferenceById(interestId);
-    interest.setImageName(imageId);
-    interestRepository.save(interest);
-  }
+
+  
 }

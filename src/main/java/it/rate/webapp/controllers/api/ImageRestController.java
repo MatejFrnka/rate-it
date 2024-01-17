@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers.api;
 
+import it.rate.webapp.dtos.ImageUploadResponseDTO;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.services.GoogleImageService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class ImageRestController {
   public ResponseEntity<?> uploadNewInterestImage(@RequestParam("picture") MultipartFile file) {
 
     try {
-      return ResponseEntity.ok().body(googleImageService.saveImage(file));
+      return ResponseEntity.ok().body(new ImageUploadResponseDTO(googleImageService.saveImage(file)));
     } catch (IOException e) {
       return ResponseEntity.internalServerError().build();
     }

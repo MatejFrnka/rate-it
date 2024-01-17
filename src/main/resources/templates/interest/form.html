@@ -63,6 +63,8 @@
                     </th:block>
                 </div>
 
+
+
                 <div class="add-criterion">
                     <span>Add criterion</span>
                     <button class="role-option-button accept-button" type="button" onclick="addCriteria()">
@@ -79,11 +81,20 @@
                 </label>
             </section>
 
+            <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
+                Upload photo</a>
+            <div id="uppy"></div>
+
+            <input type="hidden" id="uploadedImageId" name="uploadedImageId" value="uploadedImageId" />
+
+
             <button class="button" type="submit">Save</button>
         </form>
     </div>
 
     <script th:inline="javascript" src="/scripts/interestForm.js"></script>
+    <script type="module" src="/scripts/interestImageUpload.js"></script>
+
 
 </div>
 </body>

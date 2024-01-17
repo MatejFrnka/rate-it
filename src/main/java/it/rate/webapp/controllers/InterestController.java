@@ -3,6 +3,7 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
+import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,7 @@ public class InterestController {
   private final PermissionService permissionService;
   private final PlaceService placeService;
   private final LikeService likeService;
+  private final InterestRepository interestRepository;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -49,16 +51,18 @@ public class InterestController {
       @RequestParam String name,
       @RequestParam String description,
       @RequestParam List<String> criteriaNames,
-      @RequestParam(required = false) String imageId,
+      @RequestParam(required = false) String uploadedImageId,
       RedirectAttributes ra,
       Principal principal) {
     Interest savedInterest = createInterestService.save(name, description, criteriaNames);
-    interestService.addNewImage(savedInterest.getId(), imageId);
-
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);
     }
+
+    interestService.addNewImage(savedInterest.getId(), uploadedImageId);
+
+
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }
