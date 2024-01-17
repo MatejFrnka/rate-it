@@ -29,19 +29,19 @@ public class Interest {
 
   private String imageName;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "interest")
+  @OneToMany( mappedBy = "interest")
   @Builder.Default
   private List<Place> places = new ArrayList<>();
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "interest")
+  @OneToMany(mappedBy = "interest")
   @Builder.Default
   private List<Criterion> criteria = new ArrayList<>();
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "interest")
+  @OneToMany(mappedBy = "interest")
   @Builder.Default
   private List<Like> likes = new ArrayList<>();
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "interest")
+  @OneToMany(mappedBy = "interest")
   @Builder.Default
   private List<Role> roles = new ArrayList<>();
 
