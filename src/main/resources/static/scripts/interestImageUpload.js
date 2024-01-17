@@ -2,6 +2,8 @@ import {Uppy, Dashboard, XHRUpload, Webcam} from "https://releases.transloadit.c
 
 let dynamicEndpoint;
 let httpMethod;
+var imageName = document.getElementById('uploadedImageId').value;
+var uploadButton = document.getElementById('uppy-modal');
 const uploadedImageIdField = document.getElementById('uploadedImageId');
 
 
@@ -29,8 +31,7 @@ const uppy = new Uppy({
         inline: false,
         proudlyDisplayPoweredByUppy: false,
         trigger: '#uppy-modal',
-        closeModalOnClickOutside: true,
-        closeAfterFinish: true
+        closeModalOnClickOutside: true
     })
     .use(XHRUpload, {
         endpoint: dynamicEndpoint,
@@ -46,6 +47,7 @@ const uppy = new Uppy({
 
 uppy.on('upload-success', (file, response) => {
     const uploadedImageIdField = document.getElementById('uploadedImageId');
+    uploadButton.textContent = 'Change photo';
     uploadedImageIdField.value = response.body.id;
 });
 
@@ -60,3 +62,9 @@ if (uppyAddFilesList) {
 const customStyles = document.createElement('style');
 customStyles.innerHTML = '.uppy-Dashboard-AddFiles-title { display: none !important; }'
 document.head.appendChild(customStyles);
+
+if (!imageName || imageName.trim() === '') {
+    uploadButton.textContent = 'Upload photo';
+} else {
+    uploadButton.textContent = 'Change photo';
+}

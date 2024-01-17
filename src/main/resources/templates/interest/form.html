@@ -81,14 +81,18 @@
                 </label>
             </section>
 
-            <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none">
-                Upload photo</a>
+
             <div id="uppy"></div>
+
+            <div class="button-wrap">
+                <a id="uppy-modal" href="#" type="button" class="button" style="text-decoration: none"></a>
+
+
+                <button class="button" type="submit">Save</button>
+            </div>
 
             <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}" />
 
-
-            <button class="button" type="submit">Save</button>
         </form>
     </div>
 
