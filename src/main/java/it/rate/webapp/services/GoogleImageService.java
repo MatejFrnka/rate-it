@@ -65,7 +65,7 @@ public class GoogleImageService implements ImageService {
       throw new ApiServiceUnavailableException("Could not save image to the server");
     }
 
-    if (interest.getImageName().isEmpty()) {
+    if (interest.getImageName() == null || interest.getImageName().isEmpty()) {
       return newImageId;
     } else {
       deleteById(interest.getImageName());

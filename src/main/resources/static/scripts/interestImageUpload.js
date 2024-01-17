@@ -1,15 +1,18 @@
 import {Uppy, Dashboard, XHRUpload, Webcam} from "https://releases.transloadit.com/uppy/v3.21.0/uppy.min.mjs"
 
 let dynamicEndpoint;
+let httpMethod;
 const uploadedImageIdField = document.getElementById('uploadedImageId');
 
 
 if (window.location.pathname.includes('/interests/create')) {
     dynamicEndpoint = '/api/v1/images/new-interest-image';
+    httpMethod = 'post'
 } else {
     const match = window.location.pathname.match(/\/interests\/(\d+)\/admin\/edit/);
     const interestId = match ? match[1] : null;
     dynamicEndpoint = `/api/v1/images/interests/${interestId}/edit`;
+    httpMethod = 'put'
 }
 
 const uppy = new Uppy({
@@ -32,6 +35,7 @@ const uppy = new Uppy({
     .use(XHRUpload, {
         endpoint: dynamicEndpoint,
         fieldName: 'picture',
+        method: httpMethod,
         formData: true,
     })
     .use(Webcam, {
