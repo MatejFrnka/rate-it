@@ -53,10 +53,10 @@
         <section class="interest-places-section"
                  th:unless="${places.isEmpty()}">
             <h2>Places</h2>
-            <div class="filters">
-                <template id="filter-button-template">
-                    <label class="filter-container">
-                        <input type="checkbox" class="filter-checkbox"/>
+            <div class="sort-buttons">
+                <template id="sort-button-template">
+                    <label class="sort-container">
+                        <input type="checkbox" class="sort-checkbox"/>
                         <span></span>
                     </label>
                 </template>

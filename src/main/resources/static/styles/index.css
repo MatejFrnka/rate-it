@@ -421,7 +421,7 @@ h3 {
     overflow: hidden;
 }
 
-.filters {
+.sort-buttons {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -429,11 +429,11 @@ h3 {
     margin-bottom: 1rem;
 }
 
-.filter-checkbox {
+.sort-checkbox {
     display: none;
 }
 
-.filter-container > .filter-checkbox + span {
+.sort-container > .sort-checkbox + span {
     padding: 0.3em 0.5em;
     text-align: justify;
     border-radius: 1rem;
@@ -443,7 +443,7 @@ h3 {
     background: transparent;
 }
 
-.filter-container > .filter-checkbox:checked + span {
+.sort-container > .sort-checkbox:checked + span {
     color: #478363;
     font-weight: 700;
     background-color: rgba(86, 141, 115, 0.1);

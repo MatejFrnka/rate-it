@@ -1,6 +1,7 @@
 let data = [];
 let imageUrls = [];
 let usersCoords;
+let activeFilter = '';
 navigator.geolocation.getCurrentPosition(success, error);
 
 window.addEventListener('load', async () => {
@@ -11,7 +12,7 @@ window.addEventListener('load', async () => {
         imageUrls = await Promise.all(data.map(place => fetchImageUrl(place)));
 
         if (data !== null && data.length > 0) {
-            loadFilters();
+            loadSortButtons();
             loadPlaces();
         }
     } catch (error) {
@@ -23,54 +24,48 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPlaces();
 });
 
-function loadFilters() {
-    const container = document.querySelector(".filters");
-    const template = document.getElementById('filter-button-template');
+function loadSortButtons() {
+    const container = document.querySelector(".sort-buttons");
+    const template = document.getElementById('sort-button-template');
 
-    const cloneNearest = document.importNode(template.content, true);
-    const cloneTop = document.importNode(template.content, true);
-
-    createNearestFilterButton(container, cloneNearest);
-    createTopFilterButton(container, cloneTop);
+    createFilterButton(container, template, 'Nearest');
+    createFilterButton(container, template, 'Top');
 
     if (data !== null && data.length > 0) {
         const criteria = data[0].criteria;
-
         criteria.forEach(criterion => {
-            const cloneCriterion = document.importNode(template.content, true);
-            createCriterionFilterButton(container, cloneCriterion, criterion);
+            createFilterButton(container, template, criterion.name);
         });
     }
 }
 
-function createCriterionFilterButton(container, clone, criterion) {
+function createFilterButton(container, template, filterName) {
+    const clone = document.importNode(template.content, true);
     const checkbox = clone.querySelector('input');
     const title = clone.querySelector('span');
-    title.textContent = criterion.name;
+    title.textContent = filterName;
+
     checkbox.addEventListener('change', () => {
-        loadPlaces('', title.textContent);
+        if (checkbox.checked) {
+            activeFilter = title.textContent;
+            uncheckOtherCheckboxes(container, title.textContent);
+        } else {
+            activeFilter = '';
+        }
+        loadPlaces('', activeFilter);
     });
+
     container.appendChild(clone);
 }
 
-function createTopFilterButton(container, clone) {
-    const checkbox = clone.querySelector('input');
-    const title = clone.querySelector('span');
-    title.textContent = 'Top';
-    checkbox.addEventListener('change', () => {
-        loadPlaces('', title.textContent);
+function uncheckOtherCheckboxes(container, currentTitle) {
+    const checkboxes = container.querySelectorAll('input');
+    checkboxes.forEach(checkbox => {
+        const title = checkbox.parentNode.querySelector('span').textContent;
+        if (title !== currentTitle) {
+            checkbox.checked = false;
+        }
     });
-    container.appendChild(clone);
-}
-
-function createNearestFilterButton(container, clone) {
-    const checkbox = clone.querySelector('input');
-    const title = clone.querySelector('span');
-    title.textContent = 'Nearest';
-    checkbox.addEventListener('change', () => {
-        loadPlaces('', title.textContent);
-    });
-    container.appendChild(clone);
 }
 
 function loadPlaces(query, sort) {
