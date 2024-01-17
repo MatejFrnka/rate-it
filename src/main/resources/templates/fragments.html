@@ -88,10 +88,10 @@
 
 <div th:fragment="like-button" class="header-right col-2">
     <form th:action="@{/interests/{id}/like(id=*{id})}" th:method="post">
-        <button th:if="${liked}" class="like-button liked" type="submit" name="like" value="0" title="Dislike">
-            <i class="fa-solid fa-heart"></i>
+        <button th:if="${liked}" class="like-button" type="submit" name="like" value="0" title="Dislike">
+            <i class="fa-regular fa-heart"></i>
         </button>
-        <button th:unless="${liked}" class="like-button disliked" type="submit" name="like" value="1" title="Like">
+        <button th:unless="${liked}" class="like-button" type="submit" name="like" value="1" title="Like">
             <i class="fa-solid fa-heart"></i>
         </button>
     </form>
