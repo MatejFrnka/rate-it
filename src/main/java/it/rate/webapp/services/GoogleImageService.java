@@ -5,31 +5,27 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
 import it.rate.webapp.models.Interest;
-import it.rate.webapp.repositories.InterestRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class GoogleImageService implements ImageService {
 
   @Value("${UPLOAD_DIRECTORY}")
   private String UPLOAD_DIRECTORY;
 
   private final Drive driveService;
-  private final InterestRepository interestRepository;
 
-  public GoogleImageService(Drive driveService, InterestRepository interestRepository) {
-    this.driveService = driveService;
-    this.interestRepository = interestRepository;
-  }
 
   @Override
   public String saveImage(MultipartFile image) throws IOException {
