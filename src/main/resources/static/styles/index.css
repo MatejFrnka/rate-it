@@ -8,8 +8,7 @@ body {
 .container-fluid {
     position: relative;
     box-sizing: border-box;
-    padding: 0 var(--sidebar-width, 35vw);
-    min-width: 430px;
+    padding: 0 var(--sidebar-width, 0);
 }
 
 .container-fluid::before,
@@ -18,7 +17,7 @@ body {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: var(--sidebar-width, 35vw);
+    width: var(--sidebar-width, 0);
     height: 100%;
 }
 
