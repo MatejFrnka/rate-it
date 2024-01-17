@@ -3,19 +3,17 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
-import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.services.*;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -29,7 +27,6 @@ public class InterestController {
   private final PermissionService permissionService;
   private final PlaceService placeService;
   private final LikeService likeService;
-  private final InterestRepository interestRepository;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -50,7 +47,6 @@ public class InterestController {
   public String createNew(
       @ModelAttribute Interest interest,
       @RequestParam List<String> criteriaNames,
-      @RequestParam(required = false) String uploadedImageId,
       RedirectAttributes ra,
       Principal principal) {
     Interest savedInterest = createInterestService.save(interest, criteriaNames);
@@ -58,18 +54,7 @@ public class InterestController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);
     }
-
-    Interest test = interestRepository.getReferenceById(savedInterest.getId());
-    test.setCriteria(new ArrayList<>(test.getCriteria()));
-    test.setLikes(new ArrayList<>(test.getLikes()));
-    test.setPlaces(new ArrayList<>(test.getPlaces()));
-    test.setRoles(new ArrayList<>(test.getRoles()));
-    test.setImageName(uploadedImageId);
-    interestRepository.save(test);
-
-    interestService.addNewImage(savedInterest.getId(), uploadedImageId);
-
-
+  
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }

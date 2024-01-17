@@ -16,6 +16,7 @@ const uppy = new Uppy({
     restrictions: {
         allowedFileTypes: ["image/*"],
         maxFileSize: 10 * 1024 * 1024,
+        maxNumberOfFiles: 1
 
     },
     allowMultipleUploadBatches: false
@@ -42,11 +43,6 @@ const uppy = new Uppy({
 uppy.on('upload-success', (file, response) => {
     const uploadedImageIdField = document.getElementById('uploadedImageId');
     uploadedImageIdField.value = response.body.id;
-});
-
-uppy.on('upload-error', (file, error, response) => {
-    console.log('error with file:', file.id);
-    console.log('error message:', error);
 });
 
 

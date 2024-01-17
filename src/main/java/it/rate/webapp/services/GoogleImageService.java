@@ -4,6 +4,8 @@ import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.repositories.InterestRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -21,10 +23,12 @@ public class GoogleImageService implements ImageService {
   @Value("${UPLOAD_DIRECTORY}")
   private String UPLOAD_DIRECTORY;
 
-  private Drive driveService;
+  private final Drive driveService;
+  private final InterestRepository interestRepository;
 
-  public GoogleImageService(Drive driveService) {
+  public GoogleImageService(Drive driveService, InterestRepository interestRepository) {
     this.driveService = driveService;
+    this.interestRepository = interestRepository;
   }
 
   @Override
@@ -46,8 +50,28 @@ public class GoogleImageService implements ImageService {
     try {
       return driveService.files().create(fileMeta, mediaContent).execute().getId();
     } catch (IOException e) {
-      throw new ApiServiceUnavailableException("Could save image to the server");
+      throw new ApiServiceUnavailableException("Could not save image to the server");
     }
+  }
+
+  public String changeInterestImage(Long interestId, MultipartFile file) {
+
+    Interest interest = interestRepository.getReferenceById(interestId);
+    String newImageId;
+
+    try {
+      newImageId = saveImage(file);
+    } catch (IOException | ApiServiceUnavailableException e) {
+      throw new ApiServiceUnavailableException("Could not save image to the server");
+    }
+
+    if (interest.getImageName().isEmpty()) {
+      return newImageId;
+    } else {
+      deleteById(interest.getImageName());
+    }
+
+    return newImageId;
   }
 
   public void deleteById(String imageId) {

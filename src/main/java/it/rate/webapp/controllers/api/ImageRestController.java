@@ -33,8 +33,23 @@ public class ImageRestController {
   public ResponseEntity<?> uploadNewInterestImage(@RequestParam("picture") MultipartFile file) {
 
     try {
-      return ResponseEntity.ok().body(new ImageUploadResponseDTO(googleImageService.saveImage(file)));
+      return ResponseEntity.ok()
+          .body(new ImageUploadResponseDTO(googleImageService.saveImage(file)));
     } catch (IOException e) {
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  @PutMapping("/interests/{interestId}/edit")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public ResponseEntity<?> changeInterestImage(
+      @RequestParam("picture") MultipartFile file, @PathVariable Long interestId) {
+
+    try {
+      return ResponseEntity.ok()
+          .body(
+              new ImageUploadResponseDTO(googleImageService.changeInterestImage(interestId, file)));
+    } catch (ApiServiceUnavailableException e) {
       return ResponseEntity.internalServerError().build();
     }
   }

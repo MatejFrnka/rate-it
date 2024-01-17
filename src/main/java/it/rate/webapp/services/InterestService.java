@@ -7,9 +7,6 @@ import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -106,16 +103,7 @@ public class InterestService {
         .map(LikedInterestsDTO::new)
         .collect(Collectors.toList());
   }
-
-  public void addNewImage(Long interestId, String imageId) {
-
-    if (imageId == null) {
-      return;
-    }
-    Interest interest = interestRepository.getReferenceById(interestId);
-    interest.setImageName(imageId);
-    interestRepository.save(interest);
-  }
+  
 
   public Interest save(Interest interest) {
     return interestRepository.save(interest);
@@ -163,4 +151,7 @@ public class InterestService {
     final double r = 6371;
     return (c * r); // Distance in kilometers
   }
+
+
+  
 }

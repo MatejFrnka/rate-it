@@ -85,7 +85,7 @@
                 Upload photo</a>
             <div id="uppy"></div>
 
-            <input type="hidden" id="uploadedImageId" name="uploadedImageId" value="uploadedImageId" />
+            <input type="hidden" id="uploadedImageId" name="uploadedImageId" th:field="*{imageName}" />
 
 
             <button class="button" type="submit">Save</button>
