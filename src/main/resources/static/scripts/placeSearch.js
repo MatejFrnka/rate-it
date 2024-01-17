@@ -52,7 +52,7 @@ function createFilterButton(container, template, filterName) {
         } else {
             activeFilter = '';
         }
-        loadPlaces('', activeFilter);
+        loadPlaces();
     });
 
     container.appendChild(clone);
@@ -68,7 +68,7 @@ function uncheckOtherCheckboxes(container, currentTitle) {
     });
 }
 
-function loadPlaces(query, sort) {
+function loadPlaces(query) {
     const container = document.querySelector('#suggestionList');
     container.innerHTML = '';
     const template = document.getElementById('place-template');
@@ -78,11 +78,13 @@ function loadPlaces(query, sort) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    const sortByNearest = sort === 'Nearest';
-
-    if (sortByNearest) {
-        dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) - distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
+    if (activeFilter === 'Nearest') {
+        dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) -
+            distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
+    } else if (activeFilter === 'Top') {
+        dataSet = dataSet.sort((a, b) => b.avgRating - a.avgRating);
     } else {
+        // If no specific sort is selected, default to sorting by place ID
         dataSet = dataSet.sort((a, b) => a.id - b.id);
     }
 
