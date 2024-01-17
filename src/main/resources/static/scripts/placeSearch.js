@@ -1,7 +1,6 @@
 let data = [];
 let imageUrls = [];
 let usersCoords;
-let sortByNearest = false;
 navigator.geolocation.getCurrentPosition(success, error);
 
 window.addEventListener('load', async () => {
@@ -9,10 +8,12 @@ window.addEventListener('load', async () => {
         const fetchUrl = `/api/v1/interests/${interestId}/places`;
         const response = await fetch(fetchUrl);
         data = await response.json();
-
         imageUrls = await Promise.all(data.map(place => fetchImageUrl(place)));
 
-        loadPlaces();
+        if (data !== null && data.length > 0) {
+            loadFilters();
+            loadPlaces();
+        }
     } catch (error) {
         console.error('Error fetching places info:', error);
     }
@@ -22,15 +23,67 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPlaces();
 });
 
-function loadPlaces(query) {
+function loadFilters() {
+    const container = document.querySelector(".filters");
+    const template = document.getElementById('filter-button-template');
+
+    const cloneNearest = document.importNode(template.content, true);
+    const cloneTop = document.importNode(template.content, true);
+
+    createNearestFilterButton(container, cloneNearest);
+    createTopFilterButton(container, cloneTop);
+
+    if (data !== null && data.length > 0) {
+        const criteria = data[0].criteria;
+
+        criteria.forEach(criterion => {
+            const cloneCriterion = document.importNode(template.content, true);
+            createCriterionFilterButton(container, cloneCriterion, criterion);
+        });
+    }
+}
+
+function createCriterionFilterButton(container, clone, criterion) {
+    const checkbox = clone.querySelector('input');
+    const title = clone.querySelector('span');
+    title.textContent = criterion.name;
+    checkbox.addEventListener('change', () => {
+        loadPlaces('', title.textContent);
+    });
+    container.appendChild(clone);
+}
+
+function createTopFilterButton(container, clone) {
+    const checkbox = clone.querySelector('input');
+    const title = clone.querySelector('span');
+    title.textContent = 'Top';
+    checkbox.addEventListener('change', () => {
+        loadPlaces('', title.textContent);
+    });
+    container.appendChild(clone);
+}
+
+function createNearestFilterButton(container, clone) {
+    const checkbox = clone.querySelector('input');
+    const title = clone.querySelector('span');
+    title.textContent = 'Nearest';
+    checkbox.addEventListener('change', () => {
+        loadPlaces('', title.textContent);
+    });
+    container.appendChild(clone);
+}
+
+function loadPlaces(query, sort) {
     const container = document.querySelector('#suggestionList');
     container.innerHTML = '';
-    const template = document.getElementsByTagName('template')[0];
+    const template = document.getElementById('place-template');
     let dataSet = data;
 
     if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
+
+    const sortByNearest = sort === 'Nearest';
 
     if (sortByNearest) {
         dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) - distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
@@ -64,7 +117,7 @@ function loadPlaces(query) {
         const averageRating = (place.avgRating / 2).toFixed(1);
         elements.rating.textContent = averageRating;
 
-        const { bestCriterion, worstCriterion } = getBestAndWorstCriteria(place.criteria);
+        const {bestCriterion, worstCriterion} = getBestAndWorstCriteria(place.criteria);
 
         elements.ratingContainer.innerHTML = '';
         elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
@@ -78,7 +131,7 @@ function loadPlaces(query) {
 function getBestAndWorstCriteria(criteria) {
     const bestCriterion = criteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
     const worstCriterion = criteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
-    return { bestCriterion, worstCriterion };
+    return {bestCriterion, worstCriterion};
 }
 
 function isEmptyOrSpaces(str) {
@@ -127,10 +180,4 @@ function distance(lat1, lon1, lat2, lon2) {
     dist = dist * 180 / Math.PI;
     dist = dist * 60 * 1.85316;
     return dist;
-}
-
-function toggleNearest() {
-    sortByNearest = !sortByNearest;
-    navigator.geolocation.getCurrentPosition(success, error);
-    loadPlaces();
 }

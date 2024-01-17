@@ -53,16 +53,13 @@
         <section class="interest-places-section"
                  th:unless="${places.isEmpty()}">
             <h2>Places</h2>
-
             <div class="filters">
-                <label class="filter-container">
-                    <input type="checkbox" class="filter-checkbox" onchange="toggleNearest()"/>
-                    <span>Nearest</span>
-                </label>
-                <button class="filter-button">Worst</button>
-                <button class="filter-button">Křupavost</button>
-                <button class="filter-button">Trvanlivost</button>
-                <button class="filter-button">Množství tvarohu</button>
+                <template id="filter-button-template">
+                    <label class="filter-container">
+                        <input type="checkbox" class="filter-checkbox"/>
+                        <span></span>
+                    </label>
+                </template>
             </div>
 
             <div class="search-container">
@@ -72,7 +69,7 @@
             </div>
 
             <div class="interest-places" id="suggestionList"></div>
-            <template>
+            <template id="place-template">
                 <a class="interest-place">
 
                     <div class="interest-place-img">
