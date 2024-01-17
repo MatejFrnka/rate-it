@@ -54,9 +54,8 @@ public class GoogleImageService implements ImageService {
     }
   }
 
-  public String changeInterestImage(Long interestId, MultipartFile file) {
+  public String changeInterestImage(Interest interest, MultipartFile file) {
 
-    Interest interest = interestRepository.getReferenceById(interestId);
     String newImageId;
 
     try {

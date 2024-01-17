@@ -2,7 +2,9 @@ package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.ImageUploadResponseDTO;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
+import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.GoogleImageService;
+import it.rate.webapp.services.InterestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,7 @@ import java.io.IOException;
 public class ImageRestController {
 
   private final GoogleImageService googleImageService;
+  private final InterestService interestService;
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getImage(@PathVariable String id) {
@@ -45,10 +48,12 @@ public class ImageRestController {
   public ResponseEntity<?> changeInterestImage(
       @RequestParam("picture") MultipartFile file, @PathVariable Long interestId) {
 
+    Interest interest = interestService.getById(interestId);
+
     try {
       return ResponseEntity.ok()
           .body(
-              new ImageUploadResponseDTO(googleImageService.changeInterestImage(interestId, file)));
+              new ImageUploadResponseDTO(googleImageService.changeInterestImage(interest, file)));
     } catch (ApiServiceUnavailableException e) {
       return ResponseEntity.internalServerError().build();
     }

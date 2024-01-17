@@ -73,7 +73,8 @@ public class InterestService {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
   }
 
-  public Interest saveEditedInterest(@Valid Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
+  public Interest saveEditedInterest(
+      @Valid Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
     List<String> oldCriteriaNames =
         interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
             .map(Criterion::getName)
@@ -103,7 +104,6 @@ public class InterestService {
         .map(LikedInterestsDTO::new)
         .collect(Collectors.toList());
   }
-  
 
   public Interest save(Interest interest) {
     return interestRepository.save(interest);
@@ -151,7 +151,4 @@ public class InterestService {
     final double r = 6371;
     return (c * r); // Distance in kilometers
   }
-
-
-  
 }
