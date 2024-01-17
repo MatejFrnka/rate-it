@@ -48,13 +48,12 @@ public class InterestController {
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
   public String createNew(
-      @RequestParam String name,
-      @RequestParam String description,
+      @ModelAttribute Interest interest,
       @RequestParam List<String> criteriaNames,
       @RequestParam(required = false) String uploadedImageId,
       RedirectAttributes ra,
       Principal principal) {
-    Interest savedInterest = createInterestService.save(name, description, criteriaNames);
+    Interest savedInterest = createInterestService.save(interest, criteriaNames);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);

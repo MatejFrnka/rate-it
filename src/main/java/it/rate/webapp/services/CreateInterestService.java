@@ -8,14 +8,17 @@ import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.InterestRepository;
 import it.rate.webapp.repositories.RoleRepository;
 import it.rate.webapp.repositories.UserRepository;
+import java.util.List;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+
 
 @Service
 @Validated
@@ -28,28 +31,24 @@ public class CreateInterestService {
   private RoleRepository roleRepository;
 
   public Interest save(
-      @NotBlank String name,
-      @NotBlank String description,
+      @Valid Interest interest,
       @NotEmpty List<@NotBlank String> receivedCriteria) {
 
     List<Criterion> criteria =
         receivedCriteria.stream().map(c -> Criterion.builder().name(c).build()).toList();
 
-    criteria = criterionRepository.saveAll(criteria);
+    criterionRepository.saveAll(criteria);
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
 
-    Interest newInterest = Interest.builder().name(name).description(description).criteria(criteria).build();
+    interestRepository.save(interest);
+    criteria.forEach(c -> c.setInterest(interest));
 
-    interestRepository.save(newInterest);
-    criteria.forEach(c -> c.setInterest(newInterest));
-
-    criterionRepository.saveAll(criteria);
-    Role newRole = new Role(currentUser, newInterest, Role.RoleType.CREATOR);
-    newInterest.setRoles(List.of(newRole));
+    Role newRole = new Role(currentUser, interest, Role.RoleType.CREATOR);
+    interest.setRoles(List.of(newRole));
     roleRepository.save(newRole);
 
-    return newInterest;
+    return interest;
   }
 }

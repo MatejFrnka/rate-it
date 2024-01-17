@@ -7,7 +7,12 @@ import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,8 +45,11 @@ public class InterestService {
         interestRepository.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     AppUser currentUser = userRepository.getByEmail(authentication.getName());
-
-    roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
+    if (interest.isExclusive()) {
+      roleRepository.save(new Role(currentUser, interest, Role.RoleType.APPLICANT));
+    } else {
+      throw new InvalidInterestDetailsException("Cannot set role for non-exclusive interest");
+    }
   }
 
   public List<Interest> findAllSortByLikes() {
@@ -68,7 +76,7 @@ public class InterestService {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
   }
 
-  public Interest saveEditedInterest(Interest interest, List<String> criteriaNames) {
+  public Interest saveEditedInterest(@Valid Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
     List<String> oldCriteriaNames =
         interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
             .map(Criterion::getName)
@@ -155,7 +163,4 @@ public class InterestService {
     final double r = 6371;
     return (c * r); // Distance in kilometers
   }
-
-
-  
 }

@@ -1,6 +1,7 @@
 package it.rate.webapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -16,9 +17,11 @@ import java.util.List;
 public class Interest {
   @Id @GeneratedValue private Long id;
 
+  @NotBlank
   @Column(nullable = false)
   private String name;
 
+  @NotBlank
   private String description;
   @Builder.Default
   private boolean deleted = false;
