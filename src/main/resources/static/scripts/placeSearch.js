@@ -1,5 +1,4 @@
 let data = [];
-let imageUrls = [];
 let usersCoords;
 let activeFilter = '';
 let interestCriteria = [];
@@ -9,8 +8,13 @@ window.addEventListener('load', async () => {
     try {
         const fetchUrl = `/api/v1/interests/${interestId}/places`;
         const response = await fetch(fetchUrl);
-        data = await response.json();
-        imageUrls = await Promise.all(data.map(place => fetchImageUrl(place)));
+        const jsonData = await response.json();
+        data = jsonData;
+
+        data = await Promise.all(jsonData.map(async (place) => {
+            place.imageUrl = await fetchImageUrl(place);
+            return place;
+        }));
 
         loadSortButtons();
         loadPlaces();
@@ -21,13 +25,13 @@ window.addEventListener('load', async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPlaces();
-
 });
 
 function loadSortButtons() {
     if (data.length < 1) {
         return;
     }
+
     const container = document.querySelector(".sort-buttons");
     const template = document.getElementById('sort-button-template');
 
@@ -97,8 +101,8 @@ function loadPlaces(query) {
         dataSet = dataSet.sort((a, b) => a.id - b.id);
     }
 
-    dataSet.forEach((place, index) => {
-        const imageUrl = imageUrls[index];
+    dataSet.forEach((place) => {
+
         const clone = document.importNode(template.content, true);
 
         const elements = {
@@ -112,7 +116,7 @@ function loadPlaces(query) {
         };
 
         elements.placeLink.href = `/interests/${interestId}/places/${place.id}`;
-        elements.placeImg.src = imageUrl;
+        elements.placeImg.src = place.imageUrl;
         elements.titleH3.textContent = place.name;
         elements.titleH4.textContent = place.address;
 
