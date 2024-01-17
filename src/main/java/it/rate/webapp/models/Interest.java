@@ -21,15 +21,13 @@ public class Interest {
   @Column(nullable = false)
   private String name;
 
-  @NotBlank
-  private String description;
-  @Builder.Default
-  private boolean deleted = false;
+  @NotBlank private String description;
+  @Builder.Default private boolean deleted = false;
   private boolean exclusive;
 
   private String imageName;
 
-  @OneToMany( mappedBy = "interest")
+  @OneToMany(mappedBy = "interest")
   @Builder.Default
   private List<Place> places = new ArrayList<>();
 

@@ -36,8 +36,8 @@ class InterestRestControllerTest extends BaseIntegrationTest {
     String jsonExpectedResult =
         objectMapper.writeValueAsString(
             List.of(
-                new InterestSuggestionDTO(1L, "Makove kolacky", 4L, 100.75592824812773, "Fanda"),
-                new InterestSuggestionDTO(2L, "Quiet spots", 2L, 180.09481290966787, "Lavicka")));
+                new InterestSuggestionDTO(1L, "Makove kolacky", 4L, 100.75592824812773, null),
+                new InterestSuggestionDTO(2L, "Quiet spots", 2L, 180.09481290966787, null)));
 
     mockMvc
         .perform(

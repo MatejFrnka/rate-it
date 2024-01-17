@@ -24,8 +24,10 @@
                         <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
                             <div>
                                 <div class="img-wrapper">
-                                    <img th:if="${interest.imageName == null || interest.imageName.isEmpty()}"  src="https://picsum.photos/400/300" alt="Random image"/>
-                                    <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"    th:src="@{|/api/v1/images/${interest.imageName}}" alt="Interest image"/>
+                                    <img th:if="${interest.imageName == null || interest.imageName.isEmpty()}"
+                                         src="https://picsum.photos/400/300" alt="Random image"/>
+                                    <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"
+                                         th:src="@{|/api/v1/images/${interest.imageName}}" alt="Interest image"/>
                                 </div>
                                 <div class="interest-title">
                                     <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
