@@ -12,10 +12,8 @@ window.addEventListener('load', async () => {
         data = await response.json();
         imageUrls = await Promise.all(data.map(place => fetchImageUrl(place)));
 
-        if (data !== null && data.length > 0) {
-            loadSortButtons();
-            loadPlaces();
-        }
+        loadSortButtons();
+        loadPlaces();
     } catch (error) {
         console.error('Error fetching places info:', error);
     }
@@ -23,16 +21,20 @@ window.addEventListener('load', async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPlaces();
+
 });
 
 function loadSortButtons() {
+    if (data.length < 1) {
+        return;
+    }
     const container = document.querySelector(".sort-buttons");
     const template = document.getElementById('sort-button-template');
 
     createFilterButton(container, template, 'Nearest');
-    createFilterButton(container, template, 'Top');
+    createFilterButton(container, template, 'Top Overall');
 
-    if (data !== null && data.length > 0) {
+    if (data.length > 0) {
         interestCriteria = data[0].criteria;
         interestCriteria.forEach(criterion => {
             createFilterButton(container, template, criterion.name);
@@ -70,6 +72,9 @@ function uncheckOtherCheckboxes(container, currentTitle) {
 }
 
 function loadPlaces(query) {
+    if (data.length < 1) {
+        return;
+    }
     const container = document.querySelector('#suggestionList');
     container.innerHTML = '';
     const template = document.getElementById('place-template');
@@ -82,7 +87,7 @@ function loadPlaces(query) {
     if (activeFilter === 'Nearest') {
         dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) -
             distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
-    } else if (activeFilter === 'Top') {
+    } else if (activeFilter === 'Top Overall') {
         dataSet = dataSet.sort((a, b) => b.avgRating - a.avgRating);
     } else if (activeFilter !== '') {
         dataSet = dataSet.sort((a, b) => b.criteria.find(criterion => criterion.name === activeFilter).avgRating -
