@@ -17,8 +17,8 @@ body {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 400px;
-    /*background-color: #e2e2e2;*/
+    width: 20vw;
+    height: 100vw;
     background: rgb(86,141,115);
     opacity: 0;
     visibility: hidden;
@@ -41,7 +41,8 @@ body {
         visibility: visible;
     }
     .container-fluid {
-        padding: 0 400px;
+        padding: 0 20vw;
+        min-height: 100vw;
     }
 }
 
@@ -132,7 +133,6 @@ body {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    flex-grow: inherit;
 }
 
 .content-interest {
