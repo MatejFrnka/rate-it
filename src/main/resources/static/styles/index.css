@@ -427,27 +427,29 @@ h3 {
     overflow: hidden;
 }
 
-.filters {
+.sort-buttons {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.filter-button {
-    background: transparent;
-    display: flex;
-    border: 0;
-    padding: 0.3em 0.5em 0.3em 0.5em;
-    text-align: center;
+.sort-checkbox {
+    display: none;
+}
+
+.sort-container > .sort-checkbox + span {
+    padding: 0.3em 0.5em;
+    text-align: justify;
     border-radius: 1rem;
     font-family: 'Andika', sans-serif;
     font-weight: 400;
     color: #888585;
+    background: transparent;
 }
 
-#location-button {
+.sort-container > .sort-checkbox:checked + span {
     color: #478363;
     font-weight: 700;
     background-color: rgba(86, 141, 115, 0.1);
@@ -607,6 +609,8 @@ h4 {
     padding: 6px;
     text-align: center;
     z-index: 1;
+    transition: color 0.3s;
+    font-weight: 600;
 }
 
 .toggle-checkbox:checked + .toggle-container::before {
@@ -615,26 +619,18 @@ h4 {
 
 .toggle-checkbox:checked + .toggle-container span:first-child {
     color: #AAAAAA;
-    transition: color 0.3s;
-    font-weight: 600;
 }
 
 .toggle-checkbox:checked + .toggle-container span:last-child {
     color: #568D73;
-    transition: color 0.3s;
-    font-weight: 600;
 }
 
 .toggle-checkbox + .toggle-container span:first-child {
     color: #568D73;
-    transition: color 0.3s;
-    font-weight: 600;
 }
 
 .toggle-checkbox + .toggle-container span:last-child {
     color: #AAAAAA;
-    transition: color 0.3s;
-    font-weight: 600;
 }
 
 .input-param {

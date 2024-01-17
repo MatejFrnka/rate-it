@@ -1,5 +1,6 @@
 package it.rate.webapp.controllers;
 
+import it.rate.webapp.models.Place;
 import it.rate.webapp.services.GoogleImageService;
 import it.rate.webapp.services.PlaceService;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class ImageController {
       throws IOException {
 
     placeService.addImage(placeId, googleImageService.saveImage(file));
+
 
     return "redirect:/interests/" + interestId + "/places/" + placeId;
   }
