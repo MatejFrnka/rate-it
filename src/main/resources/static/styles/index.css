@@ -301,6 +301,12 @@ h3 {
     background-image: linear-gradient(to bottom right, #568c72, #b0d289);
 }
 
+.img-wrapper img {
+    height: 100%;
+    width: 100%;
+    border-radius: 1rem 1rem 0 0;
+}
+
 .interest-card-link {
     all: unset;
     cursor: pointer;

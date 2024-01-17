@@ -23,7 +23,10 @@
                     <div th:each="interest : ${likedInterests}" id="likedInterests" class="interest-card">
                         <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
                             <div>
-                                <div class="img-wrapper"></div>
+                                <div class="img-wrapper">
+                                    <img th:if="${interest.imageName == null || interest.imageName.isEmpty()}"  src="https://picsum.photos/400/300" alt="Random image"/>
+                                    <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"    th:src="@{|/api/v1/images/${interest.imageName}}" alt="Interest image"/>
+                                </div>
                                 <div class="interest-title">
                                     <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
                                 </div>
@@ -49,12 +52,12 @@
                 <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
             </div>
 
-<!--            <div class="filters">-->
-<!--                <button id="location-button" class="filter-button">Location</button>-->
-<!--                <button class="filter-button">Drink</button>-->
-<!--                <button class="filter-button">Food</button>-->
-<!--                <button class="filter-button">Outdoor</button>-->
-<!--            </div>-->
+            <!--            <div class="filters">-->
+            <!--                <button id="location-button" class="filter-button">Location</button>-->
+            <!--                <button class="filter-button">Drink</button>-->
+            <!--                <button class="filter-button">Food</button>-->
+            <!--                <button class="filter-button">Outdoor</button>-->
+            <!--            </div>-->
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="loadInterests(this.value)" autocomplete="off"
                        placeholder="Find interests…">
@@ -66,7 +69,9 @@
             <div class="interest-card">
                 <a class="interest-card-link">
                     <div>
-                        <div class="img-wrapper"></div>
+                        <div class="img-wrapper">
+                            <img alt="Place image"/>
+                        </div>
                         <div class="interest-title">
                             <p></p>
                         </div>
@@ -76,6 +81,7 @@
         </template>
     </div>
 </div>
+<script src="/scripts/imageFetcher.js"></script>
 <script src="/scripts/index.js"></script>
 </body>
 </html>
