@@ -60,6 +60,14 @@ public class InterestController {
       likeService.createLike(loggedUser, savedInterest);
     }
 
+    Interest test = interestRepository.getReferenceById(savedInterest.getId());
+    test.setCriteria(new ArrayList<>(test.getCriteria()));
+    test.setLikes(new ArrayList<>(test.getLikes()));
+    test.setPlaces(new ArrayList<>(test.getPlaces()));
+    test.setRoles(new ArrayList<>(test.getRoles()));
+    test.setImageName(uploadedImageId);
+    interestRepository.save(test);
+
     interestService.addNewImage(savedInterest.getId(), uploadedImageId);
 
 

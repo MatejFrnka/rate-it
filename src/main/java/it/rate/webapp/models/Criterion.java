@@ -21,7 +21,7 @@ public class Criterion {
 
   @ManyToOne private Interest interest;
 
-  @OneToMany(mappedBy = "criterion", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "criterion")
   @Builder.Default
   private List<Rating> ratings = new ArrayList<>();
 }
