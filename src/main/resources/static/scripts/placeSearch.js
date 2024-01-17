@@ -2,6 +2,7 @@ let data = [];
 let imageUrls = [];
 let usersCoords;
 let activeFilter = '';
+let interestCriteria = [];
 navigator.geolocation.getCurrentPosition(success, error);
 
 window.addEventListener('load', async () => {
@@ -32,8 +33,8 @@ function loadSortButtons() {
     createFilterButton(container, template, 'Top');
 
     if (data !== null && data.length > 0) {
-        const criteria = data[0].criteria;
-        criteria.forEach(criterion => {
+        interestCriteria = data[0].criteria;
+        interestCriteria.forEach(criterion => {
             createFilterButton(container, template, criterion.name);
         });
     }
@@ -83,6 +84,9 @@ function loadPlaces(query) {
             distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
     } else if (activeFilter === 'Top') {
         dataSet = dataSet.sort((a, b) => b.avgRating - a.avgRating);
+    } else if (activeFilter !== '') {
+        dataSet = dataSet.sort((a, b) => b.criteria.find(criterion => criterion.name === activeFilter).avgRating -
+            a.criteria.find(criterion => criterion.name === activeFilter).avgRating);
     } else {
         // If no specific sort is selected, default to sorting by place ID
         dataSet = dataSet.sort((a, b) => a.id - b.id);
