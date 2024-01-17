@@ -393,10 +393,6 @@ h3 {
     font-size: 0.8rem;
 }
 
-.interest-place:hover {
-    transform: scale(102%);
-}
-
 .interest-place:hover .interest-place-title > h3 {
     text-decoration: underline;
 }
