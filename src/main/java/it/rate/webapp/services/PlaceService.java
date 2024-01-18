@@ -33,9 +33,7 @@ public class PlaceService {
     AppUser loggedUser =
         userService.findByEmail(loggedInUserName).orElseThrow(InvalidUserDetailsException::new);
     Interest interest =
-        interestService
-            .findById(interestId)
-            .orElseThrow(InvalidInterestDetailsException::new);
+        interestService.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
 
     loggedUser.getCreatedPlaces().add(place);
     interest.getPlaces().add(place);
@@ -74,43 +72,27 @@ public class PlaceService {
         place.getInterest().getCriteria().stream()
             .map(criterion -> getCriterionAvgRatingDTO(criterion, place))
             .collect(Collectors.toSet());
-    CriterionAvgRatingDTO bestCriterion = getBestRatedCriterion(criteria);
-    CriterionAvgRatingDTO worstCriterion = getWorstRatedCriterion(criteria);
-    return new PlaceInfoDTO(place, bestCriterion, worstCriterion);
+    return new PlaceInfoDTO(place, criteria);
   }
 
   private CriterionAvgRatingDTO getCriterionAvgRatingDTO(Criterion criterion, Place place) {
-    double avgRating =
+    OptionalDouble optAvgRating =
         ratingRepository.findAllByCriterionAndPlace(criterion, place).stream()
             .mapToDouble(Rating::getRating)
-            .average()
-            .orElse(-1);
+            .average();
+
+    Double avgRating;
+
+    if (optAvgRating.isPresent()) {
+      avgRating = optAvgRating.getAsDouble();
+    } else {
+      avgRating = null;
+    }
 
     return new CriterionAvgRatingDTO(criterion.getId(), criterion.getName(), avgRating);
   }
 
-  private CriterionAvgRatingDTO getBestRatedCriterion(
-      Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
-    if (!criteriaAvgRatingDTOs.isEmpty()) {
-      return criteriaAvgRatingDTOs.stream()
-          .max(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
-          .get();
-    }
-    throw new IllegalStateException("No criteria found");
-  }
-
-  private CriterionAvgRatingDTO getWorstRatedCriterion(
-      Set<CriterionAvgRatingDTO> criteriaAvgRatingDTOs) {
-    if (!criteriaAvgRatingDTOs.isEmpty()) {
-      return criteriaAvgRatingDTOs.stream()
-          .min(Comparator.comparingDouble(CriterionAvgRatingDTO::avgRating))
-          .get();
-    }
-    throw new IllegalStateException("No criteria found");
-  }
-
-  public void addImage(Long placeId, String imageId) {
-    Place place = placeRepository.getReferenceById(placeId);
+  public void addImage(Place place, String imageId) {
     place.getImageNames().add(imageId);
     placeRepository.save(place);
   }

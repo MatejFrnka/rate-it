@@ -53,9 +53,14 @@
         <section class="interest-places-section"
                  th:unless="${places.isEmpty()}">
             <h2>Places</h2>
-
-            <!--            TODO: add filters-->
-            <div>Filter categories placeholder</div>
+            <div class="sort-buttons">
+                <template id="sort-button-template">
+                    <label class="sort-container">
+                        <input type="checkbox" class="sort-checkbox"/>
+                        <span></span>
+                    </label>
+                </template>
+            </div>
 
             <div class="search-container">
                 <input type="text" class="search" name="query" oninput="loadPlaces(this.value)" autocomplete="off"
@@ -64,7 +69,7 @@
             </div>
 
             <div class="interest-places" id="suggestionList"></div>
-            <template>
+            <template id="place-template">
                 <a class="interest-place">
 
                     <div class="interest-place-img">
@@ -79,7 +84,7 @@
                             </div>
 
                             <div class="interest-place-distance">
-                                3.5 km
+                                <span></span>
                             </div>
                         </header>
 
@@ -109,9 +114,16 @@
     </div>
 </div>
 
+<script th:inline="javascript">
+    /*<![CDATA[*/
 
+    const interestId = [[${interest.id}]];
+
+    /*]]>*/
+</script>
 <script src="/scripts/placeSearch.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
+<script src="/scripts/interestLike.js"></script>
 
 </body>
 </html>

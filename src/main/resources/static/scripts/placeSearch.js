@@ -1,6 +1,8 @@
 let data = [];
-const interestId = extractInterestIdFromUrl();
-let imageUrls = [];
+let usersCoords;
+let activeFilter = '';
+let interestCriteria = [];
+navigator.geolocation.getCurrentPosition(success, error);
 
 window.addEventListener('load', async () => {
     try {
@@ -14,6 +16,7 @@ window.addEventListener('load', async () => {
             return place;
         }));
 
+        loadSortButtons();
         loadPlaces();
     } catch (error) {
         console.error('Error fetching places info:', error);
@@ -24,51 +27,125 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPlaces();
 });
 
+function loadSortButtons() {
+    if (data.length < 1) {
+        return;
+    }
+
+    const container = document.querySelector(".sort-buttons");
+    const template = document.getElementById('sort-button-template');
+
+    createFilterButton(container, template, 'Nearest');
+    createFilterButton(container, template, 'Top Overall');
+
+    if (data.length > 0) {
+        interestCriteria = data[0].criteria;
+        interestCriteria.forEach(criterion => {
+            createFilterButton(container, template, criterion.name);
+        });
+    }
+}
+
+function createFilterButton(container, template, filterName) {
+    const clone = document.importNode(template.content, true);
+    const checkbox = clone.querySelector('input');
+    const title = clone.querySelector('span');
+    title.textContent = filterName;
+
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+            activeFilter = title.textContent;
+            uncheckOtherCheckboxes(container, title.textContent);
+        } else {
+            activeFilter = '';
+        }
+        loadPlaces();
+    });
+
+    container.appendChild(clone);
+}
+
+function uncheckOtherCheckboxes(container, currentTitle) {
+    const checkboxes = container.querySelectorAll('input');
+    checkboxes.forEach(checkbox => {
+        const title = checkbox.parentNode.querySelector('span').textContent;
+        if (title !== currentTitle) {
+            checkbox.checked = false;
+        }
+    });
+}
+
 function loadPlaces(query) {
+    if (data.length < 1) {
+        return;
+    }
     const container = document.querySelector('#suggestionList');
     container.innerHTML = '';
-    const template = document.getElementsByTagName('template')[0];
+    const template = document.getElementById('place-template');
     let dataSet = data;
 
     if (typeof query !== 'undefined' && !isEmptyOrSpaces(query)) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
 
+    if (activeFilter === 'Nearest') {
+        dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) -
+            distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
+    } else if (activeFilter === 'Top Overall') {
+        dataSet = dataSet.sort((a, b) => b.avgRating - a.avgRating);
+    } else if (activeFilter !== '') {
+        dataSet = dataSet.sort((a, b) => b.criteria.find(criterion => criterion.name === activeFilter).avgRating -
+            a.criteria.find(criterion => criterion.name === activeFilter).avgRating);
+    } else {
+        // If no specific sort is selected, default to sorting by place ID
+        dataSet = dataSet.sort((a, b) => a.id - b.id);
+    }
+
     dataSet.forEach((place) => {
 
-
         const clone = document.importNode(template.content, true);
-        clone.querySelector('.interest-place').href = `/interests/${interestId}/places/${place.id}`;
-        clone.querySelector('.interest-place-img img').src = place.imageUrl;
-        clone.querySelector('.interest-place-title h3').textContent = place.name;
-        clone.querySelector('.interest-place-title h4').textContent = place.address;
 
-        const averageRating = place.avgRating / 2;
-        const formattedRating = averageRating.toFixed(1);
-        clone.querySelector('.rating').textContent = formattedRating;
+        const elements = {
+            placeLink: clone.querySelector('.interest-place'),
+            placeImg: clone.querySelector('.interest-place-img img'),
+            titleH3: clone.querySelector('.interest-place-title h3'),
+            titleH4: clone.querySelector('.interest-place-title h4'),
+            distanceSpan: clone.querySelector('.interest-place-distance span'),
+            rating: clone.querySelector('.rating'),
+            ratingContainer: clone.querySelector('.interest-place-ratings')
+        };
 
-        const bestCriterionRating = (place.bestRatedCriterionRating / 2).toFixed(1);
-        const worstCriterionRating = (place.worstRatedCriterionRating / 2).toFixed(1);
+        elements.placeLink.href = `/interests/${interestId}/places/${place.id}`;
+        elements.placeImg.src = place.imageUrl;
+        elements.titleH3.textContent = place.name;
+        elements.titleH4.textContent = place.address;
 
-        const ratingContainer = clone.querySelector('.interest-place-ratings');
+        if (usersCoords !== undefined) {
+            elements.distanceSpan.textContent = distance(usersCoords[0], usersCoords[1], place.latitude, place.longitude).toFixed(1) + ' km';
+        }
 
-        ratingContainer.innerHTML = '';
+        const averageRating = (place.avgRating / 2).toFixed(1);
+        elements.rating.textContent = averageRating;
 
-        ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', formattedRating, 'Overall'));
-        ratingContainer.appendChild(createRatingItem('fas fa-star yellow', bestCriterionRating, place.bestRatedCriterionName));
-        ratingContainer.appendChild(createRatingItem('fas fa-star', worstCriterionRating, place.worstRatedCriterionName));
+        const {bestCriterion, worstCriterion} = getBestAndWorstCriteria(place.criteria);
+
+        elements.ratingContainer.innerHTML = '';
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterion.avgRating / 2).toFixed(1), bestCriterion.name));
+        elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterion.avgRating / 2).toFixed(1), worstCriterion.name));
 
         container.appendChild(clone);
     });
 }
 
-function isEmptyOrSpaces(str) {
-    return str === null || str.match(/^ *$/) !== null;
+function getBestAndWorstCriteria(criteria) {
+    const bestCriterion = criteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
+    const worstCriterion = criteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
+    return {bestCriterion, worstCriterion};
 }
 
-function extractInterestIdFromUrl() {
-    const urlParts = window.location.pathname.split('/');
-    return urlParts[urlParts.indexOf('interests') + 1];
+function isEmptyOrSpaces(str) {
+    return str === null || str.match(/^ *$/) !== null;
 }
 
 function createRatingItem(iconClass, ratingValue, criterionName) {
@@ -89,4 +166,28 @@ function createRatingItem(iconClass, ratingValue, criterionName) {
     li.appendChild(criterionSpan);
 
     return li;
+}
+
+function success(position) {
+    usersCoords = [position.coords.latitude, position.coords.longitude];
+    loadPlaces();
+}
+
+function error() {
+    console.log("Unable to retrieve your location");
+}
+
+function distance(lat1, lon1, lat2, lon2) {
+    let radlat1 = Math.PI * lat1 / 180;
+    let radlat2 = Math.PI * lat2 / 180;
+    let theta = lon1 - lon2;
+    let radtheta = Math.PI * theta / 180;
+    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+        dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = dist * 180 / Math.PI;
+    dist = dist * 60 * 1.85316;
+    return dist;
 }
