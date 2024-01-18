@@ -13,13 +13,13 @@
         (${role != null && role.equals(role.CREATOR)} ? ~{fragments.html :: interest-admin-menu} : ~{fragments.html :: like-button})"></div>
         <script th:replace="~{fragments.html :: topbar-script}"></script>
     </header>
-</div>
-<div class="content content-interest">
-    <div class="content-header">
-        <h1 th:text="*{name}"></h1>
-    </div>
-    <div class="interest-map">
-        <div id="map"></div>
+    <div class="content content-interest">
+        <div class="content-header">
+            <h1 th:text="*{name}"></h1>
+        </div>
+        <div class="interest-map">
+            <div id="map"></div>
+        </div>
     </div>
 </div>
 
