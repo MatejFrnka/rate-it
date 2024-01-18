@@ -46,12 +46,11 @@ public class InterestController {
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/create")
   public String createNew(
-      @RequestParam String name,
-      @RequestParam String description,
+      @ModelAttribute Interest interest,
       @RequestParam List<String> criteriaNames,
       RedirectAttributes ra,
       Principal principal) {
-    Interest savedInterest = createInterestService.save(name, description, criteriaNames);
+    Interest savedInterest = createInterestService.save(interest, criteriaNames);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);
@@ -80,17 +79,6 @@ public class InterestController {
     model.addAttribute("interest", interest);
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));
     return "interest/page";
-  }
-
-  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-  @PostMapping("/{interestId}/like")
-  public String like(@PathVariable Long interestId, boolean like, Principal principal) {
-    if (principal != null) {
-      AppUser loggedUser = userService.getByEmail(principal.getName());
-      Interest interest = interestService.getById(interestId);
-      likeService.changeLike(loggedUser, interest, like);
-    }
-    return "redirect:/interests/" + interestId;
   }
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
