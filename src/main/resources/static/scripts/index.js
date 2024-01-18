@@ -1,25 +1,63 @@
 let data = [];
+let usersCoords;
 
-window.addEventListener('load', async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch(`/api/v1/interests/suggestions`);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.log("Geolocation is not supported");
+            await fetchData();
+        }
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+});
+
+async function success(position) {
+    usersCoords = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+    };
+
+    try {
+        await fetchData(usersCoords);
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+}
+
+async function error() {
+    console.log("Unable to retrieve your location");
+    await fetchData();
+}
+
+async function fetchData(coords) {
+    try {
+        const response = await fetch('/api/v1/interests/suggestions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(coords)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}, Message: ${response.statusText}`);
+        }
+
         const jsonData = await response.json();
-        data = jsonData;
 
         data = await Promise.all(jsonData.map(async (interest) => {
             interest.imageUrl = await fetchInterestImageUrl(interest);
             return interest;
         }));
 
-        loadInterests()
+        loadInterests();
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
-})
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadInterests()
-});
+}
 
 function loadInterests(query) {
     const container = document.querySelector('#suggestionList');
@@ -43,4 +81,3 @@ function loadInterests(query) {
 function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
 }
-

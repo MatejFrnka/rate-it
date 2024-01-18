@@ -30,7 +30,7 @@ public class InterestRestController {
   private final UserService userService;
   private final LikeService likeService;
 
-  @GetMapping("/suggestions")
+  @PostMapping("/suggestions")
   public ResponseEntity<?> getAllSuggestions(@RequestBody Optional<CoordinatesDTO> usersCoords) {
     if (usersCoords.isPresent()) {
       return handleCoordinates(usersCoords.get());
