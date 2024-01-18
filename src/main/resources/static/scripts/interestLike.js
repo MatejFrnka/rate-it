@@ -25,7 +25,7 @@ async function likeInterest(button) {
 
 function updateLikeButton(button, isLiked) {
     const iconClass = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-    const titleText = isLiked ? 'Liked' : 'Disliked';
+    const titleText = isLiked ? 'Liked' : 'Not Liked';
 
     button.classList.toggle('liked', isLiked);
     button.innerHTML = `<i class="${iconClass}"></i>`;
