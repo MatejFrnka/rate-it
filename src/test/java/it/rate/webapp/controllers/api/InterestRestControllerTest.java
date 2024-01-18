@@ -26,7 +26,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Test
   void getAllSuggestionsOk() throws Exception {
-    mockMvc.perform(get("/api/v1/interests/suggestions")).andExpect(status().isOk());
+    mockMvc.perform(post("/api/v1/interests/suggestions")).andExpect(status().isOk());
   }
 
   @Test
@@ -41,7 +41,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
 
     mockMvc
         .perform(
-            get("/api/v1/interests/suggestions")
+            post("/api/v1/interests/suggestions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"latitude\": 50.209859, \"longitude\": 15.832464}")) // Hradec Králové
         .andExpect(status().isOk())
@@ -52,7 +52,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
   void getAllSuggestionsWithInvalidCoordinatesValueOutOfRange() throws Exception {
     mockMvc
         .perform(
-            get("/api/v1/interests/suggestions")
+            post("/api/v1/interests/suggestions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"latitude\": 90.43543, \"longitude\": 14.24542}"))
         .andExpect(status().isBadRequest());
@@ -62,7 +62,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
   void getAllSuggestionsWithInvalidCoordinatesNull() throws Exception {
     mockMvc
         .perform(
-            get("/api/v1/interests/suggestions")
+            post("/api/v1/interests/suggestions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"latitude\": null, \"longitude\": 14.24542}"))
         .andExpect(status().isBadRequest());
@@ -72,7 +72,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
   void getAllSuggestionsWithInvalidCoordinatesMissingValue() throws Exception {
     mockMvc
         .perform(
-            get("/api/v1/interests/suggestions")
+            post("/api/v1/interests/suggestions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"longitude\": 14.24542}"))
         .andExpect(status().isBadRequest());
