@@ -1,38 +1,33 @@
-const id = extractInterestIdFromUrl();
+//const isliked comes from thymeleaf fragment like-button
 
 document.addEventListener('DOMContentLoaded', function () {
-    const buttons = document.querySelectorAll('.like-button');
-    buttons.forEach(function (button) {
-        button.addEventListener('click', function () {
-            likeInterest(button)
-        });
-    });
+    const button = document.querySelector('.like-button');
+    updateLikeButton(button, isliked);
+    button.addEventListener('click', () => likeInterest(button));
 });
 
-function likeInterest(button) {
+async function likeInterest(button) {
     const isLiked = button.classList.contains('liked');
-    const value = isLiked ? 0 : 1;
-    fetch(`/api/v1/interests/${id}/like`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({liked: value})
-    })
-    .then(response => response.json())
-    .then(data => {updateLikeButton(button, data.liked)})
-    .catch(error => {'Error:', error})
-}
 
-function updateLikeButton(button, isLiked) {
-    if(isLiked) {
-        button.classList.add('liked');
-        button.classList.remove('disliked');
-    } else {
-        button.classList.add('disliked')
-        button.classList.remove('liked')
+    try {
+        const response = await fetch(`/api/v1/interests/${interestId}/like`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ liked: !isLiked })
+        });
+
+        const data = await response.json();
+        updateLikeButton(button, data.liked);
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
 
-function extractInterestIdFromUrl() {
-    const urlParts = window.location.pathname.split('/');
-    return urlParts[urlParts.indexOf('interests') + 1];
+function updateLikeButton(button, isLiked) {
+    const iconClass = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    const titleText = isLiked ? 'Liked' : 'Disliked';
+
+    button.classList.toggle('liked', isLiked);
+    button.innerHTML = `<i class="${iconClass}"></i>`;
+    button.title = titleText;
 }
