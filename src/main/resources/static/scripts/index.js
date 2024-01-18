@@ -5,6 +5,12 @@ window.addEventListener('load', async () => {
         const response = await fetch(`/api/v1/interests/suggestions`);
         const jsonData = await response.json();
         data = jsonData;
+
+        data = await Promise.all(jsonData.map(async (interest) => {
+            interest.imageUrl = await fetchInterestImageUrl(interest);
+            return interest;
+        }));
+
         loadInterests()
     } catch (error) {
         console.error('Error fetching suggestions:', error);
@@ -29,6 +35,7 @@ function loadInterests(query) {
         const clone = template.content.cloneNode(true);
         clone.querySelector('.interest-card-link').href = `/interests/${record.id}`;
         clone.querySelector('p').textContent = `${record.name} (${record.likes})`;
+        clone.querySelector('.img-wrapper img').src = record.imageUrl;
         container.appendChild(clone);
     })
 }
@@ -36,3 +43,4 @@ function loadInterests(query) {
 function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
 }
+

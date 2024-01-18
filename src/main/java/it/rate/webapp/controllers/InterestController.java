@@ -4,17 +4,16 @@ import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -55,6 +54,7 @@ public class InterestController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       likeService.createLike(loggedUser, savedInterest);
     }
+  
     ra.addAttribute("id", savedInterest.getId());
     return "redirect:/interests/{id}";
   }

@@ -15,7 +15,9 @@
     </header>
 
     <div class="interest-image">
-        <img src="https://picsum.photos/500/300" alt="placeholder"/>
+        <img th:if="*{imageName == null || imageName.isEmpty()}" src="https://picsum.photos/500/300" alt="Generic image"/>
+        <img th:unless="*{imageName == null || imageName.isEmpty()}" id="picture-container" th:attr="data-image-id=*{imageName}" alt="Interest image"/>
+
     </div>
 
     <div class="content content-interest">

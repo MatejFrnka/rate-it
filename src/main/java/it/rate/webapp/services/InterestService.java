@@ -7,13 +7,12 @@ import it.rate.webapp.dtos.LikedInterestsDTO;
 import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.*;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,7 +73,8 @@ public class InterestService {
     return interestRepository.findAllByLikes_AppUser_Email(loggedUser);
   }
 
-  public Interest saveEditedInterest(@Valid Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
+  public Interest saveEditedInterest(
+      @Valid Interest interest, @NotEmpty List<@NotBlank String> criteriaNames) {
     List<String> oldCriteriaNames =
         interestRepository.getReferenceById(interest.getId()).getCriteria().stream()
             .map(Criterion::getName)

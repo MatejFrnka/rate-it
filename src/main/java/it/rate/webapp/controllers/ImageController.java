@@ -28,7 +28,8 @@ public class ImageController {
       throws IOException {
 
     Place place = placeService.getById(placeId);
-    placeService.addImage(place, googleImageService.savePlaceImage(file, placeId));
+    placeService.addImage(place, googleImageService.saveImage(file));
+
 
     return "redirect:/interests/" + interestId + "/places/" + placeId;
   }
