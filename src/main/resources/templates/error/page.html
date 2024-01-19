@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments.html :: head(title='ERROR GOES HERE')}"></head>
+<head th:replace="~{fragments.html :: head(title=${error.simpleMessage})}"></head>
 
 <body>
 <div class="container-fluid">
     <div class="header">
-        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
         <div th:replace="~{fragments.html :: logo}"></div>
-        <div th:replace="~{fragments.html :: login-menu}"></div>
-        <script th:replace="~{fragments.html :: topbar-script}"></script>
     </div>
     <div class="content">
         <div class="row" style="margin-top: 2rem">
             <h1 th:text="${error.status}"></h1>
         </div>
-        <div class="row" style="margin-top: 1rem";>
+        <div class="row" style="margin-top: 1rem" ;>
             <h1 th:text="${error.simpleMessage}"></h1>
         </div>
         <div class="row" style="margin-top: 3rem;">
