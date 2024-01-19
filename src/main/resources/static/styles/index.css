@@ -807,3 +807,18 @@ h4 {
         font-size: 4rem;
     }
 }
+
+#error-simple {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+#error-message {
+    justify-self: center;
+    align-self: center;
+}
+
+#error-message > p {
+    font-weight: 700;
+    font-size: 1rem;
+}

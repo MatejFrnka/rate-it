@@ -8,9 +8,9 @@
         <div th:replace="~{fragments.html :: logo}"></div>
     </div>
     <div class="content">
-        <div class="row" style="display: flex; flex-wrap: nowrap;">
-            <div class="col">
-                <h1 style="display:flex;" th:text="${error.simpleMessage}"></h1>
+        <div class="row list-record">
+            <div class="col" id="error-simple">
+                <h1 th:text="${error.simpleMessage}"></h1>
             </div>
             <div class="col">
                 <div id="error-sign-wrapper">
@@ -20,6 +20,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row col-10" id="error-message">
+            <p th:text="${error.clientMessage}"></p>
+        </div>
+        <div class="row">
+
         </div>
     </div>
 
