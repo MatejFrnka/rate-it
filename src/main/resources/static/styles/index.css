@@ -786,11 +786,11 @@ h4 {
 #error-code {
     position: absolute;
     top: 23%;
-    left: 21%;
+    left: 18%;
     text-align: center;
 }
 
-#error-text {
+#error-status {
     color: white;
     font-weight: 700;
     line-height: 1;
@@ -798,27 +798,38 @@ h4 {
 }
 
 @media (max-width: 499px) {
-    #error-text {
+    #error-status {
         font-size: 12vw;
     }
 }
+
 @media (min-width: 500px) {
-    #error-text {
+    #error-status {
         font-size: 4rem;
     }
 }
 
 #error-simple {
+    margin-left: 1rem;
     display: flex;
     flex-wrap: nowrap;
+
+    & h1 {
+        font-size: 2.5rem;
+    }
 }
 
 #error-message {
-    justify-self: center;
     align-self: center;
+
+    & p {
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-top: 3rem;
+    }
 }
 
-#error-message > p {
-    font-weight: 700;
-    font-size: 1rem;
+#error-homepage-button {
+    align-self: center;
+    margin-top: 3rem;
 }
