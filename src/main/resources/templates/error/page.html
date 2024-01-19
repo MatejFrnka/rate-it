@@ -8,18 +8,33 @@
         <div th:replace="~{fragments.html :: logo}"></div>
     </div>
     <div class="content">
-        <div class="row" style="margin-top: 2rem">
-            <h1 th:text="${error.status}"></h1>
-        </div>
-        <div class="row" style="margin-top: 1rem" ;>
-            <h1 th:text="${error.simpleMessage}"></h1>
-        </div>
-        <div class="row" style="margin-top: 3rem;">
-            <h2 th:text="${error.clientMessage}"></h2>
+        <div class="row" style="display: flex; flex-wrap: nowrap;">
+            <div class="col">
+                <h1 style="display:flex;" th:text="${error.simpleMessage}"></h1>
+            </div>
+            <div class="col">
+                <div id="error-sign-wrapper">
+                    <img id="error-sign" src="/images/errorSign.png" alt="error sign image">
+                    <div id="error-code">
+                        <p id="error-text" th:text="${error.status}"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
 </div>
+
+
+<!--<div class="row" style="margin-top: 2rem">-->
+<!--    <h1 th:text="${error.status}"></h1>-->
+<!--</div>-->
+<!--<div class="row" style="margin-top: 1rem" ;>-->
+<!--    <h1 th:text="${error.simpleMessage}"></h1>-->
+<!--</div>-->
+<!--<div class="row" style="margin-top: 3rem;">-->
+<!--    <h2 th:text="${error.clientMessage}"></h2>-->
+<!--</div>-->
 
 </body>
 </html>
