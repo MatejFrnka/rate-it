@@ -772,7 +772,7 @@ h4 {
 }
 
 #error-sign-wrapper {
-    max-width: 350px;
+    max-width: 206px;
     overflow: hidden;
     position: relative;
 }
@@ -813,9 +813,12 @@ h4 {
     margin-left: 1rem;
     display: flex;
     flex-wrap: nowrap;
+    position: relative;
 
     & h1 {
         font-size: 2.5rem;
+        position: absolute;
+        z-index: 1;
     }
 }
 
