@@ -19,23 +19,28 @@
                     <h2>My Interests</h2>
                     <a th:href="@{/interests/my}"><h3>See all</h3></a>
                 </div>
-                <div class="interest-cards">
-                    <div th:each="interest : ${likedInterests}" id="likedInterests" class="interest-card">
-                        <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
-                            <div>
-                                <div class="img-wrapper">
-                                    <img th:if="${interest.imageName == null || interest.imageName.isEmpty()}"
-                                         src="https://picsum.photos/400/300" alt="Random image"/>
-                                    <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"
-                                         th:src="@{|/api/v1/images/${interest.imageName}}" alt="Interest image"/>
-                                </div>
-                                <div class="interest-title">
-                                    <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
+                <section class="splide" aria-label="Splide Basic HTML Example">
+                    <div class="splide__track">
+                        <div class="splide__list">
+                            <div th:each="interest : ${likedInterests}" id="likedInterests" class="splide__slide">
+                                <div class="interest-card">
+                                    <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
+                                        <div class="img-wrapper">
+                                            <img th:if="${interest.imageName == null || interest.imageName.isEmpty()}"
+                                                 src="https://picsum.photos/400/300" alt="Random image"/>
+                                            <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"
+                                                 th:src="@{|/api/v1/images/${interest.imageName}}"
+                                                 alt="Interest image"/>
+                                        </div>
+                                        <div class="interest-title">
+                                            <p th:text="${interest.name} + ' ' + '(' + ${interest.countLikes()} + ')'"></p>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     </div>
-                </div>
+                </section>
             </div>
             <div th:if="${likedInterests == null}">
                 <div class="section-label">
@@ -70,13 +75,11 @@
         <template>
             <div class="interest-card">
                 <a class="interest-card-link">
-                    <div>
-                        <div class="img-wrapper">
-                            <img alt="Place image"/>
-                        </div>
-                        <div class="interest-title">
-                            <p></p>
-                        </div>
+                    <div class="img-wrapper">
+                        <img alt="Place image"/>
+                    </div>
+                    <div class="interest-title">
+                        <p></p>
                     </div>
                 </a>
             </div>
