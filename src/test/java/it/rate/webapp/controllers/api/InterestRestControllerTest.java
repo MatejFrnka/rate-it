@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -52,7 +51,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Test
   void getAllSuggestionsWithInvalidCoordinatesValueOutOfRange() throws Exception {
-    //invalid latitude
+    // invalid latitude
     double latitude = 90.43543;
     double longitude = 14.24542;
 
@@ -76,12 +75,11 @@ class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Test
   void getAllSuggestionsWithInvalidCoordinatesMissingValue() throws Exception {
-    //missing latitude
+    // missing latitude
     double longitude = 14.24542;
 
     mockMvc
-        .perform(
-            get("/api/v1/interests/suggestions?longitude=" + longitude))
+        .perform(get("/api/v1/interests/suggestions?longitude=" + longitude))
         .andExpect(status().isBadRequest());
   }
 }
