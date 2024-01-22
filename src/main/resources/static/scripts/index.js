@@ -54,12 +54,12 @@ async function fetchData() {
 
         const jsonData = await response.json();
 
-        const data = await Promise.all(jsonData.map(async (interest) => {
+        data = await Promise.all(jsonData.map(async (interest) => {
             interest.imageUrl = await fetchInterestImageUrl(interest);
             return interest;
         }));
 
-        loadInterests(data);
+        loadInterests();
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }

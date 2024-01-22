@@ -26,7 +26,7 @@ class InterestRestControllerTest extends BaseIntegrationTest {
 
   @Test
   void getAllSuggestionsOk() throws Exception {
-    mockMvc.perform(post("/api/v1/interests/suggestions")).andExpect(status().isOk());
+    mockMvc.perform(get("/api/v1/interests/suggestions")).andExpect(status().isOk());
   }
 
   @Test
@@ -39,42 +39,49 @@ class InterestRestControllerTest extends BaseIntegrationTest {
                 new InterestSuggestionDTO(1L, "Makove kolacky", 4L, 100.75592824812773, null),
                 new InterestSuggestionDTO(2L, "Quiet spots", 2L, 180.09481290966787, null)));
 
+    // Hradec Králové
+    double latitude = 50.209859;
+    double longitude = 15.832464;
+
     mockMvc
         .perform(
-            post("/api/v1/interests/suggestions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"latitude\": 50.209859, \"longitude\": 15.832464}")) // Hradec Králové
+            get("/api/v1/interests/suggestions?latitude=" + latitude + "&longitude=" + longitude))
         .andExpect(status().isOk())
         .andExpect(content().string(jsonExpectedResult));
   }
 
   @Test
   void getAllSuggestionsWithInvalidCoordinatesValueOutOfRange() throws Exception {
+    //invalid latitude
+    double latitude = 90.43543;
+    double longitude = 14.24542;
+
     mockMvc
         .perform(
-            post("/api/v1/interests/suggestions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"latitude\": 90.43543, \"longitude\": 14.24542}"))
+            get("/api/v1/interests/suggestions?latitude=" + latitude + "&longitude=" + longitude))
         .andExpect(status().isBadRequest());
   }
 
   @Test
   void getAllSuggestionsWithInvalidCoordinatesNull() throws Exception {
+
+    double longitude = 14.24542;
+    Double latitude = null;
+
     mockMvc
         .perform(
-            post("/api/v1/interests/suggestions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"latitude\": null, \"longitude\": 14.24542}"))
+            get("/api/v1/interests/suggestions?longitude=" + longitude + "&latitude=" + latitude))
         .andExpect(status().isBadRequest());
   }
 
   @Test
   void getAllSuggestionsWithInvalidCoordinatesMissingValue() throws Exception {
+    //missing latitude
+    double longitude = 14.24542;
+
     mockMvc
         .perform(
-            post("/api/v1/interests/suggestions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"longitude\": 14.24542}"))
+            get("/api/v1/interests/suggestions?longitude=" + longitude))
         .andExpect(status().isBadRequest());
   }
 }
