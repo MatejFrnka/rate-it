@@ -18,7 +18,16 @@ window.addEventListener('load', async () => {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadInterests()
+    var splide = new Splide('.splide', {
+        fixedWidth: '10rem',
+        fixedHeight: '12rem',
+        gap: '1rem',
+        type: 'loop',
+        drag: 'free',
+    });
+    splide.mount();
+
+    loadInterests();
 });
 
 function loadInterests(query) {
