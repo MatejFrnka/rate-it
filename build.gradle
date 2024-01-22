@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.20.0'
     implementation 'com.google.api-client:google-api-client:1.29.2'
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.1.2'
+    implementation 'org.postgresql:postgresql:42.6.0'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     modules {
         module("org.springframework.boot:spring-boot-starter-logging") {
