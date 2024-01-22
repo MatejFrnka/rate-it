@@ -1,4 +1,6 @@
 let data = [];
+let latitude = null;
+let longitude = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -14,11 +16,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function success(position) {
-    let latitude = position.coords.latitude;
-    let longitude = position.coords.longitude;
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
 
     try {
-        await fetchData(latitude, longitude);
+        await fetchData();
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
@@ -29,13 +31,14 @@ async function error() {
     await fetchData();
 }
 
-async function fetchData(latitude, longitude) {
+async function fetchData() {
     try {
         let url = '/api/v1/interests/suggestions';
 
         // Append query parameters if latitude and longitude are provided
         if (latitude !== null && longitude !== null) {
             url += `?latitude=${latitude}&longitude=${longitude}`;
+            console.log(url);
         }
 
         const response = await fetch(url, {

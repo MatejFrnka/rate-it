@@ -31,8 +31,11 @@ public class InterestRestController {
   private final LikeService likeService;
 
   @GetMapping("/suggestions")
-  public ResponseEntity<?> getAllSuggestions(CoordinatesDTO usersCoords) {
-    if (usersCoords != null) {
+  public ResponseEntity<?> getAllSuggestions(
+      Optional<Double> latitude, Optional<Double> longitude) {
+    if (latitude.isPresent() || longitude.isPresent()) {
+      CoordinatesDTO usersCoords =
+          new CoordinatesDTO(latitude.orElse(null), longitude.orElse(null));
       return handleCoordinates(usersCoords);
     }
     return ResponseEntity.ok().body(interestService.getAllSuggestionDtos());
@@ -83,7 +86,8 @@ public class InterestRestController {
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @PostMapping("/{interestId}/like")
-  public ResponseEntity<?> like(@PathVariable Long interestId, @RequestBody LikeDTO like, Principal principal) {
+  public ResponseEntity<?> like(
+      @PathVariable Long interestId, @RequestBody LikeDTO like, Principal principal) {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       Interest interest = interestService.getById(interestId);
