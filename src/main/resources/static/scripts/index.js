@@ -2,17 +2,6 @@ let data = [];
 let latitude = null;
 let longitude = null;
 
-document.addEventListener('DOMContentLoaded', () =>{
-    var splide = new Splide('.splide', {
-        fixedWidth: '10rem',
-        fixedHeight: '12rem',
-        gap: '1rem',
-        type: 'loop',
-        drag: 'free',
-    });
-    splide.mount();
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         if (navigator.geolocation) {
@@ -21,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log("Geolocation is not supported");
             await fetchData();
         }
-
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
@@ -50,7 +38,6 @@ async function fetchData() {
         // Append query parameters if latitude and longitude are provided
         if (latitude !== null && longitude !== null) {
             url += `?latitude=${latitude}&longitude=${longitude}`;
-            console.log(url);
         }
 
         const response = await fetch(url, {

@@ -1,4 +1,4 @@
-[INFO ] 2024-01-22 22:51:17.991 [restartedMain] WebappApplication - Starting WebappApplication using Java 20.0.2.1 with PID 31560 (D:\Projekty\Java\rate-it\build\classes\java\main started by Martin in D:\Projekty\Java\rate-it)
-[DEBUG] 2024-01-22 22:51:17.992 [restartedMain] WebappApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
-[INFO ] 2024-01-22 22:51:17.992 [restartedMain] WebappApplication - The following 1 profile is active: "dev"
-[INFO ] 2024-01-22 22:51:19.177 [restartedMain] WebappApplication - Started WebappApplication in 1.205 seconds (process running for 1197.844)
+[INFO ] 2024-01-22 23:01:09.238 [restartedMain] WebappApplication - Starting WebappApplication using Java 20.0.2.1 with PID 21292 (D:\Projekty\Java\rate-it\build\classes\java\main started by Martin in D:\Projekty\Java\rate-it)
+[DEBUG] 2024-01-22 23:01:09.239 [restartedMain] WebappApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+[INFO ] 2024-01-22 23:01:09.240 [restartedMain] WebappApplication - The following 1 profile is active: "dev"
+[INFO ] 2024-01-22 23:01:10.482 [restartedMain] WebappApplication - Started WebappApplication in 1.264 seconds (process running for 504.429)
