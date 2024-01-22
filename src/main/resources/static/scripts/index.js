@@ -1,5 +1,4 @@
 let data = [];
-let usersCoords;
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -15,13 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function success(position) {
-    usersCoords = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-    };
+    let latitude = position.coords.latitude;
+    let longitude = position.coords.longitude;
 
     try {
-        await fetchData(usersCoords);
+        await fetchData(latitude, longitude);
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
@@ -32,14 +29,20 @@ async function error() {
     await fetchData();
 }
 
-async function fetchData(coords) {
+async function fetchData(latitude, longitude) {
     try {
-        const response = await fetch('/api/v1/interests/suggestions', {
-            method: 'POST',
+        let url = '/api/v1/interests/suggestions';
+
+        // Append query parameters if latitude and longitude are provided
+        if (latitude !== null && longitude !== null) {
+            url += `?latitude=${latitude}&longitude=${longitude}`;
+        }
+
+        const response = await fetch(url, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(coords)
         });
 
         if (!response.ok) {
@@ -48,12 +51,12 @@ async function fetchData(coords) {
 
         const jsonData = await response.json();
 
-        data = await Promise.all(jsonData.map(async (interest) => {
+        const data = await Promise.all(jsonData.map(async (interest) => {
             interest.imageUrl = await fetchInterestImageUrl(interest);
             return interest;
         }));
 
-        loadInterests();
+        loadInterests(data);
     } catch (error) {
         console.error('Error fetching suggestions:', error);
     }
