@@ -20,7 +20,7 @@ if (window.location.pathname.includes('/interests/create')) {
 const uppy = new Uppy({
     restrictions: {
         allowedFileTypes: ["image/*"],
-        maxFileSize: 5 * 1024 * 1024,
+        maxFileSize: 10 * 1024 * 1024,
         maxNumberOfFiles: 1
 
     },
