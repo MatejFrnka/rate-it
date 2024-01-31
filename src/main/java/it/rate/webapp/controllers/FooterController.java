@@ -8,9 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @AllArgsConstructor
+@RequestMapping(("/about"))
 public class FooterController {
 
   private final UserService userService;
@@ -33,7 +35,7 @@ public class FooterController {
     return "footer/developers";
   }
 
-  @GetMapping("/about")
+  @GetMapping("/")
   public String about(Model model, Principal principal) {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
@@ -42,12 +44,21 @@ public class FooterController {
     return "footer/about";
   }
 
-  @GetMapping("/terms")
+  @GetMapping("/privacy-policy")
+  public String privacy(Model model, Principal principal) {
+    if (principal != null) {
+      AppUser loggedUser = userService.getByEmail(principal.getName());
+      model.addAttribute("loggedUser", loggedUser);
+    }
+    return "footer/legal/privacyPolicy";
+  }
+
+  @GetMapping("/terms-and-conditions")
   public String terms(Model model, Principal principal) {
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
     }
-    return "footer/terms";
+    return "footer/legal/termsAndConditions";
   }
 }
