@@ -7,7 +7,6 @@ body {
 }
 
 footer {
-    padding-top: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,6 +27,8 @@ footer {
 }
 
 .footer-links {
+    padding-top: 10px;
+    padding-bottom: 6px;
     width: 90%;
     display: flex;
     justify-content: space-around;
