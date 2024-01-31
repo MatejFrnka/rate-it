@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseMigrationSettings" lastSelectedDirectory="src\main\resources\db\migration" />
+  <component name="JpaLiquibaseChangesConfig">
+    <exclude-change idName="interest_category" tagName="dropPrimaryKey" />
+    <exclude-change idName="place_image_names" tagName="dropPrimaryKey" />
+    <exclude-change idName="interest_category#rowid" tagName="dropColumn" />
+    <exclude-change idName="place_image_names#rowid" tagName="dropColumn" />
+  </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="webapp.main" name="Default">
+        <packages>
+          <package value="it.rate.webapp" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>
