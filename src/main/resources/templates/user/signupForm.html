@@ -45,6 +45,12 @@
                            placeholder="Enter your password here.." required>
                     <img class="user-icon" src="/icons/lock.png" alt="user-lock">
                 </section>
+                <section class="credentials">
+                    <label>
+                        <input type="checkbox" id="terms-agreement" required>
+                        I agree to the <a href="/about/terms-and-conditions">terms & conditions</a> and <a href="/about/privacy-policy">privacy policy</a>.
+                    </label>
+                </section>
                 <p th:if="${error}" th:text="${error}" class="error"></p>
 
                 <div class="user-form-button">
