@@ -9,7 +9,7 @@
   </component>
   <component name="PersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit moduleName="webapp.main" name="Default">
+      <persistence-unit name="Default">
         <packages>
           <package value="it.rate.webapp" />
         </packages>
