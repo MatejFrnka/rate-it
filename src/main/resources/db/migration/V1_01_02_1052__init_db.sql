@@ -70,7 +70,7 @@ CREATE TABLE places
 
 CREATE TABLE ratings
 (
-    rating       BIGINT NOT NULL,
+    rating       INT4 NOT NULL,
     app_user_id  BIGINT NOT NULL,
     place_id     BIGINT NOT NULL,
     criterion_id BIGINT NOT NULL,

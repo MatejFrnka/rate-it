@@ -196,25 +196,25 @@ public class WebappApplication implements CommandLineRunner {
     criterionRepository.saveAll(List.of(c1, c2, c3, c4));
 
     // Koláčky
-    Rating rat1 = new Rating(u1, p1, c1, 5L);
-    Rating rat2 = new Rating(u1, p1, c2, 6L);
-    Rating rat3 = new Rating(u2, p2, c1, 4L);
-    Rating rat4 = new Rating(u2, p2, c2, 7L);
-    Rating rat5 = new Rating(u3, p1, c1, 1L);
-    Rating rat9 = new Rating(u1, p1, c4, 2L);
-    Rating rat10 = new Rating(u1, p2, c4, 10L);
-    Rating rat11 = new Rating(u3, p1, c4, 6L);
-    Rating rat12 = new Rating(u3, p4, c1, 8L);
-    Rating rat13 = new Rating(u3, p4, c2, 7L);
-    Rating rat14 = new Rating(u1, p4, c4, 10L);
-    Rating rat15 = new Rating(u1, p4, c4, 5L);
-    Rating rat16 = new Rating(u1, p5, c4, 7L);
-    Rating rat17 = new Rating(u1, p5, c4, 8L);
+    Rating rat1 = new Rating(u1, p1, c1, 5);
+    Rating rat2 = new Rating(u1, p1, c2, 6);
+    Rating rat3 = new Rating(u2, p2, c1, 4);
+    Rating rat4 = new Rating(u2, p2, c2, 7);
+    Rating rat5 = new Rating(u3, p1, c1, 1);
+    Rating rat9 = new Rating(u1, p1, c4, 2);
+    Rating rat10 = new Rating(u1, p2, c4, 10);
+    Rating rat11 = new Rating(u3, p1, c4, 6);
+    Rating rat12 = new Rating(u3, p4, c1, 8);
+    Rating rat13 = new Rating(u3, p4, c2, 7);
+    Rating rat14 = new Rating(u1, p4, c4, 10);
+    Rating rat15 = new Rating(u1, p4, c4, 5);
+    Rating rat16 = new Rating(u1, p5, c4, 7);
+    Rating rat17 = new Rating(u1, p5, c4, 8);
 
     // Quiet spots
-    Rating rat6 = new Rating(u1, p3, c3, 10L);
-    Rating rat7 = new Rating(u2, p3, c3, 8L);
-    Rating rat8 = new Rating(u3, p3, c3, 9L);
+    Rating rat6 = new Rating(u1, p3, c3, 10);
+    Rating rat7 = new Rating(u2, p3, c3, 8);
+    Rating rat8 = new Rating(u3, p3, c3, 9);
 
     ratingRepository.saveAll(
         List.of(

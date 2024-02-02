@@ -17,7 +17,7 @@ public class Rating {
 
   @Range(min = 1, max = 10)
   @Column(nullable = false)
-  private int rating;
+  private Integer rating;
 
   @ManyToOne
   @MapsId("userId")
@@ -36,7 +36,7 @@ public class Rating {
     this.appUser = appUser;
     this.place = place;
     this.criterion = criterion;
-    this.rating = rating;
+    this.rating = Math.toIntExact(rating);
   }
 
   public Long getCriterionId() {
