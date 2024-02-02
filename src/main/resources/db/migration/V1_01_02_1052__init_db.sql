@@ -4,6 +4,8 @@ CREATE SEQUENCE IF NOT EXISTS criteria_seq START WITH 1 INCREMENT BY 50;
 
 CREATE SEQUENCE IF NOT EXISTS interests_seq START WITH 1 INCREMENT BY 50;
 
+CREATE SEQUENCE IF NOT EXISTS password_reset_seq START WITH 1 INCREMENT BY 50;
+
 CREATE SEQUENCE IF NOT EXISTS places_seq START WITH 1 INCREMENT BY 50;
 
 CREATE SEQUENCE IF NOT EXISTS users_seq START WITH 1 INCREMENT BY 50;
@@ -48,6 +50,14 @@ CREATE TABLE likes
     CONSTRAINT pk_likes PRIMARY KEY (app_user_id, interest_id)
 );
 
+CREATE TABLE password_reset
+(
+    id      BIGINT       NOT NULL,
+    token   VARCHAR(255) NOT NULL,
+    user_id BIGINT,
+    CONSTRAINT pk_passwordreset PRIMARY KEY (id)
+);
+
 CREATE TABLE place_image_names
 (
     place_id    BIGINT NOT NULL,
@@ -71,10 +81,19 @@ CREATE TABLE places
 CREATE TABLE ratings
 (
     rating       INT4 NOT NULL,
-    app_user_id  BIGINT NOT NULL,
-    place_id     BIGINT NOT NULL,
-    criterion_id BIGINT NOT NULL,
+    app_user_id  BIGINT  NOT NULL,
+    place_id     BIGINT  NOT NULL,
+    criterion_id BIGINT  NOT NULL,
     CONSTRAINT pk_ratings PRIMARY KEY (app_user_id, place_id, criterion_id)
+);
+
+CREATE TABLE reviews
+(
+    text        VARCHAR(255)                NOT NULL,
+    created_at  TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    app_user_id BIGINT                      NOT NULL,
+    place_id    BIGINT                      NOT NULL,
+    CONSTRAINT pk_reviews PRIMARY KEY (app_user_id, place_id)
 );
 
 CREATE TABLE roles
@@ -99,6 +118,7 @@ CREATE TABLE users
     email       VARCHAR(255) NOT NULL,
     password    VARCHAR(255) NOT NULL,
     server_role VARCHAR(255) NOT NULL,
+    bio         VARCHAR(150),
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
 
@@ -117,6 +137,9 @@ ALTER TABLE likes
 ALTER TABLE likes
     ADD CONSTRAINT FK_LIKES_ON_INTEREST FOREIGN KEY (interest_id) REFERENCES interests (id);
 
+ALTER TABLE password_reset
+    ADD CONSTRAINT FK_PASSWORDRESET_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+
 ALTER TABLE places
     ADD CONSTRAINT FK_PLACES_ON_INTEREST FOREIGN KEY (interest_id) REFERENCES interests (id);
 
@@ -131,6 +154,12 @@ ALTER TABLE ratings
 
 ALTER TABLE ratings
     ADD CONSTRAINT FK_RATINGS_ON_PLACE FOREIGN KEY (place_id) REFERENCES places (id);
+
+ALTER TABLE reviews
+    ADD CONSTRAINT FK_REVIEWS_ON_APP_USER FOREIGN KEY (app_user_id) REFERENCES users (id);
+
+ALTER TABLE reviews
+    ADD CONSTRAINT FK_REVIEWS_ON_PLACE FOREIGN KEY (place_id) REFERENCES places (id);
 
 ALTER TABLE roles
     ADD CONSTRAINT FK_ROLES_ON_APP_USER FOREIGN KEY (app_user_id) REFERENCES users (id);
