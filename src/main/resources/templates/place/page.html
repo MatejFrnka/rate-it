@@ -157,9 +157,11 @@
 
                 <div class="rating-box-main">
                     <div class="rating-box-main-left">
-                        <div class="user-icon-rating">
-                            <img th:src="@{/icons/user.svg}" alt="User icon">
-                        </div>
+                        <a th:href="@{/users/{userName}(userName=${review.userName})}">
+                            <div class="user-icon-rating">
+                                <img th:src="@{/icons/user.svg}" alt="User icon">
+                            </div>
+                        </a>
                     </div>
                     <div class="rating-box-main-middle">
                         <p th:text="${review.userName()}"></p>
