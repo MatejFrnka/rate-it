@@ -1,23 +1,32 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var expandButtons = document.getElementsByClassName('expand-button');
+    const expandButtons = document.getElementsByClassName('expand-button');
 
-    for (var i = 0; i < expandButtons.length; i++) {
+    for (let i = 0; i < expandButtons.length; i++) {
         expandButtons[i].addEventListener('click', function () {
-            var userName = this.id.replace('button-show-ratings-', '');
+            let userName = this.id.replace('button-show-ratings-', '');
             toggleRatings(userName);
+
+            const textarea = document.querySelector('#textarea_' + userName);
+            if (textarea != null) {
+                resizeTextArea(textarea);
+            }
         });
     }
 });
 
 function toggleRatings(userName) {
-    var ratingsList = document.getElementById('ratingsList_' + userName);
-    var expandButton = document.getElementById('button-show-ratings-' + userName);
+    const ratingsList = document.querySelector('#review_' + userName);
+    const expandButton = document.querySelector('#button-show-ratings-' + userName);
 
-    ratingsList.style.display = (ratingsList.style.display === 'none') ? 'block' : 'none';
+    ratingsList.style.display = (ratingsList.style.display === 'none') ? 'flex' : 'none';
 
     if (ratingsList.style.display === 'none') {
         expandButton.querySelector('img').src = '/icons/right-arrow.svg';
     } else {
         expandButton.querySelector('img').src = '/icons/down-arrow.svg';
     }
+}
+
+function resizeTextArea(textarea) {
+    textarea.style.height = textarea.scrollHeight + "px";
 }

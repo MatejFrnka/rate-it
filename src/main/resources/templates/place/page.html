@@ -139,7 +139,9 @@
             <h2></h2>
             <div class="review-container">
                 <div class="review-text-container">
-                <textarea disabled id="review"
+                <textarea disabled
+                          id="review"
+                          class="review_textarea_disabled"
                           th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}"></textarea>
                 </div>
             </div>
@@ -157,14 +159,14 @@
 
                 <div class="rating-box-main">
                     <div class="rating-box-main-left">
-                        <a th:href="@{/users/{userName}(userName=${review.userName})}">
-                            <div class="user-icon-rating">
+                        <div class="user-icon-rating">
+                            <a th:href="@{/users/{userName}(userName=${review.userName})}">
                                 <img th:src="@{/icons/user.svg}" alt="User icon">
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
                     <div class="rating-box-main-middle">
-                        <p th:text="${review.userName()}"></p>
+                        <span th:text="${review.userName()}"></span>
                         <div class="button-ratings-container">
                             <button class="expand-button" th:id="'button-show-ratings-' + ${review.userName()}">
                                 <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
@@ -175,26 +177,32 @@
                     <div class="rating-box-main-right">
                         <div class="average-rating-container">
                             <i class="fas fa-star"></i>
-                            <div class="average-rating">
-                                <p th:unless="${@thymeMath.isNaN(review.avgRating())}"
-                                   th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating()), 1, 1, 'POINT')}"></p>
-                                <p th:if="${@thymeMath.isNaN(review.avgRating())}" class="rating">N/A</p>
-                            </div>
+                            <span class="rating" th:unless="${@thymeMath.isNaN(review.avgRating())}"
+                                  th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating()), 1, 1, 'POINT')}"></span>
+                            <span class="rating" th:if="${@thymeMath.isNaN(review.avgRating())}">N/A</span>
+                        </div>
+                        <div class="timestamp-container">
+                            <span th:text="${#dates.format(review.timestamp, 'dd/MM/yyyy, HH:mm:ss')}"></span>
                         </div>
                     </div>
                 </div>
 
-                <ul class="list-of-ratings" th:id="'ratingsList_' + ${review.userName()}" style="display: none;">
-                    <li th:each="rating : ${review.ratings()}">
-                        <div class="criterion-rating">
-                            <i class="fas fa-star"></i>
-                            <p th:unless="${@thymeMath.isNaN(rating.rating())}"
-                               th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating()), 1, 1, 'POINT')}"></p>
-                            <p th:if="${@thymeMath.isNaN(rating.rating())}" class="rating">N/A</p>
-                            <p th:text="${rating.criterionName()}" class="criterion-name"></p>
-                        </div>
-                    </li>
-                </ul>
+                <div class="user-review-container" th:id="'review_' + ${review.userName()}" style="display: none;">
+                    <textarea disabled
+                              th:id="'textarea_' + ${review.userName()}"
+                              th:unless="${review.review == null}"
+                              class="review_textarea_disabled"
+                              th:text="${review.review}"></textarea>
+                    <span>
+                    <span class="criterion-rating" th:each="rating : ${review.ratings()}">
+                        <i class="fas fa-star"></i>
+                        <span th:unless="${@thymeMath.isNaN(rating.rating())}"
+                              th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating()), 1, 1, 'POINT')}"></span>
+                        <span th:if="${@thymeMath.isNaN(rating.rating())}" class="rating">N/A</span>
+                        <span th:text="${rating.criterionName()}" class="criterion-name"></span>
+                    </span>
+                    </span>
+                </div>
             </div>
         </section>
 
