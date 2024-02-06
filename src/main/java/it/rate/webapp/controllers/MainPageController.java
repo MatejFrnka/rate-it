@@ -6,17 +6,21 @@ import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.UserService;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@Validated
 @RequiredArgsConstructor
 public class MainPageController {
 
   private final InterestService interestService;
   private final UserService userService;
   private final CategoryService categoryService;
+  private final BuildProperties buildProperties;
 
   @GetMapping({"/", "/index"})
   public String index(Model model, Principal principal) {
@@ -27,6 +31,7 @@ public class MainPageController {
       model.addAttribute("likedInterests", interestService.findAllLikedByAppUser(loggedUser));
     }
     model.addAttribute("categories", categoryService.findAll());
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "main/index";
   }
