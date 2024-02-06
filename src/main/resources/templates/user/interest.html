@@ -23,7 +23,10 @@
                     <h4 th:text="${place.placeName}"></h4>
                     <div class="place-rating-average">
                         <i class="fas fa-star"></i>
-                        <span class="rating" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                        <span class="rating"
+                              th:unless="${@thymeMath.isNaN(place.avgRating)}"
+                              th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                        <span class="rating" th:if="${@thymeMath.isNaN(place.avgRating)}">N/A</span>
                     </div>
                 </div>
                 <div class="extension">
@@ -31,7 +34,9 @@
                         <ul class="user-interest-place" th:each="rating : ${place.ratings}">
                             <li th:object="${rating}">
                                 <i class="fas fa-star"></i>
-                                <span class="place-rating-average" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average" th:unless="${@thymeMath.isNaN(rating.rating)}"
+                                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average" th:if="${@thymeMath.isNaN(rating.rating)}">N/A</span>
                                 <p th:text="*{criterionName}"></p>
                             </li>
                         </ul>

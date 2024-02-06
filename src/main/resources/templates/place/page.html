@@ -36,10 +36,10 @@
             <div class="rating">
                 <i class="fas fa-star"></i>
                 <span th:id="place-rating"
-                      th:unless="${place.getAverageRating() == null}"
+                      th:unless="${@thymeMath.isNaN(place.getAverageRating())}"
                       th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.getAverageRating()), 1, 1, 'POINT')}"></span>
                 <span th:id="place-rating"
-                      th:if="${place.getAverageRating() == null}">N/A</span>
+                      th:if="${@thymeMath.isNaN(place.getAverageRating())}">N/A</span>
             </div>
         </header>
 
@@ -174,7 +174,9 @@
                         <div class="average-rating-container">
                             <i class="fas fa-star"></i>
                             <div class="average-rating">
-                                <p th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating()), 1, 1, 'POINT')}"></p>
+                                <p th:unless="${@thymeMath.isNaN(review.avgRating())}"
+                                   th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating()), 1, 1, 'POINT')}"></p>
+                                <p th:if="${@thymeMath.isNaN(review.avgRating())}" class="rating">N/A</p>
                             </div>
                         </div>
                     </div>
@@ -184,7 +186,9 @@
                     <li th:each="rating : ${review.ratings()}">
                         <div class="criterion-rating">
                             <i class="fas fa-star"></i>
-                            <p th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating()), 1, 1, 'POINT')}"></p>
+                            <p th:unless="${@thymeMath.isNaN(rating.rating())}"
+                               th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating()), 1, 1, 'POINT')}"></p>
+                            <p th:if="${@thymeMath.isNaN(rating.rating())}" class="rating">N/A</p>
                             <p th:text="${rating.criterionName()}" class="criterion-name"></p>
                         </div>
                     </li>

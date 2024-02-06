@@ -148,8 +148,8 @@ function loadPlaces(query, sortBy) {
         dataSet = dataSet.sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0));
     } else if (sortBy !== '') {
         dataSet = dataSet.sort((a, b) => {
-            const ratingA = a.criteria.find(criterion => criterion.name === sortBy)?.avgRating || 0;
-            const ratingB = b.criteria.find(criterion => criterion.name === sortBy)?.avgRating || 0;
+            const ratingA = a.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
+            const ratingB = b.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
             return ratingB - ratingA;
         });
     } else {
@@ -182,7 +182,7 @@ function loadPlaces(query, sortBy) {
 
         let averageRating;
         if (isNaN(place.avgRating)) {
-            averageRating = 'N/A';
+            averageRating = 'No ratings yet';
         } else {
             averageRating = (place.avgRating / 2).toFixed(1);
         }
@@ -191,24 +191,19 @@ function loadPlaces(query, sortBy) {
 
         const {bestCriterion, worstCriterion} = getBestAndWorstCriteria(place.criteria);
 
-        let bestCriterionAvgRating;
-        if (bestCriterion === null || isNaN(bestCriterion.avgRating)) {
-            bestCriterionAvgRating = 'N/A';
-        } else {
-            bestCriterionAvgRating = (bestCriterion.avgRating / 2).toFixed(1);
-        }
-
-        let worstCriterionAvgRating;
-        if (worstCriterion === null || isNaN(worstCriterion.avgRating)) {
-            worstCriterionAvgRating = 'N/A';
-        } else {
-            worstCriterionAvgRating = (worstCriterion.avgRating / 2).toFixed(1);
-        }
-
         elements.ratingContainer.innerHTML = '';
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterionAvgRating), bestCriterion.name));
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterionAvgRating), worstCriterion.name));
+
+        if ((bestCriterion === null && worstCriterion === null)) {
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', '---', averageRating));
+        } else if (place.criteria.length === 1){
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, place.criteria[0].name));
+        } else {
+            let bestCriterionAvgRating = (bestCriterion.avgRating / 2).toFixed(1);
+            let worstCriterionAvgRating = (worstCriterion.avgRating / 2).toFixed(1);
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterionAvgRating), bestCriterion.name));
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterionAvgRating), worstCriterion.name));
+        }
 
         container.appendChild(clone);
     });
