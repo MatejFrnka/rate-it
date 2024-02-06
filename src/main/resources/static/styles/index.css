@@ -15,14 +15,6 @@ footer {
     width: 100%;
     background-color: #568D73;
     color: white;
-    position: relative;
-}
-
-footer p {
-    position: absolute;
-    bottom: 0;
-    right: 1rem;
-    margin: 0;
 }
 
 .container-fluid {
