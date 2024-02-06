@@ -8,10 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
 
 @Getter
 @Setter
