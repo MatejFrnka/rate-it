@@ -30,7 +30,6 @@ public class MapController extends BaseThymeleafController{
         interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser);
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       optRole.ifPresent(role -> model.addAttribute("role", role.getRoleType()));
       model.addAttribute(

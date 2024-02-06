@@ -15,8 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
-
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests/{interestId}/admin")
@@ -31,12 +29,11 @@ public class InterestAdminController extends BaseThymeleafController{
 
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
-  public String editInterestPage(@PathVariable Long interestId, Model model, Principal principal) {
+  public String editInterestPage(@PathVariable Long interestId, Model model) {
 
     model.addAttribute("interest", interestService.getById(interestId));
     model.addAttribute("action", "/interests/" + interestId + "/admin/edit");
     model.addAttribute("method", "put");
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
 
     return "interest/form";
@@ -56,9 +53,7 @@ public class InterestAdminController extends BaseThymeleafController{
 
   @GetMapping("/users")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
-  public String editUsersPage(@PathVariable Long interestId, Model model, Principal principal) {
-
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+  public String editUsersPage(@PathVariable Long interestId, Model model) {
     model.addAttribute("interest", interestService.getById(interestId));
 
     return "interest/users";
@@ -77,21 +72,17 @@ public class InterestAdminController extends BaseThymeleafController{
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) {
 
-    AppUser loggedUser = userService.getById(userId);
+    AppUser user = userService.getById(userId);
     Interest interest = interestService.getById(interestId);
-
-    roleService.setRole(interest, loggedUser, Role.RoleType.VOTER);
+    roleService.setRole(interest, user, Role.RoleType.VOTER);
 
     return "redirect:/interests/{interestId}/admin/users";
   }
 
   @GetMapping("/invite")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
-  public String inviteUsers(@PathVariable Long interestId, Model model, Principal principal) {
-
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+  public String inviteUsers(@PathVariable Long interestId, Model model) {
     model.addAttribute("interest", interestService.getById(interestId));
-
     return "interest/invite";
   }
 
