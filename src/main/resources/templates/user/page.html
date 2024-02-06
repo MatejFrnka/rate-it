@@ -15,9 +15,10 @@
     </header>
     <main class="content user-profile">
         <section class="user-info" th:object="${user}">
-            <div class="user-image">
+            <a href="#" class="user-image" id="uppy-modal" >
                 <img src="/icons/user.svg" alt="placeholderImg">
-            </div>
+            </a>
+            <div id="uppy"></div>
             <div class="user-details">
                 <h2 th:text="*{username}"></h2>
                 <p th:if="${loggedUser == null || loggedUser.id != user.id}" th:text="*{bio}"></p>
@@ -84,4 +85,5 @@
 <script src="/scripts/defaultImage.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id != user.id}" src="/scripts/userFollow.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id == user.id}" src="/scripts/userBioEdit.js"></script>
+<script type="module" src="/scripts/userUploadImage.js"></script>
 </html>
