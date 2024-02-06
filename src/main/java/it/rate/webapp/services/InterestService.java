@@ -78,7 +78,9 @@ public class InterestService {
         interestRepository.findAllDistinctByUserRatingsOrReviews(appUser);
 
     Comparator<PlaceReviewDTO> comparator =
-        Comparator.comparing(PlaceReviewDTO::avgRating).reversed();
+        Comparator.comparing(
+                (PlaceReviewDTO dto) -> Double.isNaN(dto.avgRating()) ? 0d : dto.avgRating())
+            .reversed();
 
     return ratedInterests.stream()
         .map(
