@@ -1,5 +1,6 @@
 import {Uppy, Dashboard, XHRUpload, Webcam} from "https://releases.transloadit.com/uppy/v3.21.0/uppy.min.mjs"
-let dynamicEndpoint = '/api/v1/images/new-interest-image';
+const usernameMatch = window.location.href.match(/\/users\/(.*)$/);
+let dynamicEndpoint = '/api/v1/images/users/'.concat(usernameMatch[1]).concat('/new-profile-image');
 
 
 const uppy = new Uppy({

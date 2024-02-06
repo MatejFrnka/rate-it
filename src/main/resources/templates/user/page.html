@@ -15,9 +15,16 @@
     </header>
     <main class="content user-profile">
         <section class="user-info" th:object="${user}">
-            <a href="#" class="user-image" id="uppy-modal" >
+
+            <a th:if="${loggedUser != null && user.username().equals(loggedUser.getUsername())}"
+               class="user-image" id="uppy-modal" style="cursor: pointer">
                 <img src="/icons/user.svg" alt="placeholderImg">
             </a>
+
+            <div th:if="${loggedUser == null || !user.username().equals(loggedUser.getUsername())}" class="user-image">
+                <img src="/icons/user.svg" alt="placeholderImg">
+            </div>
+
             <div id="uppy"></div>
             <div class="user-details">
                 <h2 th:text="*{username}"></h2>

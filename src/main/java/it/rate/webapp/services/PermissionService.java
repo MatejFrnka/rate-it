@@ -99,4 +99,14 @@ public class PermissionService {
         && (optRole.get().getRoleType().equals(Role.RoleType.VOTER)
             || optRole.get().getRoleType().equals(Role.RoleType.CREATOR));
   }
+
+  public boolean canEditUser(String username) {
+
+    if(username == null || username.isBlank()) {
+      return false;
+    }
+
+    return username.equalsIgnoreCase(userService.getAuthenticatedUser().getUsername());
+
+  }
 }

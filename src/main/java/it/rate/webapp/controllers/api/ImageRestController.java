@@ -84,4 +84,13 @@ public class ImageRestController {
       return ResponseEntity.internalServerError().body("Error while processing the file");
     }
   }
+
+  @PostMapping("/users/{username}/new-profile-image")
+  @PreAuthorize("@permissionService.canEditUser(#username)")
+  public ResponseEntity<?> uploadProfileImage(@PathVariable String username,
+                                              @RequestParam("picture") MultipartFile file) {
+
+    return ResponseEntity.ok().build();
+
+  }
 }
