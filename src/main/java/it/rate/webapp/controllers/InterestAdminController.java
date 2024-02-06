@@ -9,7 +9,6 @@ import it.rate.webapp.models.Role;
 import it.rate.webapp.services.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +28,6 @@ public class InterestAdminController {
   private final CriterionService criterionService;
   private final CategoryService categoryService;
   private final EmailService emailService;
-  private final BuildProperties buildProperties;
 
   @GetMapping("/edit")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
@@ -40,7 +38,6 @@ public class InterestAdminController {
     model.addAttribute("method", "put");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
-    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "interest/form";
   }
@@ -63,7 +60,6 @@ public class InterestAdminController {
 
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("interest", interestService.getById(interestId));
-    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "interest/users";
   }
@@ -95,7 +91,6 @@ public class InterestAdminController {
 
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("interest", interestService.getById(interestId));
-    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "interest/invite";
   }

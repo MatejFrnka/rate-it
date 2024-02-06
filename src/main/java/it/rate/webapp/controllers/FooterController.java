@@ -2,12 +2,12 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.services.UserService;
-import java.security.Principal;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.security.Principal;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class FooterController {
 
   private final UserService userService;
-  private final BuildProperties buildProperties;
 
   @GetMapping("/contact")
   public String contact(Model model, Principal principal) {
@@ -24,7 +23,6 @@ public class FooterController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
     }
-    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "footer/contact";
   }
 
@@ -34,7 +32,6 @@ public class FooterController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
     }
-    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "footer/developers";
   }
 
@@ -44,7 +41,6 @@ public class FooterController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
     }
-    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "footer/about";
   }
 
@@ -54,7 +50,6 @@ public class FooterController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
     }
-    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "footer/legal/privacyPolicy";
   }
 
@@ -64,7 +59,6 @@ public class FooterController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
     }
-    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "footer/legal/termsAndConditions";
   }
 }
