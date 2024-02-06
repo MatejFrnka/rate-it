@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests")
-public class InterestController {
+public class InterestController extends BaseThymeleafController{
 
   private final InterestService interestService;
   private final UserService userService;

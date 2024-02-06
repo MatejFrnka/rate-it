@@ -17,7 +17,7 @@ import java.util.Optional;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests/{interestId}/places")
-public class PlaceController {
+public class PlaceController extends BaseThymeleafController {
 
   private final PlaceService placeService;
   private final UserService userService;

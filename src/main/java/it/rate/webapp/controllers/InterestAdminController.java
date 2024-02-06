@@ -20,7 +20,7 @@ import java.security.Principal;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests/{interestId}/admin")
-public class InterestAdminController {
+public class InterestAdminController extends BaseThymeleafController{
   private final InterestService interestService;
   private final ManageInterestService manageInterestService;
   private final RoleService roleService;

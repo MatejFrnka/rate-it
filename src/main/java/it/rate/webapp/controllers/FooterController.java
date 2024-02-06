@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @AllArgsConstructor
 @RequestMapping(("/about"))
-public class FooterController {
+public class FooterController extends BaseThymeleafController{
 
   private final UserService userService;
 

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-public class UserController {
+public class UserController extends BaseThymeleafController {
 
   private final UserService userService;
   private final RatingService ratingService;

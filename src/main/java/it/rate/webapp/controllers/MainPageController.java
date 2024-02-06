@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @Validated
 @RequiredArgsConstructor
-public class MainPageController {
+public class MainPageController extends BaseThymeleafController {
 
   private final InterestService interestService;
   private final UserService userService;
