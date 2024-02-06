@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests/{interestId}/admin")
-public class InterestAdminController extends BaseThymeleafController{
+public class InterestAdminController extends BaseThymeleafController {
   private final InterestService interestService;
   private final ManageInterestService manageInterestService;
   private final RoleService roleService;
