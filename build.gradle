@@ -50,14 +50,6 @@ dependencies {
     // email
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.1.2'
 
-    // logging
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    modules {
-        module("org.springframework.boot:spring-boot-starter-logging") {
-            replacedBy("org.springframework.boot:spring-boot-starter-log4j2", "Use Log4j2 instead of Logback")
-        }
-    }
-
     // image processing
     implementation 'net.coobird:thumbnailator:0.4.20' //Image editor
     implementation 'org.springframework.boot:spring-boot-starter-cache'

@@ -39,7 +39,7 @@
                 <div class="user-interest-default">
                     <div class="user-interest-image">
                         <img th:if="*{imageName == null || imageName.isEmpty()}"
-                             src="https://picsum.photos/400/300" alt="Random image"/>
+                             class="default-image" alt="Default image" th:data-interest-id="${interest.interestId}"/>
                         <img th:unless="*{imageName == null || imageName.isEmpty()}"
                              th:src="@{|/api/v1/images/*{imageName}}"
                              alt="Interest image"/>
@@ -80,6 +80,8 @@
     const MAX_BIO_LENGTH = [[${@constraints.MAX_BIO_LENGTH}]];
 </script>
 <script src="/scripts/userItemLoading.js"></script>
+<script src="/scripts/imageFetcher.js"></script>
+<script src="/scripts/defaultImage.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id != user.id}" src="/scripts/userFollow.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id == user.id}" src="/scripts/userBioEdit.js"></script>
 </html>

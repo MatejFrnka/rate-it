@@ -3,12 +3,15 @@ let usersCoords;
 
 document.addEventListener('DOMContentLoaded', async () => {
     initializeCheckboxesSplide()
+    document.querySelector('.loader').style.display = 'block';
     try {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
+            document.querySelector('.loader').style.display = 'none';
         } else {
             console.log("Geolocation is not supported");
             await fetchData();
+            document.querySelector('.loader').style.display = 'none';
         }
     } catch (error) {
         console.error('Error fetching suggestions:', error);

@@ -28,7 +28,7 @@
                                 <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
                                     <div class="img-wrapper">
                                         <img th:if="${interest.imageName == null || interest.imageName.isEmpty()}"
-                                             src="https://picsum.photos/400/300" alt="Random image"/>
+                                             class="default-image" alt="Default image" th:data-interest-id="${interest.id}"/>
                                         <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"
                                              th:src="@{|/api/v1/images/${interest.imageName}}"
                                              alt="Interest image"/>
@@ -103,10 +103,12 @@
                 </div>
             </a>
         </template>
+        <span class="loader"></span>
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
 <script src="/scripts/imageFetcher.js"></script>
+<script src="/scripts/defaultImage.js"></script>
 <script src="/scripts/index.js"></script>
 <script src="/scripts/checkboxesSplide.js"></script>
 <script th:unless="${likedInterests == null || likedInterests.isEmpty()}" src="/scripts/indexSplide.js"></script>

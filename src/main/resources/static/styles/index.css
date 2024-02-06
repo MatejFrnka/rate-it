@@ -334,6 +334,20 @@ h3 {
     background-color: #575757;
 }
 
+#rate-confirmation {
+    position: absolute;
+    margin-top: 3.5rem;
+}
+
+.success {
+    color: #568D73;
+}
+
+.fail {
+    color: red;
+}
+
+
 .location-button-bar {
     display: flex;
     justify-content: space-between;
@@ -1028,6 +1042,8 @@ h4 {
     margin: auto;
     height: var(--form-container-height);
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .left-container,
@@ -1158,6 +1174,16 @@ h4 {
     font-weight: bold;
     font-size: x-large;
     margin-bottom: 0;
+}
+
+@media only screen and (max-width: 440px) and (max-height: 750px){
+    .form-container {
+        height: 34rem;
+    }
+
+    .top-container {
+        height: 31rem;
+    }
 }
 
 .rs-logo {
@@ -1623,4 +1649,37 @@ h4 {
     overflow: hidden;
     padding: 0.3rem 1rem;
     width: 100%;
+}
+
+/*Loading spinner*/
+.loader {
+    align-self: center;
+    width: 48px;
+    height: 48px;
+    border: 3px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+.loader::after {
+    content: '';
+    position: absolute;
+    box-sizing: border-box;
+    left: 20px;
+    top: 31px;
+    border: 10px solid transparent;
+    border-right-color: #FFF;
+    transform: rotate(-40deg);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

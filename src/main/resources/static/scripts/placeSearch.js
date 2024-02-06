@@ -2,12 +2,15 @@ let data = [];
 let usersCoords;
 
 document.addEventListener('DOMContentLoaded', async () => {
+    document.querySelector('.loader').style.display = 'block';
     try {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
+            document.querySelector('.loader').style.display = 'none';
         } else {
             console.log("Geolocation is not supported");
             await fetchData();
+            document.querySelector('.loader').style.display = 'none';
         }
     } catch (error) {
         console.error('Error fetching suggestions:', error);
@@ -30,13 +33,17 @@ async function error() {
 
 async function fetchData() {
     try {
+        const fetchInterest = `/api/v1/interests/${interestId}`;
+        const interestResponse = await fetch(fetchInterest);
+        const interest = await interestResponse.json();
+
         const fetchUrl = `/api/v1/interests/${interestId}/places`;
         const response = await fetch(fetchUrl);
         const jsonData = await response.json();
         data = jsonData;
 
         data = await Promise.all(jsonData.map(async (place) => {
-            place.imageUrl = await fetchImageUrl(place);
+            place.imageUrl = await fetchImageUrl(place, interest);
             return place;
         }))
 

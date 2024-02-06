@@ -2,7 +2,9 @@ package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.CoordinatesDTO;
 import it.rate.webapp.dtos.ErrorMessagesDTO;
+import it.rate.webapp.dtos.InterestSuggestionDTO;
 import it.rate.webapp.dtos.LikeDTO;
+import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
@@ -92,5 +94,14 @@ public class InterestRestController {
         .body(
             new ErrorMessagesDTO(
                 validationErrors.stream().map(ConstraintViolation::getMessage).toList()));
+  }
+
+  @GetMapping("/{interestId}")
+  public ResponseEntity<?> getSuggestion(@PathVariable Long interestId) {
+    Optional<Interest> optInterest = interestService.findById(interestId);
+    if (optInterest.isEmpty()) {
+      return ResponseEntity.badRequest().body(new InterestNotFoundException());
+    }
+    return ResponseEntity.ok().body(new InterestSuggestionDTO(optInterest.get(), null));
   }
 }

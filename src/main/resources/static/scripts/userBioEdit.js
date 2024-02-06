@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
     userBio.addEventListener('blur', function () {
         if (userBio.textContent.trim() === '') {
             userBio.textContent = defaultText;
+        } else {
+            saveBio();
         }
-
-        saveBio();
     });
 });
 
