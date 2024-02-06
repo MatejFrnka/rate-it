@@ -6,7 +6,6 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
-import it.rate.webapp.repositories.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
