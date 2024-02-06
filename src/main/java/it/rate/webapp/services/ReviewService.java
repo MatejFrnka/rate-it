@@ -24,14 +24,6 @@ public class ReviewService {
     return reviewRepository.findById(reviewId);
   }
 
-  public List<Review> findAllByPlace(Place place) {
-    return reviewRepository.findAllByPlace(place);
-  }
-
-  public List<Review> findAllByAppUserAndInterest(AppUser appUser, Interest interest) {
-    return reviewRepository.findAllByAppUserAndPlace_Interest(appUser, interest);
-  }
-
   public void deleteById(ReviewId reviewId) {
     reviewRepository.deleteById(reviewId);
   }

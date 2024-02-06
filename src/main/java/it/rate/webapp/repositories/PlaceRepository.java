@@ -10,14 +10,13 @@ import java.util.List;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
-    @Query(
-            "SELECT DISTINCT p FROM AppUser a "
-                    + "LEFT JOIN a.reviews revs "
-                    + "LEFT JOIN a.ratings rats "
-                    + "LEFT JOIN revs.place p_revs "
-                    + "LEFT JOIN rats.place p_rats "
-                    + "LEFT JOIN Place p ON p IN (p_revs, p_rats) "
-                    + "LEFT JOIN p.interest i "
-                    + "WHERE a = :appUser AND i = :interest")
-    List<Place> findAllDistinctByAppUserAndInterest(AppUser appUser, Interest interest);
+  // find all distinct places that have been reviewed or rated by a user in given interest
+  @Query(
+          "SELECT DISTINCT p FROM Place p "
+                  + "LEFT JOIN p.reviews revs "
+                  + "LEFT JOIN p.ratings rats "
+                  + "LEFT JOIN p.interest i "
+                  + "WHERE revs.appUser = :appUser AND i = :interest "
+                  + "   OR rats.appUser = :appUser AND i = :interest")
+  List<Place> findAllDistinctByAppUserAndInterest(AppUser appUser, Interest interest);
 }

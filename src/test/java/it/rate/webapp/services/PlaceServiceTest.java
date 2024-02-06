@@ -18,6 +18,7 @@ import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import java.util.*;
 import it.rate.webapp.repositories.ReviewRepository;
+import it.rate.webapp.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ class PlaceServiceTest extends BaseTest {
   @MockBean PlaceRepository placeRepository;
   @MockBean RatingRepository ratingRepository;
   @MockBean ReviewRepository reviewRepository;
+  @MockBean
+  UserRepository userRepository;
 
   @Autowired PlaceService placeService;
   Interest i1;
@@ -215,10 +218,9 @@ class PlaceServiceTest extends BaseTest {
                 5.5,
                 r4.getCreatedAt()));
 
-    when(reviewRepository.findAllByPlace(p1)).thenReturn(reviews);
-    when(ratingRepository.findAllByPlaceAndCriterionDeletedFalse(p1)).thenReturn(ratings);
+    when(userRepository.findAllDistinctByReviews_PlaceOrRatings_Place(p1)).thenReturn(List.of(u1, u2));
     when(reviewRepository.findById(new ReviewId(p1.getId(), u1.getId())))
-        .thenReturn(Optional.of(rev1));
+            .thenReturn(Optional.of(rev1));
     when(reviewRepository.findById(new ReviewId(p1.getId(), u2.getId())))
         .thenReturn(Optional.empty());
     when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u1, p1))
@@ -228,8 +230,7 @@ class PlaceServiceTest extends BaseTest {
 
     assertThat(placeService.getPlaceReviewDTOs(p1), containsInAnyOrder(expectedResult.toArray()));
 
-    verify(reviewRepository, times(1)).findAllByPlace(any(Place.class));
-    verify(ratingRepository, times(1)).findAllByPlaceAndCriterionDeletedFalse(any(Place.class));
+    verify(userRepository, times(1)).findAllDistinctByReviews_PlaceOrRatings_Place(any(Place.class));
     verify(reviewRepository, times(2)).findById(any(ReviewId.class));
     verify(ratingRepository, times(2))
         .findAllByAppUserAndPlaceAndCriterionDeletedFalse(any(AppUser.class), any(Place.class));
@@ -248,9 +249,7 @@ class PlaceServiceTest extends BaseTest {
                 3.5,
                 rev1.getCreatedAt()));
 
-    when(reviewRepository.findAllByAppUserAndPlace_Interest(u1, i1)).thenReturn(List.of(rev1));
-    when(ratingRepository.findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(u1, i1))
-        .thenReturn(List.of(r1, r2));
+    when(placeRepository.findAllDistinctByAppUserAndInterest(u1, i1)).thenReturn(List.of(p1));
     when(reviewRepository.findById(new ReviewId(p1.getId(), u1.getId())))
         .thenReturn(Optional.of(rev1));
     when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u1, p1))
@@ -263,11 +262,8 @@ class PlaceServiceTest extends BaseTest {
         placeService.getPlaceReviewDTOs(u1, i1, comparator),
         containsInAnyOrder(expectedResult.toArray()));
 
-    verify(reviewRepository, times(1))
-        .findAllByAppUserAndPlace_Interest(any(AppUser.class), any(Interest.class));
-    verify(ratingRepository, times(1))
-        .findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(
-            any(AppUser.class), any(Interest.class));
+    verify(placeRepository, times(1))
+        .findAllDistinctByAppUserAndInterest(any(AppUser.class), any(Interest.class));
     verify(reviewRepository, times(1)).findById(any(ReviewId.class));
     verify(ratingRepository, times(1))
         .findAllByAppUserAndPlaceAndCriterionDeletedFalse(any(AppUser.class), any(Place.class));
@@ -285,9 +281,7 @@ class PlaceServiceTest extends BaseTest {
                 List.of(new RatingDTO(r3), new RatingDTO(r4)),
                 5.5,
                 r4.getCreatedAt()));
-    when(reviewRepository.findAllByAppUserAndPlace_Interest(u2, i1)).thenReturn(new ArrayList<>());
-    when(ratingRepository.findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(u2, i1))
-        .thenReturn(List.of(r3, r4));
+    when(placeRepository.findAllDistinctByAppUserAndInterest(u2, i1)).thenReturn(List.of(p1));
     when(reviewRepository.findById(new ReviewId(p1.getId(), u2.getId())))
         .thenReturn(Optional.empty());
     when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u2, p1))
@@ -300,11 +294,8 @@ class PlaceServiceTest extends BaseTest {
         placeService.getPlaceReviewDTOs(u2, i1, comparator),
         containsInAnyOrder(expectedResult.toArray()));
 
-    verify(reviewRepository, times(1))
-        .findAllByAppUserAndPlace_Interest(any(AppUser.class), any(Interest.class));
-    verify(ratingRepository, times(1))
-        .findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(
-            any(AppUser.class), any(Interest.class));
+    verify(placeRepository, times(1))
+        .findAllDistinctByAppUserAndInterest(any(AppUser.class), any(Interest.class));
     verify(reviewRepository, times(1)).findById(any(ReviewId.class));
     verify(ratingRepository, times(1))
         .findAllByAppUserAndPlaceAndCriterionDeletedFalse(any(AppUser.class), any(Place.class));

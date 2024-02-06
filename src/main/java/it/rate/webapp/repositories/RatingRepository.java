@@ -9,10 +9,5 @@ public interface RatingRepository extends JpaRepository<Rating, RatingId> {
 
   List<Rating> findAllByCriterionAndPlaceAndCriterionDeletedFalse(Criterion criterion, Place place);
 
-  List<Rating> findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(
-      AppUser appUser, Interest interest);
-
   List<Rating> findAllByAppUserAndPlaceAndCriterionDeletedFalse(AppUser appUser, Place place);
-
-  List<Rating> findAllByPlaceAndCriterionDeletedFalse(Place place);
 }

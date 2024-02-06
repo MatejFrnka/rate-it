@@ -2,6 +2,7 @@ package it.rate.webapp.repositories;
 
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Place;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,5 +20,12 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
 
   List<Interest> findAllByLikes_AppUser(AppUser appUser);
 
-  List<Interest> findAllDistinctByCriteria_Ratings_AppUser(AppUser appUser);
+  // find all distinct interests in which the user has either rated or reviewed
+  @Query(
+      "SELECT DISTINCT i FROM Interest i "
+          + "JOIN i.places p "
+          + "LEFT JOIN p.reviews r "
+          + "LEFT JOIN p.ratings ra "
+          + "WHERE (r.appUser = :appUser OR ra.appUser = :appUser)")
+  List<Interest> findAllDistinctByUserRatingsOrReviews(AppUser appUser);
 }

@@ -75,7 +75,7 @@ public class InterestService {
 
   public List<RatedInterestDTO> getAllRatedInterestsDTOS(@Valid AppUser appUser) {
     List<Interest> ratedInterests =
-        interestRepository.findAllDistinctByCriteria_Ratings_AppUser(appUser);
+        interestRepository.findAllDistinctByUserRatingsOrReviews(appUser);
 
     Comparator<PlaceReviewDTO> comparator =
         Comparator.comparing(PlaceReviewDTO::avgRating).reversed();

@@ -22,13 +22,11 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
 
   Optional<AppUser> findByEmailIgnoreCase(String email);
 
+  // find all distinct users who either reviewed or rated a place
   @Query(
           "SELECT DISTINCT a FROM AppUser a "
                   + "LEFT JOIN a.reviews revs "
                   + "LEFT JOIN a.ratings rats "
-                  + "LEFT JOIN revs.place p_revs "
-                  + "LEFT JOIN rats.place p_rats "
-                  + "LEFT JOIN Place p ON p IN (p_revs, p_rats) "
-                  + "WHERE p = :place")
+                  + "WHERE revs.place = :place OR rats.place = :place")
   List<AppUser> findAllDistinctByReviews_PlaceOrRatings_Place(Place place);
 }

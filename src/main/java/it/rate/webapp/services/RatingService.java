@@ -22,16 +22,6 @@ public class RatingService {
   private final RatingRepository ratingRepository;
   private final CriterionRepository criterionRepository;
 
-  public List<Rating> findAllByAppUserAndInterest(
-      @Valid AppUser appUser, @Valid Interest interest) {
-    return ratingRepository.findAllByAppUserAndCriterion_InterestAndCriterionDeletedFalse(
-        appUser, interest);
-  }
-
-  public List<Rating> findAllByPlace(@Valid Place place) {
-    return ratingRepository.findAllByPlaceAndCriterionDeletedFalse(place);
-  }
-
   public List<Rating> findAllByAppUserAndPlace(@Valid AppUser appUser, @Valid Place place) {
     return ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(appUser, place);
   }
