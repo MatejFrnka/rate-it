@@ -6,6 +6,7 @@ import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
 import it.rate.webapp.repositories.PlaceRepository;
+import it.rate.webapp.repositories.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,6 +25,7 @@ public class PlaceService {
   private final PlaceRepository placeRepository;
   private final RatingService ratingService;
   private final ReviewService reviewService;
+  private final UserService userService;
 
   public Optional<Place> findById(Long id) {
     return placeRepository.findById(id);
@@ -85,17 +87,8 @@ public class PlaceService {
 
   public List<PlaceReviewDTO> getPlaceReviewDTOs(
       @Valid AppUser user, @Valid Interest interest, Comparator<PlaceReviewDTO> comparator) {
-    List<Review> reviews = reviewService.findAllByAppUserAndInterest(user, interest);
-    List<Rating> ratings = ratingService.findAllByAppUserAndInterest(user, interest);
-    Set<Place> distinctPlaces = new HashSet<>();
-
-    for (Review review : reviews) {
-      distinctPlaces.add(review.getPlace());
-    }
-
-    for (Rating rating : ratings) {
-      distinctPlaces.add(rating.getPlace());
-    }
+    List<Place> distinctPlaces =
+        placeRepository.findAllDistinctByAppUserAndInterest(user, interest);
 
     return distinctPlaces.stream()
         .map(place -> getPlaceReviewDTO(user, place))
@@ -104,19 +97,9 @@ public class PlaceService {
   }
 
   public List<PlaceReviewDTO> getPlaceReviewDTOs(@Valid Place place) {
-    List<Review> reviews = reviewService.findAllByPlace(place);
-    List<Rating> ratings = ratingService.findAllByPlace(place);
-    Set<AppUser> distinctUsers = new HashSet<>();
+    List<AppUser> appUsers = userService.findAllDistinctByPlace(place);
 
-    for (Review review : reviews) {
-      distinctUsers.add(review.getAppUser());
-    }
-
-    for (Rating rating : ratings) {
-      distinctUsers.add(rating.getAppUser());
-    }
-
-    return distinctUsers.stream()
+    return appUsers.stream()
         .map(appUser -> getPlaceReviewDTO(appUser, place))
         .sorted(Comparator.comparing(PlaceReviewDTO::timestamp).reversed())
         .toList();
