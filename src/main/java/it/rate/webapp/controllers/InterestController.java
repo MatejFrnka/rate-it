@@ -5,11 +5,11 @@ import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
+import jakarta.transaction.Transactional;
 import java.security.Principal;
 import java.util.*;
-
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +28,7 @@ public class InterestController {
   private final LikeService likeService;
   private final CriterionService criterionService;
   private final CategoryService categoryService;
+  private final BuildProperties buildProperties;
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
@@ -40,6 +41,7 @@ public class InterestController {
     model.addAttribute("method", "post");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "interest/form";
   }
@@ -77,6 +79,7 @@ public class InterestController {
     }
     model.addAttribute("interest", interest);
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "interest/page";
   }
@@ -100,6 +103,7 @@ public class InterestController {
     AppUser loggedUser = userService.getByEmail(principal.getName());
     model.addAttribute("loggedUser", loggedUser);
     model.addAttribute("likedInterests", interestService.getLikedInterestsDTOS(loggedUser));
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "interest/seeAll";
   }

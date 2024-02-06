@@ -4,6 +4,7 @@ import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ public class MapController {
   private final RoleService roleService;
   private final PlaceService placeService;
   private final LikeService likeService;
+  private final BuildProperties buildProperties;
 
   @GetMapping()
   public String mapView(Model model, @PathVariable Long interestId, Principal principal) {
@@ -38,6 +40,7 @@ public class MapController {
     }
     model.addAttribute("interest", interest);
     model.addAttribute("places", placeService.getPlaceInfoDTOS(interest));
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "interest/map";
   }

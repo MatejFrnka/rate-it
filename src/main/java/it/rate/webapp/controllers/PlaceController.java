@@ -7,6 +7,7 @@ import it.rate.webapp.models.*;
 import it.rate.webapp.services.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,7 @@ public class PlaceController {
   private final RoleService roleService;
   private final InterestService interestService;
   private final ReviewService reviewService;
+  private final BuildProperties buildProperties;
 
   @GetMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
@@ -36,6 +38,7 @@ public class PlaceController {
     model.addAttribute("action", "/interests/" + interestId + "/places/new");
     model.addAttribute("title", "New page");
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "place/form";
   }
@@ -61,6 +64,7 @@ public class PlaceController {
     model.addAttribute("place", place);
     model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
     model.addAttribute("placeRatings", placeService.getPlaceUserRatingDto(place));
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
@@ -89,6 +93,7 @@ public class PlaceController {
     model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.getById(placeId));
     model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     return "place/form";
   }

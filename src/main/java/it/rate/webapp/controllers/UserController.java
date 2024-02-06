@@ -19,6 +19,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,11 @@ public class UserController {
   private final UserService userService;
   private final RatingService ratingService;
   private final InterestService interestService;
+  private final BuildProperties buildProperties;
 
   @GetMapping("/signup")
-  public String signupPage() {
+  public String signupPage(Model model) {
+    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "user/signupForm";
   }
 
@@ -58,10 +61,11 @@ public class UserController {
   }
 
   @GetMapping("/login")
-  public String loginPage(Principal principal) {
+  public String loginPage(Principal principal, Model model) {
     if (principal != null) {
       return "redirect:/";
     }
+    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "user/loginForm";
   }
 
@@ -74,6 +78,7 @@ public class UserController {
 
     model.addAttribute("token", token);
     model.addAttribute("ref", ref);
+    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "user/resetPasswordForm";
   }
 
@@ -83,6 +88,7 @@ public class UserController {
     user.ifPresent(userService::initPasswordReset);
 
     model.addAttribute("email", email);
+    model.addAttribute("projectVersion", buildProperties.getVersion());
     return "user/resetSubmitted";
   }
 
@@ -92,6 +98,7 @@ public class UserController {
       model.addAttribute("error", "Passwords do not match. Please try again.");
       model.addAttribute("token", pwResetDTO.token());
       model.addAttribute("ref", pwResetDTO.ref());
+      model.addAttribute("projectVersion", buildProperties.getVersion());
       return "user/resetPasswordForm";
     }
     try {
@@ -100,6 +107,7 @@ public class UserController {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("token", pwResetDTO.token());
       model.addAttribute("ref", pwResetDTO.ref());
+      model.addAttribute("projectVersion", buildProperties.getVersion());
       return "user/resetPasswordForm";
     }
     return "redirect:/login";
@@ -113,6 +121,7 @@ public class UserController {
 
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
@@ -136,6 +145,7 @@ public class UserController {
 
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("interest", ratedInterest);
+    model.addAttribute("projectVersion", buildProperties.getVersion());
 
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
