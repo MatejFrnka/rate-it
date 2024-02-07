@@ -68,6 +68,7 @@ class PlaceServiceTest extends BaseTest {
     p1 =
         Place.builder()
             .id(1L)
+            .interest(i1)
             .name("Place")
             .description("Description")
             .latitude(1.0)
