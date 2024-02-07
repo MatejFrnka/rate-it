@@ -141,19 +141,24 @@
     </script>
 </div>
 
-<div th:fragment="review-box (review)" class="review-box">
+<div th:fragment="review-box (review, placePage)" class="review-box">
     <div class="review-box-main">
         <div class="review-box-main-left">
-            <div class="user-icon-rating">
+            <div th:if="${placePage}" class="user-icon-rating">
                 <a th:href="@{/users/{userName}(userName=${review.userName})}">
                     <img th:src="@{/icons/user.svg}" alt="User icon">
                 </a>
             </div>
+            <div th:unless="${placePage}" class="user-icon-rating">
+                <a th:href="@{/interests/{intId}/places/{placeId}(intId=${review.interestId}, placeId=${review.placeId})}"
+                   class="button">Visit</a>
+            </div>
         </div>
         <div class="review-box-main-middle">
-            <span th:text="${review.userName()}"></span>
+            <span th:if="${placePage}" th:text="${review.userName}"></span>
+            <span th:unless="${placePage}" th:text="${review.placeName}"></span>
             <div class="button-ratings-container">
-                <button class="expand-button" th:id="'button-show-ratings-' + ${review.userName()}">
+                <button class="expand-button" th:id="'button-show-ratings-' + ${review.userName} + '-' + ${review.placeId}">
                     <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
                     <i>Details</i>
                 </button>
@@ -162,9 +167,9 @@
         <div class="review-box-main-right">
             <div class="average-rating-container">
                 <i class="fas fa-star"></i>
-                <span class="rating" th:unless="${@thymeMath.isNaN(review.avgRating())}"
-                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating()), 1, 1, 'POINT')}"></span>
-                <span class="rating" th:if="${@thymeMath.isNaN(review.avgRating())}">N/A</span>
+                <span class="rating" th:unless="${@thymeMath.isNaN(review.avgRating)}"
+                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating), 1, 1, 'POINT')}"></span>
+                <span class="rating" th:if="${@thymeMath.isNaN(review.avgRating)}">N/A</span>
             </div>
             <div class="timestamp-container">
                 <span th:text="${#dates.format(review.timestamp, 'dd/MM/yyyy, HH:mm:ss')}"></span>
@@ -172,20 +177,20 @@
         </div>
     </div>
 
-    <div class="user-review-container" th:id="'review_' + ${review.userName()}" style="display: none;">
+    <div class="user-review-container" th:id="'review_' + ${review.userName} + '-' + ${review.placeId}" style="display: none;">
         <textarea disabled
-                  th:id="'textarea_' + ${review.userName()}"
+                  th:id="'textarea_' + ${review.userName} + '-' + ${review.placeId}"
                   th:unless="${review.review == null}"
                   class="review_textarea_disabled"
                   th:text="${review.review}">
         </textarea>
         <span>
-            <span class="criterion-rating" th:each="rating : ${review.ratings()}">
+            <span class="criterion-rating" th:each="rating : ${review.ratings}">
                 <i class="fas fa-star"></i>
-                <span th:unless="${@thymeMath.isNaN(rating.rating())}"
-                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating()), 1, 1, 'POINT')}"></span>
-                <span th:if="${@thymeMath.isNaN(rating.rating())}" class="rating">N/A</span>
-                <span th:text="${rating.criterionName()}" class="criterion-name"></span>
+                <span th:unless="${@thymeMath.isNaN(rating.rating)}"
+                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating), 1, 1, 'POINT')}"></span>
+                <span th:if="${@thymeMath.isNaN(rating.rating)}" class="rating">N/A</span>
+                <span th:text="${rating.criterionName}" class="criterion-name"></span>
             </span>
         </span>
     </div>

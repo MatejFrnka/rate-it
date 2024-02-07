@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     for (let i = 0; i < expandButtons.length; i++) {
         expandButtons[i].addEventListener('click', function () {
-            let userName = this.id.replace('button-show-ratings-', '');
-            toggleRatings(userName);
+            let name = this.id.replace('button-show-ratings-', '');
+            toggleRatings(name);
 
-            const textarea = document.querySelector('#textarea_' + userName);
+            const textarea = document.querySelector('#textarea_' + name);
             if (textarea != null) {
                 resizeTextArea(textarea);
             }
@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function toggleRatings(userName) {
-    const ratingsList = document.querySelector('#review_' + userName);
-    const expandButton = document.querySelector('#button-show-ratings-' + userName);
+function toggleRatings(name) {
+    const ratingsList = document.querySelector('#review_' + name);
+    const expandButton = document.querySelector('#button-show-ratings-' + name);
 
     ratingsList.style.display = (ratingsList.style.display === 'none') ? 'flex' : 'none';
 
