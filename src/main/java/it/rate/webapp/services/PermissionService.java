@@ -21,6 +21,7 @@ public class PermissionService {
   private final RoleRepository roleRepository;
   private final UserService userService;
   private final RatingService ratingService;
+  private final ReviewService reviewService;
 
   public boolean hasRatingPermission(AppUser user, Interest interest) {
     Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interest.getId()));
@@ -34,21 +35,20 @@ public class PermissionService {
   }
 
   public boolean ratePlace(Long placeId) {
-    AppUser user = userService.getAuthenticatedUser();
     Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
-    return canRateOrCreate(place.getInterest()) || hasRatedOrReviewedPlace(user, place);
+    return canRateOrCreate(place.getInterest()) || hasRatedOrReviewedPlace(place);
   }
 
   public boolean manageCommunity(Long interestId) {
     if (!interestRepository.existsById(interestId)) {
       throw new InterestNotFoundException();
     }
-    AppUser user = userService.getAuthenticatedUser();
-    if (isAuthenticatedOrAdmin(user)) {
-      Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-      return optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.CREATOR);
+    if (isAdmin()) {
+      return true;
     }
-    return false;
+    AppUser user = userService.getAuthenticatedUser();
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+    return optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.CREATOR);
   }
 
   public boolean canCreateInterest() {
@@ -56,17 +56,17 @@ public class PermissionService {
   }
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
-    AppUser user = userService.getAuthenticatedUser();
-    if (isAuthenticatedOrAdmin(user)) {
-      Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
-      if (place.getCreator().equals(user)) {
-        return true;
-      }
-
-      Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-      return optRole.map(role -> role.getRoleType().equals(Role.RoleType.CREATOR)).orElse(false);
+    if (isAdmin()) {
+      return true;
     }
-    return false;
+    AppUser user = userService.getAuthenticatedUser();
+    Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
+    if (place.getCreator().equals(user)) {
+      return true;
+    }
+
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+    return optRole.map(role -> role.getRoleType().equals(Role.RoleType.CREATOR)).orElse(false);
   }
 
   public boolean createPlace(Long interestId) {
@@ -76,24 +76,28 @@ public class PermissionService {
   }
 
   private boolean canRateOrCreate(Interest i) {
-    AppUser user = userService.getAuthenticatedUser();
-    if (isAuthenticatedOrAdmin(user)) {
-      Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
-      if (!i.isExclusive()) {
-        return true;
-      }
-      return optRole.isPresent()
-              && (optRole.get().getRoleType().equals(Role.RoleType.VOTER)
-              || optRole.get().getRoleType().equals(Role.RoleType.CREATOR));
+    if (isAdmin()) {
+      return true;
     }
-    return false;
+    AppUser user = userService.getAuthenticatedUser();
+    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
+    if (!i.isExclusive()) {
+      return true;
+    }
+    return optRole.isPresent()
+        && (optRole.get().getRoleType().equals(Role.RoleType.VOTER)
+            || optRole.get().getRoleType().equals(Role.RoleType.CREATOR));
   }
 
-  public boolean hasRatedOrReviewedPlace(AppUser user, Place place) {
-    return ratingService.existsByUserAndPlace(user, place);
+  public boolean hasRatedOrReviewedPlace(Place place) {
+    AppUser user = userService.getAuthenticatedUser();
+    return user != null
+        && (ratingService.existsByUserAndPlace(user, place)
+            || reviewService.findById(new ReviewId(user.getId(), place.getId())).isPresent());
   }
 
-  private boolean isAuthenticatedOrAdmin(AppUser user) {
-    return user == null || !user.getServerRole().equals(ServerRole.ADMIN);
+  private boolean isAdmin() {
+    AppUser user = userService.getAuthenticatedUser();
+    return user != null && user.getServerRole().equals(ServerRole.ADMIN);
   }
 }

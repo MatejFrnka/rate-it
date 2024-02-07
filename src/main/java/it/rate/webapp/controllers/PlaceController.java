@@ -66,7 +66,7 @@ public class PlaceController {
       AppUser loggedUser = userService.getByEmail(principal.getName());
       model.addAttribute("loggedUser", loggedUser);
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())
-          || permissionService.hasRatedOrReviewedPlace(loggedUser, place)) {
+          || permissionService.hasRatedOrReviewedPlace(place)) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
         Optional<Review> optReview =
             reviewService.findById(new ReviewId(loggedUser.getId(), placeId));

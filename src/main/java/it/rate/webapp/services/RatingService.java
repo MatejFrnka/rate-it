@@ -5,15 +5,13 @@ import it.rate.webapp.exceptions.badrequest.InvalidCriterionDetailsException;
 import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
-import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.*;
 
 @Service
 @Validated
