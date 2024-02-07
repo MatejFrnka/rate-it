@@ -34,8 +34,9 @@ public class PermissionService {
   }
 
   public boolean ratePlace(Long placeId) {
+    AppUser user = userService.getAuthenticatedUser();
     Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
-    return canRateOrCreate(place.getInterest());
+    return canRateOrCreate(place.getInterest()) || hasRatedPlace(user, place);
   }
 
   public boolean manageCommunity(Long interestId) {
@@ -43,14 +44,11 @@ public class PermissionService {
       throw new InterestNotFoundException();
     }
     AppUser user = userService.getAuthenticatedUser();
-    if (user == null) {
-      return false;
+    if (isAuthenticatedOrAdmin(user)) {
+      Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+      return optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.CREATOR);
     }
-    if (user.getServerRole().equals(ServerRole.ADMIN)) {
-      return true;
-    }
-    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-    return optRole.isPresent() && optRole.get().getRoleType().equals(Role.RoleType.CREATOR);
+    return false;
   }
 
   public boolean canCreateInterest() {
@@ -59,23 +57,16 @@ public class PermissionService {
 
   public boolean hasPlaceEditPermissions(Long placeId, Long interestId) {
     AppUser user = userService.getAuthenticatedUser();
-    if (user == null) {
-      return false;
-    }
-    // Check if user is admin
-    if (user.getServerRole().equals(ServerRole.ADMIN)) {
-      return true;
-    }
+    if (isAuthenticatedOrAdmin(user)) {
+      Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
+      if (place.getCreator().equals(user)) {
+        return true;
+      }
 
-    // Check if user is place creator
-    Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
-    if (place.getCreator().equals(user)) {
-      return true;
+      Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
+      return optRole.map(role -> role.getRoleType().equals(Role.RoleType.CREATOR)).orElse(false);
     }
-
-    // Check if user is Interest creator
-    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-    return optRole.map(role -> role.getRoleType().equals(Role.RoleType.CREATOR)).orElse(false);
+    return false;
   }
 
   public boolean createPlace(Long interestId) {
@@ -86,22 +77,23 @@ public class PermissionService {
 
   private boolean canRateOrCreate(Interest i) {
     AppUser user = userService.getAuthenticatedUser();
-    if (user == null) {
-      return false;
+    if (isAuthenticatedOrAdmin(user)) {
+      Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
+      if (!i.isExclusive()) {
+        return true;
+      }
+      return optRole.isPresent()
+              && (optRole.get().getRoleType().equals(Role.RoleType.VOTER)
+              || optRole.get().getRoleType().equals(Role.RoleType.CREATOR));
     }
-    if (user.getServerRole().equals(ServerRole.ADMIN)) {
-      return true;
-    }
-    Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), i.getId()));
-    if (!i.isExclusive()) {
-      return true;
-    }
-    return optRole.isPresent()
-        && (optRole.get().getRoleType().equals(Role.RoleType.VOTER)
-            || optRole.get().getRoleType().equals(Role.RoleType.CREATOR));
+    return false;
   }
 
-  public boolean hasRatedBefore(AppUser user, Place place) {
+  public boolean hasRatedPlace(AppUser user, Place place) {
     return ratingService.existsByUserAndPlace(user, place);
+  }
+
+  private boolean isAuthenticatedOrAdmin(AppUser user) {
+    return user == null || !user.getServerRole().equals(ServerRole.ADMIN);
   }
 }
