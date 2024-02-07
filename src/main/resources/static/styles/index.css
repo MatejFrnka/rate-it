@@ -1531,6 +1531,35 @@ h4 {
     margin: 0 0.5rem;
 }
 
+.review-box-main-right {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.review-box-right-top {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+}
+
+.review-box-right-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.review-box-right-bottom > span {
+    font-size: small;
+    margin: 0;
+}
+
+.review-box-right-top span {
+    font-weight: bolder;
+}
+
 .user-icon-rating {
     height: 100%;
     display: flex;
@@ -1543,37 +1572,12 @@ h4 {
     height: 3rem;
 }
 
-.review-box-main-middle {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    flex: 1;
-}
-
-.review-box-main-middle span {
-    margin-top: 0.5rem;
-    font-weight: bolder;
-}
-
-.review-box-main-right {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    margin: 0.5rem;
-    padding-right: 0.5rem;
-}
-
 .expand-button {
     border: none;
     display: flex;
     background: white;
     padding-left: 0;
     color: #598F76;
-}
-
-.timestamp-container {
-    font-size: small;
-    margin: 0;
 }
 
 .expand-button img {

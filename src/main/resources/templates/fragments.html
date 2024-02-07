@@ -154,30 +154,32 @@
                    class="button">Visit</a>
             </div>
         </div>
-        <div class="review-box-main-middle">
-            <span th:if="${placePage}" th:text="${review.userName}"></span>
-            <span th:unless="${placePage}" th:text="${review.placeName}"></span>
-            <div class="button-ratings-container">
-                <button class="expand-button" th:id="'button-show-ratings-' + ${review.userName} + '-' + ${review.placeId}">
-                    <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
-                    <i>Details</i>
-                </button>
-            </div>
-        </div>
         <div class="review-box-main-right">
-            <div class="average-rating-container">
-                <i class="fas fa-star"></i>
-                <span class="rating" th:unless="${@thymeMath.isNaN(review.avgRating)}"
-                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating), 1, 1, 'POINT')}"></span>
-                <span class="rating" th:if="${@thymeMath.isNaN(review.avgRating)}">N/A</span>
+            <div class="review-box-right-top">
+                <span th:if="${placePage}" th:text="${review.userName}"></span>
+                <span th:unless="${placePage}" th:text="${review.placeName}"></span>
+                <div class="average-rating-container">
+                    <i class="fas fa-star"></i>
+                    <span class="rating" th:unless="${@thymeMath.isNaN(review.avgRating)}"
+                          th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating), 1, 1, 'POINT')}"></span>
+                    <span class="rating" th:if="${@thymeMath.isNaN(review.avgRating)}">N/A</span>
+                </div>
             </div>
-            <div class="timestamp-container">
+            <div class="review-box-right-bottom">
+                <div class="button-ratings-container">
+                    <button class="expand-button"
+                            th:id="'button-show-ratings-' + ${review.userName} + '-' + ${review.placeId}">
+                        <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
+                        <i>Details</i>
+                    </button>
+                </div>
                 <span th:text="${#dates.format(review.timestamp, 'dd/MM/yyyy, HH:mm:ss')}"></span>
             </div>
         </div>
     </div>
 
-    <div class="user-review-container" th:id="'review_' + ${review.userName} + '-' + ${review.placeId}" style="display: none;">
+    <div class="user-review-container" th:id="'review_' + ${review.userName} + '-' + ${review.placeId}"
+         style="display: none;">
         <textarea disabled
                   th:id="'textarea_' + ${review.userName} + '-' + ${review.placeId}"
                   th:unless="${review.review == null}"
@@ -196,7 +198,8 @@
     </div>
 </div>
 
-<script th:fragment="topbar-script" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+<script th:fragment="topbar-script"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 
