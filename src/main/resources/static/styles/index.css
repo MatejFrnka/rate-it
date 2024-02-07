@@ -334,6 +334,20 @@ h3 {
     background-color: #575757;
 }
 
+#rate-confirmation {
+    position: absolute;
+    margin-top: 3.5rem;
+}
+
+.success {
+    color: #568D73;
+}
+
+.fail {
+    color: red;
+}
+
+
 .location-button-bar {
     display: flex;
     justify-content: space-between;

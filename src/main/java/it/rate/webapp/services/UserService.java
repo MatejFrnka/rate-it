@@ -67,6 +67,10 @@ public class UserService {
     return userRepository.findByEmailIgnoreCase(email);
   }
 
+  public List<AppUser> findAllDistinctByPlace(@Valid Place place) {
+    return userRepository.findAllDistinctByReviews_PlaceOrRatings_Place(place);
+  }
+
   public List<InterestUserDTO> getUsersDTO(
       @Valid Interest interest, @NotNull Role.RoleType roleType) {
     return interest.getRoles().stream()

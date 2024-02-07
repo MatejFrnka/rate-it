@@ -96,7 +96,7 @@ function loadInterests(query, category) {
         elements.interestLink.href = `/interests/${interest.id}`;
         elements.interestImg.src = interest.imageUrl;
         elements.titleH3.textContent = interest.name;
-        if (interest.distanceKm !== null) {
+        if (!isNaN(interest.distanceKm) && interest.distanceKm > 0) {
             elements.distanceSpan.textContent = interest.distanceKm.toFixed(1) + ' km';
         }
         elements.interestLikes.textContent = interest.likes;

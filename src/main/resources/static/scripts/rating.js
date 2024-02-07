@@ -1,6 +1,8 @@
 // https://medium.com/geekculture/how-to-build-a-simple-star-rating-system-abcbb5117365
 
 const STARS = 10;
+const RATE_CONFIRMATION = document.getElementById('rate-confirmation');
+
 
 function addClassToStars(stars, rating, className) {
     //loop through and set the active class on preceding stars
@@ -56,6 +58,8 @@ function initializeRating() {
                     break;
 
                 case 'click':
+                    RATE_CONFIRMATION.className = '';
+                    RATE_CONFIRMATION.textContent = '';
                     // Set the input value and add class based on the click rating
                     let inputClick = stars.parentElement.querySelector('input');
 
@@ -142,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const updateElement = (elementId, value) => {
                 const element = document.getElementById(elementId);
-                if (value === null) {
+                if (isNaN(value)) {
                     element.textContent = 'N/A';
                 } else {
                     element.textContent = (value / 2).toFixed(1);
@@ -154,9 +158,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             updateElement('place-rating', responseData.avgRating);
+            RATE_CONFIRMATION.classList.add('success');
+            RATE_CONFIRMATION.textContent = 'Rating saved.';
 
         } catch (error) {
             console.error(error);
+            RATE_CONFIRMATION.classList.add('fail');
+            RATE_CONFIRMATION.textContent = 'Something went wrong. Try again later.';
         }
     }
 

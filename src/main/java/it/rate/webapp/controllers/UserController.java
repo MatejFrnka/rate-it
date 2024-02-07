@@ -1,10 +1,6 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.dtos.AppUserDTO;
-import it.rate.webapp.dtos.PasswordResetDTO;
-import it.rate.webapp.dtos.SignupUserInDTO;
-import it.rate.webapp.dtos.SignupUserOutDTO;
-import it.rate.webapp.dtos.UserRatedInterestDTO;
+import it.rate.webapp.dtos.*;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
@@ -12,10 +8,11 @@ import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.RatingService;
+import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +25,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
-  private final RatingService ratingService;
   private final InterestService interestService;
+  private final PlaceService placeService;
 
   @GetMapping("/signup")
   public String signupPage() {
@@ -109,7 +106,7 @@ public class UserController {
   public String userPage(@PathVariable String username, Model model, Principal principal) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
-    List<UserRatedInterestDTO> ratedInterests = ratingService.getAllUserRatedInterestDTOS(user);
+    List<RatedInterestDTO> ratedInterests = interestService.getAllRatedInterestsDTOS(user);
 
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
@@ -132,10 +129,14 @@ public class UserController {
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
     Interest interest =
         interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
-    UserRatedInterestDTO ratedInterest = ratingService.getUserRatedInterestDTO(user, interest);
+    Comparator<PlaceReviewDTO> comparator =
+        Comparator.comparing(PlaceReviewDTO::timestamp).reversed();
+    List<PlaceReviewDTO> placesReviews =
+        placeService.getPlaceReviewDTOs(user, interest, comparator);
 
     model.addAttribute("user", new AppUserDTO(user));
-    model.addAttribute("interest", ratedInterest);
+    model.addAttribute("interest", interest);
+    model.addAttribute("placesReviews", placesReviews);
 
     if (principal != null) {
       model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
