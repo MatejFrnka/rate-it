@@ -16,38 +16,7 @@
         <a th:href="@{/users/{username}(username=${user.username})}" th:text="${user.username}"
            class="user-back-link"></a>
         <h2 th:text="${interest.name}"></h2>
-<!--        <section class="user-page-layout">-->
-<!--            <div class="extendable user-detail-place" th:each="place : ${placesReviews}" th:object="${place}"-->
-<!--                 onclick="toggleExtension(this)">-->
-<!--                <div class="user-detail-place-default">-->
-<!--                    <h4 th:text="${place.placeName}"></h4>-->
-<!--                    <div class="place-rating-average">-->
-<!--                        <i class="fas fa-star"></i>-->
-<!--                        <span class="rating"-->
-<!--                              th:unless="${@thymeMath.isNaN(place.avgRating)}"-->
-<!--                              th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>-->
-<!--                        <span class="rating" th:if="${@thymeMath.isNaN(place.avgRating)}">N/A</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="extension">-->
-<!--                    <div class="extension-list">-->
-<!--                        <ul class="user-interest-place" th:each="rating : ${place.ratings}">-->
-<!--                            <li th:object="${rating}">-->
-<!--                                <i class="fas fa-star"></i>-->
-<!--                                <span class="place-rating-average" th:unless="${@thymeMath.isNaN(rating.rating)}"-->
-<!--                                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating), 1, 1, 'POINT')}"></span>-->
-<!--                                <span class="place-rating-average" th:if="${@thymeMath.isNaN(rating.rating)}">N/A</span>-->
-<!--                                <p th:text="*{criterionName}"></p>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                    <a th:href="@{/interests/{intId}/places/{placeId}-->
-<!--                    (intId=${interest.id}, placeId=${place.placeId()})}"-->
-<!--                       class="button">Visit</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </section>-->
-        <section class="user-page-layout">
+        <section class="place-reviews">
             <div th:each="placeReview : ${placesReviews}">
                 <div th:replace="~{fragments.html :: review-box(review=${placeReview}, placePage=false)}"></div>
             </div>

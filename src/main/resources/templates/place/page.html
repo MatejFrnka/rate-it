@@ -154,7 +154,7 @@
             </div>
         </section>
 
-        <section>
+        <section class="place-reviews">
             <div th:each="placeReview : ${placeReviews}">
                 <div th:replace="~{fragments.html :: review-box(review=${placeReview}, placePage=true)}"></div>
             </div>
