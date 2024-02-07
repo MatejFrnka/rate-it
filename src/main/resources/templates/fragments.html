@@ -68,14 +68,12 @@
         <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/user.svg}" alt="User Profile">
         <ul class="dropdown-menu">
-            <li th:if="${loggedUser}" class="dropdown-header">
-                <a class="dropdown-item" th:href="@{/users/{username}(username=${loggedUser.getUsername()})}"
+            <li th:if="${loggedUser}">
+                <a class="dropdown-item dropdown-username" th:href="@{/users/{username}(username=${loggedUser.getUsername()})}"
                    th:text="${loggedUser.getUsername()}"></a>
             </li>
-            <li th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
+            <li class="dropdown-item dropdown-username" th:unless="${loggedUser}" th:text="'Anonymous user'"></li>
+            <li><hr class="dropdown-divider"></li>
             <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
             <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/login}">Login</a></li>
             <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/signup}">Register</a></li>

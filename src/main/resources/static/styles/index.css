@@ -117,7 +117,7 @@ footer {
     display: none;
 }
 
-.dropdown-header a {
+.dropdown-username {
     font-weight: 600;
 }
 
@@ -375,10 +375,6 @@ h3 {
     margin-top: 0.5rem;
 }
 
-#suggestionList {
-    flex-wrap: wrap;
-}
-
 .interest-card {
     display: flex;
     flex-direction: column;
@@ -576,7 +572,7 @@ h3 {
     font-size: 0.8rem;
 }
 
-@media only screen and (max-width: 475px) {
+@media only screen and (max-width: 420px) {
     .interest-place {
         flex-direction: column;
         height: auto;
