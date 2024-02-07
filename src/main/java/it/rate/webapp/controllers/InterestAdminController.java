@@ -48,6 +48,10 @@ public class InterestAdminController {
   public String editInterest(@PathVariable Long interestId, InterestInDTO interestDTO) {
 
     Interest interest = interestService.getById(interestId);
+    if (!interestDTO.exclusive() && interest.isExclusive()) {
+      roleService.removeAllVoterRoles(interestId);
+    }
+
     interest = interestService.update(interest, interestDTO);
     criterionService.updateAll(interest, interestDTO.criteriaNames());
 
