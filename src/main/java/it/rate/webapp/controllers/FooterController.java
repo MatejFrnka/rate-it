@@ -15,11 +15,6 @@ public class FooterController extends BaseThymeleafController {
     return "footer/contact";
   }
 
-  @GetMapping("/developers")
-  public String developers() {
-    return "footer/developers";
-  }
-
   @GetMapping("/")
   public String about() {
     return "footer/about";
