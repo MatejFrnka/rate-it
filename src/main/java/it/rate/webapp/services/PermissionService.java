@@ -20,6 +20,7 @@ public class PermissionService {
   private final InterestRepository interestRepository;
   private final RoleRepository roleRepository;
   private final UserService userService;
+  private final RatingService ratingService;
 
   public boolean hasRatingPermission(AppUser user, Interest interest) {
     Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interest.getId()));
@@ -98,5 +99,9 @@ public class PermissionService {
     return optRole.isPresent()
         && (optRole.get().getRoleType().equals(Role.RoleType.VOTER)
             || optRole.get().getRoleType().equals(Role.RoleType.CREATOR));
+  }
+
+  public boolean hasRatedBefore(AppUser user, Place place) {
+    return ratingService.existsByUserAndPlace(user, place);
   }
 }

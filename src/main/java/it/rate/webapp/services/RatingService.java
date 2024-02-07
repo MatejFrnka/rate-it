@@ -8,6 +8,7 @@ import it.rate.webapp.exceptions.badrequest.InvalidRatingException;
 import it.rate.webapp.mappers.RatingMapper;
 import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.CriterionRepository;
+import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ public class RatingService {
 
   private final RatingRepository ratingRepository;
   private final CriterionRepository criterionRepository;
+  private final PlaceRepository placeRepository;
 
   public RatingsDTO getUsersRatingsDto(@Valid AppUser appUser, @Valid Place place) {
     List<Rating> ratings = ratingRepository.findAllByAppUserAndPlace(appUser, place);
@@ -133,5 +135,9 @@ public class RatingService {
             .map(place -> RatingMapper.remapToUserRatedPlaceDTO(place.getKey(), place.getValue()))
             .sorted(Comparator.comparingDouble(UserRatedPlaceDTO::avgRating).reversed())
             .collect(Collectors.toList()));
+  }
+
+  public boolean existsByUserAndPlace(AppUser appUser, Place place) {
+    return ratingRepository.existsByAppUserAndPlace(appUser, place);
   }
 }

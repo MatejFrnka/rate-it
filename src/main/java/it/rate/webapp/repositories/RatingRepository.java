@@ -22,4 +22,6 @@ public interface RatingRepository extends JpaRepository<Rating, RatingId> {
           + "LEFT JOIN Rating r ON r IN (cr, pr) "
           + "WHERE r.appUser = :appUser AND i = :interest")
   List<Rating> findAllByAppUserAndInterestId(AppUser appUser, Interest interest);
+
+  boolean existsByAppUserAndPlace(AppUser appUser, Place place);
 }
