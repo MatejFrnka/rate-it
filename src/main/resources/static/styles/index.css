@@ -1741,3 +1741,7 @@ h4 {
 .user-picture .uppy-Dashboard-Item-previewImg {
     border-radius: 50% !important;
 }
+
+.about h1{
+  color: #568D73;
+}
