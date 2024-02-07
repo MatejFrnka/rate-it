@@ -36,7 +36,7 @@ public class PermissionService {
   public boolean ratePlace(Long placeId) {
     AppUser user = userService.getAuthenticatedUser();
     Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
-    return canRateOrCreate(place.getInterest()) || hasRatedPlace(user, place);
+    return canRateOrCreate(place.getInterest()) || hasRatedOrReviewedPlace(user, place);
   }
 
   public boolean manageCommunity(Long interestId) {
@@ -89,7 +89,7 @@ public class PermissionService {
     return false;
   }
 
-  public boolean hasRatedPlace(AppUser user, Place place) {
+  public boolean hasRatedOrReviewedPlace(AppUser user, Place place) {
     return ratingService.existsByUserAndPlace(user, place);
   }
 
