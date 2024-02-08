@@ -107,4 +107,22 @@ public class ImageRestController {
       return ResponseEntity.internalServerError().body("Error while processing the file");
     }
   }
+
+  @GetMapping("/users/{username}")
+  public ResponseEntity<?> getProfilePicture(@PathVariable String username) {
+
+    Optional<AppUser> user = userService.findByUsernameIgnoreCase(username);
+
+    if(user.isEmpty()) {
+      return ResponseEntity.badRequest().body("User does not exist");
+    } else if(user.get().getImageName() == null) {
+      return ResponseEntity.badRequest().body("No profile picture set");
+    }
+
+    try {
+      return ResponseEntity.ok().body(imageService.getImageById(user.get().getImageName()));
+    } catch (ApiServiceUnavailableException e) {
+      return ResponseEntity.internalServerError().build();
+    }
+  }
 }

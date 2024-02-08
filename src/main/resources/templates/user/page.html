@@ -19,12 +19,15 @@
             <a th:if="${loggedUser != null && user.username().equals(loggedUser.getUsername())}"
                class="user-image" id="uppy-modal" style="cursor: pointer">
                 <img th:if="*{imageName() == null}" src="/icons/user.svg" alt="placeholderImg">
-                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}" alt="profile-picture">
+                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}"
+                     alt="profile-picture">
             </a>
+
 
             <div th:if="${loggedUser == null || !user.username().equals(loggedUser.getUsername())}" class="user-image">
                 <img th:if="*{imageName() == null}" src="/icons/user.svg" alt="placeholderImg">
-                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}" alt="profile-picture">
+                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}"
+                     alt="profile-picture">
             </div>
 
             <div id="uppy"></div>
@@ -69,7 +72,8 @@
                         <ul class="user-interest-place" th:each="place : ${interest.ratedPlaces}">
                             <li th:object="${place}">
                                 <i class="fas fa-star"></i>
-                                <span class="place-rating-average" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average"
+                                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
                                 <span th:text="*{placeName}"></span>
                             </li>
                         </ul>

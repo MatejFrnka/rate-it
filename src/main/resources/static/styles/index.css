@@ -1669,3 +1669,8 @@ h4 {
         transform: rotate(360deg);
     }
 }
+
+/*User profile image in header*/
+#user-profile-img {
+    border-radius: 50%;
+}
