@@ -1675,3 +1675,11 @@ h4 {
 #user-profile-img {
     border-radius: 50%;
 }
+
+.cropper-view-box {
+    border-radius: 50%;
+}
+
+.user-picture .uppy-Dashboard-Item-previewImg {
+    border-radius: 50% !important;
+}

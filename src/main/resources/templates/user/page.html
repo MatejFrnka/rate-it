@@ -29,7 +29,7 @@
                      alt="profile-picture">
             </div>
 
-            <div id="uppy"></div>
+            <div id="uppy" class="user-picture"></div>
             <div class="user-details">
                 <h2 th:text="*{username}"></h2>
                 <p th:if="${loggedUser == null || loggedUser.id != user.id}" th:text="*{bio}"></p>
