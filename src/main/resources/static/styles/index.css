@@ -1581,18 +1581,16 @@ h4 {
 .expand-button {
     border: none;
     display: flex;
+    gap: 0.5rem;
+    align-items: center;
     background: white;
     padding-left: 0;
     color: #598F76;
 }
 
-.expand-button img {
-    padding-top: 1px;
-}
-
 .average-rating-container {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.3rem;
     justify-content: flex-end;
     align-items: baseline;
 }
