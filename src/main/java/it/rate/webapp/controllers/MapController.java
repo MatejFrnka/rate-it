@@ -16,7 +16,7 @@ import java.util.Optional;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests/{interestId}/map")
-public class MapController {
+public class MapController extends BaseThymeleafController {
   private final InterestService interestService;
   private final UserService userService;
   private final RoleService roleService;
@@ -30,7 +30,6 @@ public class MapController {
         interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser);
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       optRole.ifPresent(role -> model.addAttribute("role", role.getRoleType()));
       model.addAttribute(

@@ -72,7 +72,11 @@
                             <li th:object="${place}">
                                 <i class="fas fa-star"></i>
                                 <span class="place-rating-average"
+
+                                      th:unless="${@thymeMath.isNaN(place.avgRating)}"
                                       th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average"
+                                      th:if="${@thymeMath.isNaN(place.avgRating)}">N/A</span>
                                 <span th:text="*{placeName}"></span>
                             </li>
                         </ul>

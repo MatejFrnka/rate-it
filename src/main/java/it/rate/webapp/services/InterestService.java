@@ -20,6 +20,7 @@ public class InterestService {
 
   private final InterestRepository interestRepository;
   private final CategoryService categoryService;
+  private final PlaceService placeService;
 
   public Optional<Interest> findById(Long interestId) {
     return interestRepository.findById(interestId);
@@ -68,15 +69,30 @@ public class InterestService {
             interest ->
                 new InterestSuggestionDTO(
                     interest, getDistanceToNearestPlace(usersCoords, interest.getPlaces())))
-        .sorted(
-            Comparator.comparingDouble(
-                dto -> dto.distanceKm() != null ? dto.distanceKm() : Double.MAX_VALUE))
+        .sorted(Comparator.comparingDouble(InterestSuggestionDTO::distanceKm))
         .collect(Collectors.toList());
+  }
+
+  public List<RatedInterestDTO> getAllRatedInterestsDTOS(@Valid AppUser appUser) {
+    List<Interest> ratedInterests =
+        interestRepository.findAllDistinctByUserRatingsOrReviews(appUser);
+
+    Comparator<PlaceReviewDTO> comparator =
+        Comparator.comparing(
+                (PlaceReviewDTO dto) -> Double.isNaN(dto.avgRating()) ? 0d : dto.avgRating())
+            .reversed();
+
+    return ratedInterests.stream()
+        .map(
+            interest ->
+                new RatedInterestDTO(
+                    interest, placeService.getPlaceReviewDTOs(appUser, interest, comparator)))
+        .toList();
   }
 
   private Double getDistanceToNearestPlace(CoordinatesDTO usersCoords, List<Place> places) {
     if (places.isEmpty()) {
-      return null;
+      return Double.NaN;
     }
     double minDistance = Double.MAX_VALUE;
     for (Place place : places) {

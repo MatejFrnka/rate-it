@@ -8,10 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
 
 @Getter
 @Setter
@@ -72,12 +70,7 @@ public class Place {
   }
 
   public Double getAverageRating() {
-    Double averageRating = null;
-    OptionalDouble optAverageRating = ratings.stream().mapToDouble(Rating::getRating).average();
-    if (optAverageRating.isPresent()) {
-      averageRating = optAverageRating.getAsDouble();
-    }
-    return averageRating;
+    return ratings.stream().mapToDouble(Rating::getRating).average().orElse(Double.NaN);
   }
 
   public void update(PlaceInDTO placeDTO) {
