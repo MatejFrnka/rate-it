@@ -12,6 +12,10 @@ java {
     sourceCompatibility = '17'
 }
 
+springBoot {
+    buildInfo()
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor

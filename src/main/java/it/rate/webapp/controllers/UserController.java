@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-public class UserController {
+public class UserController extends BaseThymeleafController {
 
   private final UserService userService;
   private final InterestService interestService;
@@ -103,17 +103,13 @@ public class UserController {
   }
 
   @GetMapping("/users/{username}")
-  public String userPage(@PathVariable String username, Model model, Principal principal) {
+  public String userPage(@PathVariable String username, Model model) {
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
     List<RatedInterestDTO> ratedInterests = interestService.getAllRatedInterestsDTOS(user);
 
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("ratedInterests", ratedInterests);
-
-    if (principal != null) {
-      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-    }
 
     return "user/page";
   }
@@ -122,8 +118,7 @@ public class UserController {
   public String interestDetail(
       @PathVariable String username,
       @PathVariable Long interestId,
-      Model model,
-      Principal principal) {
+      Model model) {
 
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
@@ -137,10 +132,6 @@ public class UserController {
     model.addAttribute("user", new AppUserDTO(user));
     model.addAttribute("interest", interest);
     model.addAttribute("placesReviews", placesReviews);
-
-    if (principal != null) {
-      model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
-    }
 
     return "user/interest";
   }

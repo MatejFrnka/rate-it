@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests")
-public class InterestController {
+public class InterestController extends BaseThymeleafController {
 
   private final InterestService interestService;
   private final UserService userService;
@@ -31,14 +31,13 @@ public class InterestController {
 
   @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
   @GetMapping("/create")
-  public String createInterest(Model model, Principal principal) {
+  public String createInterest(Model model) {
 
     Set<Criterion> criteria = new HashSet<>();
     model.addAttribute("criteria", criteria);
     model.addAttribute("interest", new Interest());
     model.addAttribute("action", "/interests/create");
     model.addAttribute("method", "post");
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
     model.addAttribute("categories", categoryService.findAll());
 
     return "interest/form";
@@ -67,7 +66,6 @@ public class InterestController {
         interestService.findById(interestId).orElseThrow(InterestNotFoundException::new);
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser);
       Optional<Role> optRole = roleService.findById(new RoleId(loggedUser.getId(), interestId));
       optRole.ifPresent(role -> model.addAttribute("role", role.getRoleType()));
       model.addAttribute(
@@ -98,7 +96,6 @@ public class InterestController {
   public String myInterests(Model model, Principal principal) {
 
     AppUser loggedUser = userService.getByEmail(principal.getName());
-    model.addAttribute("loggedUser", loggedUser);
     model.addAttribute("likedInterests", interestService.getLikedInterestsDTOS(loggedUser));
 
     return "interest/seeAll";
