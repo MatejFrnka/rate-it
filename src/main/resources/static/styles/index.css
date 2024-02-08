@@ -285,6 +285,8 @@ h3 {
 .hover-star-count {
     margin: 0 0 0 0.2rem;
     width: 1.5rem;
+    display: flex;
+    justify-content: center;
     text-align: center;
     font-size: 0.875rem;
 }
@@ -323,8 +325,10 @@ h3 {
 }
 
 .place-rating-criterion .rating {
-    display: block;
     width: 1.5rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 
 .place-button-bar {
@@ -1601,8 +1605,9 @@ h4 {
 }
 
 .average-rating-container span {
+    text-align: center;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     overflow-wrap: normal;
     width: 1.5rem;
 }
