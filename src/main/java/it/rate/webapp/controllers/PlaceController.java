@@ -29,7 +29,7 @@ public class PlaceController extends BaseThymeleafController {
 
   @GetMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String newPlacePage(@PathVariable Long interestId, Model model, Principal principal) {
+  public String newPlacePage(@PathVariable Long interestId, Model model) {
 
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
@@ -63,7 +63,6 @@ public class PlaceController extends BaseThymeleafController {
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser);
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())
           || permissionService.hasRatedOrReviewedPlace(place)) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
@@ -82,7 +81,7 @@ public class PlaceController extends BaseThymeleafController {
   @GetMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlacePage(
-      @PathVariable Long interestId, @PathVariable Long placeId, Model model, Principal principal) {
+      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
 
     model.addAttribute("method", "PUT");
     model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
