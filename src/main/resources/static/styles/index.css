@@ -1519,6 +1519,7 @@ h4 {
     display: flex;
     justify-content: center;
     width: 4rem;
+    height: 3.5rem;
 }
 
 .user-icon-rating {

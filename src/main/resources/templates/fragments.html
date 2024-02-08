@@ -69,7 +69,7 @@
         <img th:if="${loggedUser != null && loggedUser.getImageName() != null}" role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{'/api/v1/images/' + ${loggedUser.getImageName()}}" alt="User Profile" id="user-profile-img">
 
-        <img th:if="${loggedUser == null}" role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+        <img th:if="${loggedUser == null || loggedUser.getImageName() == null}" role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
              th:src="@{/icons/user.svg}" alt="User Profile" id="default-profile-img">
 
         <ul class="dropdown-menu">
