@@ -102,11 +102,10 @@ public class PermissionService {
 
   public boolean canEditUser(String username) {
 
-    if(username == null || username.isBlank()) {
+    if (username == null || username.isBlank()) {
       return false;
     }
 
     return username.equalsIgnoreCase(userService.getAuthenticatedUser().getUsername());
-
   }
 }

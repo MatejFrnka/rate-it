@@ -181,9 +181,9 @@ public class UserService {
     userRepository.save(user);
     passwordResetRepository.delete(pwReset);
   }
-  
+
   public void addImage(@NotNull String imageId, AppUser user) {
-    if(user.getImageName() != null) {
+    if (user.getImageName() != null) {
       imageService.deleteById(user.getImageName());
     }
     user.setImageName(imageId);
