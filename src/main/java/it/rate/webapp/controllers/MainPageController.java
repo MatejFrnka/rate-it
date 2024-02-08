@@ -8,11 +8,13 @@ import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@Validated
 @RequiredArgsConstructor
-public class MainPageController {
+public class MainPageController extends BaseThymeleafController {
 
   private final InterestService interestService;
   private final UserService userService;
@@ -23,11 +25,9 @@ public class MainPageController {
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser);
       model.addAttribute("likedInterests", interestService.findAllLikedByAppUser(loggedUser));
     }
     model.addAttribute("categories", categoryService.findAll());
-
     return "main/index";
   }
 }

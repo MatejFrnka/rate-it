@@ -17,7 +17,7 @@ import java.util.Optional;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests/{interestId}/places")
-public class PlaceController {
+public class PlaceController extends BaseThymeleafController {
 
   private final PlaceService placeService;
   private final UserService userService;
@@ -35,7 +35,6 @@ public class PlaceController {
     model.addAttribute("method", "POST");
     model.addAttribute("action", "/interests/" + interestId + "/places/new");
     model.addAttribute("title", "New page");
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
 
     return "place/form";
   }
@@ -48,7 +47,6 @@ public class PlaceController {
 
     Interest interest = interestService.getById(interestId);
     AppUser loggedUser = userService.getByEmail(principal.getName());
-    Place place = placeService.save(placeDTO, interest, loggedUser);
 
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
@@ -89,7 +87,6 @@ public class PlaceController {
     model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
     model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.getById(placeId));
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
 
     return "place/form";
   }
