@@ -2,11 +2,7 @@ function toggleExtension(toggleDiv) {
     const isExtended = toggleDiv.classList.toggle('extended');
 
     if (isExtended) {
-        if (toggleDiv.classList.contains("user-interest")) {
             loadAndFormatItems(toggleDiv, 3);
-        } else if (toggleDiv.classList.contains("user-detail-place")) {
-            loadAndFormatItems(toggleDiv, null); // Indicates loading all items
-        }
     }
 }
 
