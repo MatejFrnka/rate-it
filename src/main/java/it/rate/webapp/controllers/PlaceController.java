@@ -17,7 +17,7 @@ import java.util.Optional;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/interests/{interestId}/places")
-public class PlaceController {
+public class PlaceController extends BaseThymeleafController {
 
   private final PlaceService placeService;
   private final UserService userService;
@@ -29,13 +29,12 @@ public class PlaceController {
 
   @GetMapping("/new")
   @PreAuthorize("@permissionService.createPlace(#interestId)")
-  public String newPlacePage(@PathVariable Long interestId, Model model, Principal principal) {
+  public String newPlacePage(@PathVariable Long interestId, Model model) {
 
     model.addAttribute("place", new Place());
     model.addAttribute("method", "POST");
     model.addAttribute("action", "/interests/" + interestId + "/places/new");
     model.addAttribute("title", "New page");
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
 
     return "place/form";
   }
@@ -64,7 +63,6 @@ public class PlaceController {
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      model.addAttribute("loggedUser", loggedUser);
       if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
         Optional<Review> optReview =
@@ -82,13 +80,12 @@ public class PlaceController {
   @GetMapping("/{placeId}/edit")
   @PreAuthorize("@permissionService.hasPlaceEditPermissions(#placeId, #interestId)")
   public String editPlacePage(
-      @PathVariable Long interestId, @PathVariable Long placeId, Model model, Principal principal) {
+      @PathVariable Long interestId, @PathVariable Long placeId, Model model) {
 
     model.addAttribute("method", "PUT");
     model.addAttribute("action", "/interests/" + interestId + "/places/" + placeId + "/edit");
     model.addAttribute("title", "Edit page");
     model.addAttribute("place", placeService.getById(placeId));
-    model.addAttribute("loggedUser", userService.getByEmail(principal.getName()));
 
     return "place/form";
   }
