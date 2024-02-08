@@ -1368,6 +1368,7 @@ h4 {
 .user-interest-image {
     flex-shrink: 0;
     width: 20%;
+    max-height: 4.3rem;
 }
 
 .user-interest-image img {
