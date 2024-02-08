@@ -548,13 +548,14 @@ h3 {
 }
 
 .interest-place-ratings .rating {
-    display: block;
     width: 2rem;
-    flex-shrink: 0;
-
+    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 .interest-place-ratings .criterion {
+    margin-left: 0.2rem;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -1632,6 +1633,9 @@ h4 {
 
     .criterion-rating span {
         min-width: 1.5rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
     }
 
     .criterion-name {
