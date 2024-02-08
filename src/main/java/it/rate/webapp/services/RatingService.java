@@ -93,6 +93,6 @@ public class RatingService {
   }
 
   public boolean existsByUserAndPlace(AppUser appUser, Place place) {
-    return ratingRepository.existsByAppUserAndPlace(appUser, place);
+    return ratingRepository.existsByAppUserAndPlaceAndCriterionDeletedFalse(appUser, place);
   }
 }

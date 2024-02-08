@@ -11,5 +11,5 @@ public interface RatingRepository extends JpaRepository<Rating, RatingId> {
 
   List<Rating> findAllByAppUserAndPlaceAndCriterionDeletedFalse(AppUser appUser, Place place);
 
-  boolean existsByAppUserAndPlace(AppUser appUser, Place place);
+  boolean existsByAppUserAndPlaceAndCriterionDeletedFalse(AppUser appUser, Place place);
 }
