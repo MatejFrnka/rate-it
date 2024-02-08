@@ -27,7 +27,7 @@ public class PermissionService {
     if (!interest.isExclusive()) {
       return true;
     }
-    return isVoter(user, interest.getId()) || isCreator(user, interest.getId());
+    return isVoterOrCreator(user, interest.getId());
   }
 
   public boolean ratePlace(Long placeId) {
@@ -36,10 +36,10 @@ public class PermissionService {
   }
 
   public boolean manageCommunity(Long interestId) {
-    AppUser user = userService.getAuthenticatedUser();
     if (!interestRepository.existsById(interestId)) {
       throw new InterestNotFoundException();
     }
+    AppUser user = userService.getAuthenticatedUser();
     if (isAuthenticated(user)) {
       return isAdmin(user) || isCreator(user, interestId);
     }
@@ -69,17 +69,14 @@ public class PermissionService {
   private boolean canRateOrCreate(Interest i) {
     AppUser user = userService.getAuthenticatedUser();
     if (isAuthenticated(user)) {
-      return (isAdmin(user)
-          || !i.isExclusive()
-          || isVoter(user, i.getId())
-          || isCreator(user, i.getId()));
+      return (isAdmin(user) || !i.isExclusive() || isVoterOrCreator(user, i.getId()));
     }
     return false;
   }
 
   public boolean hasRatedOrReviewedPlace(Place place) {
     AppUser user = userService.getAuthenticatedUser();
-    return user != null
+    return isAuthenticated(user)
         && (ratingService.existsByUserAndPlace(user, place)
             || reviewService.findById(new ReviewId(user.getId(), place.getId())).isPresent());
   }
@@ -97,8 +94,13 @@ public class PermissionService {
     return optRole.map(role -> role.getRoleType().equals(Role.RoleType.CREATOR)).orElse(false);
   }
 
-  private boolean isVoter(AppUser user, Long interestId) {
+  private boolean isVoterOrCreator(AppUser user, Long interestId) {
     Optional<Role> optRole = roleRepository.findById(new RoleId(user.getId(), interestId));
-    return optRole.map(role -> role.getRoleType().equals(Role.RoleType.VOTER)).orElse(false);
+    return optRole
+        .map(
+            role ->
+                role.getRoleType().equals(Role.RoleType.VOTER)
+                    || role.getRoleType().equals(Role.RoleType.CREATOR))
+        .orElse(false);
   }
 }
