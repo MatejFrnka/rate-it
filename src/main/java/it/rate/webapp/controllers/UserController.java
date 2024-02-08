@@ -1,10 +1,6 @@
 package it.rate.webapp.controllers;
 
-import it.rate.webapp.dtos.AppUserDTO;
-import it.rate.webapp.dtos.PasswordResetDTO;
-import it.rate.webapp.dtos.SignupUserInDTO;
-import it.rate.webapp.dtos.SignupUserOutDTO;
-import it.rate.webapp.dtos.UserRatedInterestDTO;
+import it.rate.webapp.dtos.*;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
 import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
@@ -12,10 +8,11 @@ import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.RatingService;
+import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

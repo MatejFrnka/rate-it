@@ -47,6 +47,7 @@ public class PlaceController extends BaseThymeleafController {
 
     Interest interest = interestService.getById(interestId);
     AppUser loggedUser = userService.getByEmail(principal.getName());
+    Place place = placeService.save(placeDTO, interest, loggedUser);
 
     return String.format("redirect:/interests/%d/places/%d", interestId, place.getId());
   }
