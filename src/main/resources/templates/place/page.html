@@ -36,10 +36,10 @@
             <div class="rating">
                 <i class="fas fa-star"></i>
                 <span th:id="place-rating"
-                      th:unless="${place.getAverageRating() == null}"
+                      th:unless="${@thymeMath.isNaN(place.getAverageRating())}"
                       th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.getAverageRating()), 1, 1, 'POINT')}"></span>
                 <span th:id="place-rating"
-                      th:if="${place.getAverageRating() == null}">N/A</span>
+                      th:if="${@thymeMath.isNaN(place.getAverageRating())}">N/A</span>
             </div>
         </header>
 
@@ -58,10 +58,10 @@
                         <div th:class="${usersRatings} ? 'place-rating-average small' : 'place-rating-average'">
                             <i class="fas fa-star"></i>
                             <span th:id="${criterionDTO.id}"
-                                  th:unless="${criterionDTO.avgRating == null}" class="rating"
+                                  th:unless="${@thymeMath.isNaN(criterionDTO.avgRating)}" class="rating"
                                   th:text="${#numbers.formatDecimal(@thymeMath.roundRating(criterionDTO.avgRating), 1, 1, 'POINT')}"></span>
                             <span th:id="${criterionDTO.id}"
-                                  th:if="${criterionDTO.avgRating == null}" class="rating">N/A</span>
+                                  th:if="${@thymeMath.isNaN(criterionDTO.avgRating)}" class="rating">N/A</span>
                         </div>
 
                         <div th:if="${usersRatings}">
@@ -153,7 +153,7 @@
         </section>
 
         <section class="user-ratings">
-            <div class="rating-box" th:each="userRatingDto : ${placeRatings.userPlaceRatings()}">
+            <div class="rating-box" th:each="review : ${placeReviews}">
 
                 <div class="rating-box-main">
                     <div class="rating-box-main-left">
@@ -162,9 +162,9 @@
                         </div>
                     </div>
                     <div class="rating-box-main-middle">
-                        <p th:text="${userRatingDto.userName()}"></p>
+                        <p th:text="${review.userName()}"></p>
                         <div class="button-ratings-container">
-                            <button class="expand-button" th:id="'button-show-ratings-' + ${userRatingDto.userName()}">
+                            <button class="expand-button" th:id="'button-show-ratings-' + ${review.userName()}">
                                 <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
                                 <i>Details</i>
                             </button>
@@ -174,18 +174,22 @@
                         <div class="average-rating-container">
                             <i class="fas fa-star"></i>
                             <div class="average-rating">
-                                <p th:text="${userRatingDto.totalAverageRating()}"></p>
+                                <p th:unless="${@thymeMath.isNaN(review.avgRating())}"
+                                   th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating()), 1, 1, 'POINT')}"></p>
+                                <p th:if="${@thymeMath.isNaN(review.avgRating())}" class="rating">N/A</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <ul class="list-of-ratings" th:id="'ratingsList_' + ${userRatingDto.userName()}" style="display: none;">
-                    <li th:each="rating : ${userRatingDto.ratings()}">
+                <ul class="list-of-ratings" th:id="'ratingsList_' + ${review.userName()}" style="display: none;">
+                    <li th:each="rating : ${review.ratings()}">
                         <div class="criterion-rating">
                             <i class="fas fa-star"></i>
-                            <p th:text="${rating.getValue()}"></p>
-                            <p th:text="${rating.getKey()}" class="criterion-name"></p>
+                            <p th:unless="${@thymeMath.isNaN(rating.rating())}"
+                               th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating()), 1, 1, 'POINT')}"></p>
+                            <p th:if="${@thymeMath.isNaN(rating.rating())}" class="rating">N/A</p>
+                            <p th:text="${rating.criterionName()}" class="criterion-name"></p>
                         </div>
                     </li>
                 </ul>
@@ -207,7 +211,7 @@
 <script src="/scripts/placeMap.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
 <script src="/scripts/defaultImage.js"></script>
-<script th:if="${placeRatings}" src="/scripts/placeRatingsExpand.js"></script>
+<script th:if="${placeReviews}" src="/scripts/placeRatingsExpand.js"></script>
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
 <script th:if="${usersRatings}" src="/scripts/reviewForm.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/placeImageUpload.js"></script>

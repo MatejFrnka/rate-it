@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const updateElement = (elementId, value) => {
                 const element = document.getElementById(elementId);
-                if (value === null) {
+                if (isNaN(value)) {
                     element.textContent = 'N/A';
                 } else {
                     element.textContent = (value / 2).toFixed(1);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments.html :: head(title=${interest.interestName} + ' by ' + ${user.username})}">
+<head th:replace="~{fragments.html :: head(title=${interest.name} + ' by ' + ${user.username})}">
 </head>
 
 <body>
@@ -15,29 +15,34 @@
     <main class="content user-profile">
         <a th:href="@{/users/{username}(username=${user.username})}" th:text="${user.username}"
            class="user-back-link"></a>
-        <h2 th:text="${interest.interestName}"></h2>
+        <h2 th:text="${interest.name}"></h2>
         <section class="user-page-layout">
-            <div class="extendable user-detail-place" th:each="place : ${interest.ratedPlaces}" th:object="${place}"
+            <div class="extendable user-detail-place" th:each="place : ${placesReviews}" th:object="${place}"
                  onclick="toggleExtension(this)">
                 <div class="user-detail-place-default">
                     <h4 th:text="${place.placeName}"></h4>
                     <div class="place-rating-average">
                         <i class="fas fa-star"></i>
-                        <span class="rating" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                        <span class="rating"
+                              th:unless="${@thymeMath.isNaN(place.avgRating)}"
+                              th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                        <span class="rating" th:if="${@thymeMath.isNaN(place.avgRating)}">N/A</span>
                     </div>
                 </div>
                 <div class="extension">
                     <div class="extension-list">
-                        <ul class="user-interest-place" th:each="criterion : ${place.ratings}">
-                            <li th:object="${criterion}">
+                        <ul class="user-interest-place" th:each="rating : ${place.ratings}">
+                            <li th:object="${rating}">
                                 <i class="fas fa-star"></i>
-                                <span class="place-rating-average" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(criterion.rating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average" th:unless="${@thymeMath.isNaN(rating.rating)}"
+                                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average" th:if="${@thymeMath.isNaN(rating.rating)}">N/A</span>
                                 <p th:text="*{criterionName}"></p>
                             </li>
                         </ul>
                     </div>
                     <a th:href="@{/interests/{intId}/places/{placeId}
-                    (intId=${interest.interestId}, placeId=${place.placeId()})}"
+                    (intId=${interest.id}, placeId=${place.placeId()})}"
                        class="button">Visit</a>
                 </div>
             </div>

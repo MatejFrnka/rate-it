@@ -59,7 +59,7 @@ public class PlaceController extends BaseThymeleafController {
     Place place = placeService.findById(placeId).orElseThrow(PlaceNotFoundException::new);
     model.addAttribute("place", place);
     model.addAttribute("placeCriteria", placeService.getCriteriaOfPlaceDTO(place));
-    model.addAttribute("placeRatings", placeService.getPlaceUserRatingDto(place));
+    model.addAttribute("placeReviews", placeService.getPlaceReviewDTOs(place));
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
