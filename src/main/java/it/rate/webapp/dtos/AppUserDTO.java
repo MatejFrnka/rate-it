@@ -2,7 +2,8 @@ package it.rate.webapp.dtos;
 
 import it.rate.webapp.models.AppUser;
 
-public record AppUserDTO(Long id, String username, String bio, int followers, int follows) {
+public record AppUserDTO(
+    Long id, String username, String bio, int followers, int follows, String imageName) {
 
   public AppUserDTO(AppUser appUser) {
     this(
@@ -10,6 +11,7 @@ public record AppUserDTO(Long id, String username, String bio, int followers, in
         appUser.getUsername(),
         appUser.getBio(),
         appUser.getFollowers().size(),
-        appUser.getFollows().size());
+        appUser.getFollows().size(),
+        appUser.getImageName());
   }
 }

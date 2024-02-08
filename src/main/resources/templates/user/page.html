@@ -18,11 +18,13 @@
 
             <a th:if="${loggedUser != null && user.username().equals(loggedUser.getUsername())}"
                class="user-image" id="uppy-modal" style="cursor: pointer">
-                <img src="/icons/user.svg" alt="placeholderImg">
+                <img th:if="*{imageName() == null}" src="/icons/user.svg" alt="placeholderImg">
+                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}" alt="profile-picture">
             </a>
 
             <div th:if="${loggedUser == null || !user.username().equals(loggedUser.getUsername())}" class="user-image">
-                <img src="/icons/user.svg" alt="placeholderImg">
+                <img th:if="*{imageName() == null}" src="/icons/user.svg" alt="placeholderImg">
+                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}" alt="profile-picture">
             </div>
 
             <div id="uppy"></div>
