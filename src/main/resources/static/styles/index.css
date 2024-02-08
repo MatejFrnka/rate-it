@@ -184,7 +184,7 @@ h3 {
     margin-top: 0.5rem;
     font-weight: 600;
     font-size: 1rem;
-    color: #568D73;
+    color: var(--green-text-color);
 }
 
 .button {
@@ -605,6 +605,7 @@ h3 {
     flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 1rem;
+    user-select: none;
 }
 
 .sort-checkbox {
@@ -629,9 +630,9 @@ h3 {
 }
 
 .sort-container > .sort-checkbox:checked + span {
-    color: #478363;
+    color: var(--green-text-color);
     -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #478363;
+    -webkit-text-stroke-color: var(--green-text-color);
     background-color: rgba(86, 141, 115, 0.1);
 }
 
@@ -780,10 +781,10 @@ h4 {
     width: 50%;
     height: 100%;
     border-radius: 20px;
-    background: #e0e9e4;
+    background: rgba(86, 141, 115, 0.1);
     transition: all 0.3s;
-    color: #568D73;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: var(--green-text-color);
+    box-shadow: 0 0 8px rgba(86, 141, 115, 0.5);
 }
 
 .toggle-container span {
@@ -803,11 +804,11 @@ h4 {
 }
 
 .toggle-checkbox:checked + .toggle-container span:last-child {
-    color: #568D73;
+    color: var(--green-text-color);
 }
 
 .toggle-checkbox + .toggle-container span:first-child {
-    color: #568D73;
+    color: var(--green-text-color);
 }
 
 .toggle-checkbox + .toggle-container span:last-child {
@@ -1035,6 +1036,7 @@ h4 {
 
 :root {
     --form-container-height: 75vh;
+    --green-text-color: #478363
 }
 
 .form-container {
@@ -1335,7 +1337,7 @@ h4 {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    color: #568D73;
+    color: var(--green-text-color);
     font-weight: 600;
 }
 
@@ -1462,7 +1464,7 @@ h4 {
 }
 
 .user-back-link {
-    color: #568d73;
+    color: var(--green-text-color);
     text-decoration: none;
     font-size: 1.5rem;
     font-weight: 600;
