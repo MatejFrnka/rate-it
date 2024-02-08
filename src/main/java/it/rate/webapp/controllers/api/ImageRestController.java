@@ -2,13 +2,13 @@ package it.rate.webapp.controllers.api;
 
 import it.rate.webapp.dtos.ImageUploadResponseDTO;
 import it.rate.webapp.exceptions.api.ApiServiceUnavailableException;
+import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Place;
-import it.rate.webapp.services.GoogleImageService;
-import it.rate.webapp.services.InterestService;
-import it.rate.webapp.services.PlaceService;
+import it.rate.webapp.services.*;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,15 +20,16 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ImageRestController {
 
-  private final GoogleImageService googleImageService;
+  private final ImageService imageService;
   private final InterestService interestService;
   private final PlaceService placeService;
+  private final UserService userService;
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getImage(@PathVariable String id) {
 
     try {
-      return ResponseEntity.ok().body(googleImageService.getImageById(id));
+      return ResponseEntity.ok().body(imageService.getImageById(id));
     } catch (ApiServiceUnavailableException e) {
       return ResponseEntity.internalServerError().build();
     }
@@ -42,7 +43,7 @@ public class ImageRestController {
     String userEmail = principal.getName();
     try {
       return ResponseEntity.ok()
-          .body(new ImageUploadResponseDTO(googleImageService.saveImage(file, userEmail)));
+          .body(new ImageUploadResponseDTO(imageService.saveImage(file, userEmail)));
     } catch (IOException e) {
       return ResponseEntity.internalServerError().build();
     }
@@ -62,7 +63,7 @@ public class ImageRestController {
       return ResponseEntity.ok()
           .body(
               new ImageUploadResponseDTO(
-                  googleImageService.changeInterestImage(interest, file, userEmail)));
+                  imageService.changeInterestImage(interest, file, userEmail)));
     } catch (ApiServiceUnavailableException e) {
       return ResponseEntity.internalServerError().build();
     }
@@ -78,7 +79,7 @@ public class ImageRestController {
     String userEmail = principal.getName();
     Place place = placeService.getById(placeId);
     try {
-      placeService.addImage(place, googleImageService.saveImage(file, userEmail));
+      placeService.addImage(place, imageService.saveImage(file, userEmail));
       return ResponseEntity.ok().build();
     } catch (IOException e) {
       return ResponseEntity.internalServerError().body("Error while processing the file");
@@ -87,10 +88,23 @@ public class ImageRestController {
 
   @PostMapping("/users/{username}/new-profile-image")
   @PreAuthorize("@permissionService.canEditUser(#username)")
-  public ResponseEntity<?> uploadProfileImage(@PathVariable String username,
-                                              @RequestParam("picture") MultipartFile file) {
+  public ResponseEntity<?> uploadProfileImage(
+      @PathVariable String username,
+      @RequestParam("picture") MultipartFile file,
+      Principal principal) {
 
-    return ResponseEntity.ok().build();
+    String userEmail = principal.getName();
+    Optional<AppUser> user = userService.findByUsernameIgnoreCase(username);
+    if (user.isEmpty()) {
+      return ResponseEntity.badRequest().body("User does not exist");
+    }
 
+    try {
+      userService.addImage(imageService.saveImage(file, userEmail), user.get());
+      return ResponseEntity.ok().build();
+
+    } catch (IOException e) {
+      return ResponseEntity.internalServerError().body("Error while processing the file");
+    }
   }
 }
