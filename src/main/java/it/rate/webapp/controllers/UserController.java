@@ -2,11 +2,13 @@ package it.rate.webapp.controllers;
 
 import it.rate.webapp.dtos.*;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
-import it.rate.webapp.exceptions.badrequest.InvalidUserDetailsException;
+import it.rate.webapp.exceptions.badrequest.InvalidTokenException;
+import it.rate.webapp.exceptions.badrequest.PasswordMismatchException;
 import it.rate.webapp.exceptions.notfound.InterestNotFoundException;
 import it.rate.webapp.exceptions.notfound.UserNotFoundException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.PasswordReset;
 import it.rate.webapp.services.InterestService;
 import it.rate.webapp.services.PlaceService;
 import it.rate.webapp.services.UserService;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -67,39 +70,43 @@ public class UserController extends BaseThymeleafController {
     if (token == null || ref == null) {
       return principal != null ? "redirect:/" : "user/resetPassword";
     }
-    userService.validateToken(token, ref);
-
-    model.addAttribute("token", token);
-    model.addAttribute("ref", ref);
-    return "user/resetPasswordForm";
+    try {
+      userService.validateToken(token, ref);
+      model.addAttribute("token", token);
+      model.addAttribute("ref", ref);
+      return "user/resetPasswordForm";
+    } catch (InvalidTokenException e) {
+      model.addAttribute("error", e.getMessage());
+      return "user/resetPassword";
+    }
   }
 
   @PostMapping("/reset")
   public String submitResetPassword(Model model, String email) {
     Optional<AppUser> user = userService.findByEmailIgnoreCase(email);
     user.ifPresent(userService::initPasswordReset);
-
+    model.addAttribute("tokenExpiry", PasswordReset.getFormattedExpiration());
     model.addAttribute("email", email);
     return "user/resetSubmitted";
   }
 
   @PutMapping("/reset")
-  public String updatePassword(PasswordResetDTO pwResetDTO, String confirmPassword, Model model) {
-    if (!confirmPassword.equals(pwResetDTO.password())) {
-      model.addAttribute("error", "Passwords do not match. Please try again.");
-      model.addAttribute("token", pwResetDTO.token());
-      model.addAttribute("ref", pwResetDTO.ref());
-      return "user/resetPasswordForm";
-    }
+  public String updatePassword(
+      PasswordResetDTO pwResetDTO, String confirmPassword, Model model, RedirectAttributes ra) {
     try {
+      if (!confirmPassword.equals(pwResetDTO.password())) {
+        throw new PasswordMismatchException();
+      }
       userService.updatePassword(pwResetDTO);
-    } catch (InvalidUserDetailsException e) {
+      ra.addFlashAttribute("resetSuccess", "Password reset successful");
+      return "redirect:/login";
+    } catch (BadRequestException e) {
       model.addAttribute("error", e.getMessage());
       model.addAttribute("token", pwResetDTO.token());
       model.addAttribute("ref", pwResetDTO.ref());
+
       return "user/resetPasswordForm";
     }
-    return "redirect:/login";
   }
 
   @GetMapping("/users/{username}")
@@ -116,9 +123,7 @@ public class UserController extends BaseThymeleafController {
 
   @GetMapping("/users/{username}/interests/{interestId}")
   public String interestDetail(
-      @PathVariable String username,
-      @PathVariable Long interestId,
-      Model model) {
+      @PathVariable String username, @PathVariable Long interestId, Model model) {
 
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);

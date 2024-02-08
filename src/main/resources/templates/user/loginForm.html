@@ -30,6 +30,7 @@
                 </section>
                 <a th:href="@{/reset}" class="forgot-password">Forgot password?</a>
                 <p th:if="${param.error}" class="error">Invalid username or password</p>
+                <p th:if="${resetSuccess}" style="margin: auto" class="successful" th:text="${resetSuccess}"></p>
                 <div class="user-form-button">
                     <button type="submit" class="sign-button">Login</button>
                 </div>
