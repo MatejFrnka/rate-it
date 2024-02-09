@@ -5,4 +5,6 @@ import it.rate.webapp.models.RoleId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, RoleId> {
+
+  void deleteAllByInterestIdAndRoleType(Long interestId, Role.RoleType roleType);
 }

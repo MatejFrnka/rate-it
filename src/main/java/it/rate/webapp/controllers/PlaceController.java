@@ -63,7 +63,8 @@ public class PlaceController extends BaseThymeleafController {
 
     if (principal != null) {
       AppUser loggedUser = userService.getByEmail(principal.getName());
-      if (permissionService.hasRatingPermission(loggedUser, place.getInterest())) {
+      if (permissionService.hasRatingPermission(loggedUser, place.getInterest())
+          || permissionService.hasRatedOrReviewedPlace(place)) {
         model.addAttribute("usersRatings", ratingService.getUsersRatingsDto(loggedUser, place));
         Optional<Review> optReview =
             reviewService.findById(new ReviewId(loggedUser.getId(), placeId));
