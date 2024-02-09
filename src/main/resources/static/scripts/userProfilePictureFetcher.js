@@ -1,7 +1,7 @@
 function updateUserIcon(username) {
     fetch(`/api/v1/images/users/${username}`)
         .then(response => {
-            if (response.ok) {
+            if (response.status === 200) {
                 return response.blob();
             } else {
                 return null;
@@ -10,7 +10,7 @@ function updateUserIcon(username) {
         .then(blob => {
             if (blob) {
                 const url = URL.createObjectURL(blob);
-                const imgElements = document.querySelectorAll(`.rating-box[data-username="${username}"] .user-icon-rating img`);
+                const imgElements = document.querySelectorAll(`.review-box[data-username="${username}"] .user-icon-rating img`);
                 imgElements.forEach(imgElement => {
                     imgElement.src = url;
                 });
@@ -22,7 +22,7 @@ function updateUserIcon(username) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    const ratingBoxes = document.querySelectorAll('.rating-box');
+    const ratingBoxes = document.querySelectorAll('.review-box');
 
     ratingBoxes.forEach(function(ratingBox) {
         const username = ratingBox.getAttribute('data-username');
