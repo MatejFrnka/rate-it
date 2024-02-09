@@ -1760,3 +1760,9 @@ h4 {
 .user-picture .uppy-Dashboard-Item-previewImg {
     border-radius: 50% !important;
 }
+
+.button-wrap {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
