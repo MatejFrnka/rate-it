@@ -3,6 +3,7 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.dtos.InterestInDTO;
 import it.rate.webapp.enums.InviteBy;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
@@ -44,7 +45,7 @@ public class InterestAdminController extends BaseThymeleafController {
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(@PathVariable Long interestId, InterestInDTO interestDTO) {
 
-    Interest interest = interestService.getById(interestId);
+    Interest interest = interestService.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
 
     if (interest.isExclusive() && !interestDTO.exclusive()) {
       roleService.removeAllVoterRoles(interestId);
