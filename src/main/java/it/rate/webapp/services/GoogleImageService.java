@@ -64,6 +64,7 @@ public class GoogleImageService implements ImageService {
     }
   }
 
+  @Override
   public String changeInterestImage(Interest interest, MultipartFile file, String userEmail) {
 
     String newImageId;
@@ -77,6 +78,7 @@ public class GoogleImageService implements ImageService {
     return newImageId;
   }
 
+  @Override
   public void deleteById(String imageId) {
     try {
       driveService.files().delete(imageId).execute();

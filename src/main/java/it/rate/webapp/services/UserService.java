@@ -22,11 +22,11 @@ import jakarta.validation.Validator;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,6 +47,7 @@ public class UserService {
   private final AuthenticationManager provider;
   private final PasswordResetRepository passwordResetRepository;
   private final EmailService emailService;
+  private final ImageService imageService;
 
   public Optional<AppUser> findById(Long userId) {
     return userRepository.findById(userId);
@@ -138,12 +139,13 @@ public class UserService {
     userRepository.save(follower);
   }
 
-  public void editUser(@Valid AppUser user, @Valid AppUserDTO editedUser) {
-    if (!user.getId().equals(editedUser.id())) {
-      throw new ForbiddenOperationException("Users cannot edit each other's details!");
+  public void editUser(@Valid AppUserDTO editedUser) {
+    AppUser appUser = getAuthenticatedUser();
+    if (appUser == null) {
+      throw new ForbiddenOperationException();
     }
-    user.setBio(editedUser.bio());
-    userRepository.save(user);
+    appUser.setBio(editedUser.bio());
+    userRepository.save(appUser);
   }
 
   public void initPasswordReset(@Valid AppUser user) {
@@ -189,5 +191,13 @@ public class UserService {
     user.setPasswordReset(null);
     userRepository.save(user);
     passwordResetRepository.delete(pwReset);
+  }
+
+  public void addImage(@NotNull String imageId, AppUser user) {
+    if (user.getImageName() != null) {
+      imageService.deleteById(user.getImageName());
+    }
+    user.setImageName(imageId);
+    userRepository.save(user);
   }
 }

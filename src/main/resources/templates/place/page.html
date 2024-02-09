@@ -153,7 +153,9 @@
         </section>
 
         <section class="user-ratings">
-            <div class="rating-box" th:each="review : ${placeReviews}">
+
+            <div class="rating-box" th:each="review : ${placeReviews}"
+                 th:attr="data-username=${review.userName()}">
 
                 <div class="rating-box-main">
                     <div class="rating-box-main-left">
@@ -215,6 +217,7 @@
 <script th:if="${usersRatings}" src="/scripts/rating.js"></script>
 <script th:if="${usersRatings}" src="/scripts/reviewForm.js"></script>
 <script th:if="${usersRatings}" type="module" src="/scripts/placeImageUpload.js"></script>
+<script src="/scripts/userProfilePictureFetcher.js"></script>
 
 </body>
 </html>
