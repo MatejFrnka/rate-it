@@ -1,7 +1,7 @@
 function updateUserIcon(username) {
     fetch(`/api/v1/images/users/${username}`)
         .then(response => {
-            if (response.ok) {
+            if (response.status === 200) {
                 return response.blob();
             } else {
                 return null;
