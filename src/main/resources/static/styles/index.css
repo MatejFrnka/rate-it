@@ -587,6 +587,10 @@ h3 {
     font-size: 0.8rem;
 }
 
+.single-line {
+    bottom: 2rem;
+}
+
 @media only screen and (max-width: 420px) {
     .interest-place {
         flex-direction: column;
@@ -599,6 +603,10 @@ h3 {
 
     .interest-place-ratings {
         position: relative;
+    }
+
+    .single-line {
+        bottom: 0;
     }
 }
 

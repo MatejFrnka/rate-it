@@ -193,10 +193,12 @@ function loadPlaces(query, sortBy) {
 
         elements.ratingContainer.innerHTML = '';
 
-        if ((bestCriterion === null && worstCriterion === null)) {
+        if (bestCriterion === null && worstCriterion === null) {
             elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', '---', averageRating));
-        } else if (place.criteria.length === 1){
+            elements.ratingContainer.classList.add('single-line');
+        } else if (place.criteria.length === 1) {
             elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, place.criteria[0].name));
+            elements.ratingContainer.classList.add('single-line');
         } else {
             let bestCriterionAvgRating = (bestCriterion.avgRating / 2).toFixed(1);
             let worstCriterionAvgRating = (worstCriterion.avgRating / 2).toFixed(1);
