@@ -73,14 +73,12 @@
              th:src="@{/icons/user.svg}" alt="User Profile" id="default-profile-img">
 
         <ul class="dropdown-menu">
-            <li th:if="${loggedUser}" class="dropdown-header">
-                <a class="dropdown-item" th:href="@{/users/{username}(username=${loggedUser.getUsername()})}"
+            <li th:if="${loggedUser}">
+                <a class="dropdown-item dropdown-username" th:href="@{/users/{username}(username=${loggedUser.getUsername()})}"
                    th:text="${loggedUser.getUsername()}"></a>
             </li>
-            <li th:unless="${loggedUser}" class="dropdown-header" th:text="'Anonymous user'"></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
+            <li class="dropdown-item dropdown-username" th:unless="${loggedUser}" th:text="'Anonymous user'"></li>
+            <li><hr class="dropdown-divider"></li>
             <li th:if="${loggedUser}"><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
             <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/login}">Login</a></li>
             <li th:unless="${loggedUser}"><a class="dropdown-item" th:href="@{/signup}">Register</a></li>
@@ -104,7 +102,7 @@
                th:href="@{/interests/{id}/admin/users(id=*{id})}">Manage Users</a>
             <hr class="dropdown-divider">
             <a class="dropdown-item"
-               th:href="@{/users/logout}">Logout</a>
+               th:href="@{/logout}">Logout</a>
         </div>
     </div>
 </div>
@@ -124,17 +122,17 @@
                 Edit Place</a>
             <hr class="dropdown-divider">
             <a class="dropdown-item"
-               th:href="@{/users/logout}">Logout</a>
+               th:href="@{/logout}">Logout</a>
         </div>
     </div>
 </div>
 
 <footer th:fragment="page-footer">
     <div class="footer-links">
-            <a th:href="@{/about/contact}">Feedback</a>
-            <a th:href="@{/about/}">About</a>
-            <a th:href="@{/about/terms-and-conditions}">T & C</a>
-            <a th:href="@{/about/privacy-policy}">Privacy policy</a>
+        <a th:href="@{/about/contact}">Feedback</a>
+        <a th:href="@{/about/}">About</a>
+        <a th:href="@{/about/terms-and-conditions}">T & C</a>
+        <a th:href="@{/about/privacy-policy}">Privacy policy</a>
     </div>
     <span>© 2024 RateSpot</span>
     <!-- ============== PROJECT VERSION: ============== --> 
@@ -144,15 +142,69 @@
 <div th:fragment="like-button" class="header-right col-2">
     <button class="like-button"></button>
     <script th:inline="javascript">
-        /*<![CDATA[*/
-
         const isliked = [[${liked}]];
-
-        /*]]>*/
     </script>
 </div>
 
-<script th:fragment="topbar-script" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+<div th:fragment="review-box (review, placePage)" class="review-box" th:attr="data-username=${review.userName()}">
+    <div class="review-box-main">
+        <div class="review-box-main-left">
+            <div th:if="${placePage}" class="user-icon-rating">
+                <a th:href="@{/users/{userName}(userName=${review.userName})}">
+                    <img th:src="@{/icons/user.svg}" alt="User icon">
+                </a>
+            </div>
+            <div th:unless="${placePage}" class="user-icon-rating">
+                <a th:href="@{/interests/{intId}/places/{placeId}(intId=${review.interestId}, placeId=${review.placeId})}"
+                   class="button">Visit</a>
+            </div>
+        </div>
+        <div class="review-box-main-right">
+            <div class="review-box-right-top">
+                <span th:if="${placePage}" th:text="${review.userName}"></span>
+                <span th:unless="${placePage}" th:text="${review.placeName}"></span>
+                <div class="average-rating-container">
+                    <i class="fas fa-star"></i>
+                    <span class="rating" th:unless="${@thymeMath.isNaN(review.avgRating)}"
+                          th:text="${#numbers.formatDecimal(@thymeMath.roundRating(review.avgRating), 1, 1, 'POINT')}"></span>
+                    <span class="rating" th:if="${@thymeMath.isNaN(review.avgRating)}">N/A</span>
+                </div>
+            </div>
+            <div class="review-box-right-bottom">
+                <div class="button-ratings-container">
+                    <button class="expand-button"
+                            th:id="'button-show-ratings-' + ${review.userName} + '-' + ${review.placeId}">
+                        <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
+                        <i>Details</i>
+                    </button>
+                </div>
+                <span th:text="${#dates.format(review.timestamp, 'dd/MM/yyyy, HH:mm')}"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="user-review-container" th:id="'review_' + ${review.userName} + '-' + ${review.placeId}"
+         style="display: none;">
+        <textarea disabled
+                  th:id="'textarea_' + ${review.userName} + '-' + ${review.placeId}"
+                  th:unless="${review.review == null}"
+                  class="review_textarea_disabled"
+                  th:text="${review.review}">
+        </textarea>
+        <span>
+            <span class="criterion-rating" th:each="rating : ${review.ratings}">
+                <i class="fas fa-star"></i>
+                <span th:unless="${@thymeMath.isNaN(rating.rating)}"
+                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(rating.rating), 1, 1, 'POINT')}"></span>
+                <span th:if="${@thymeMath.isNaN(rating.rating)}" class="rating">N/A</span>
+                <span th:text="${rating.criterionName}" class="criterion-name"></span>
+            </span>
+        </span>
+    </div>
+</div>
+
+<script th:fragment="topbar-script"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 

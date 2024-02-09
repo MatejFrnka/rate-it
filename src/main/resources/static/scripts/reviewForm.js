@@ -85,7 +85,8 @@ function displayReview(newReview) {
     updateReviewText(reviewSection, newReview);
     updateReviewTimestamp(reviewSection, newReview);
     updateReviewButtons(reviewSection, newReview);
-    resizeTextArea()
+    const textarea = document.querySelector("#review");
+    resizeTextArea(textarea);
 }
 
 function updateReviewText(reviewSection, newReview) {
@@ -109,7 +110,14 @@ function updateReviewTimestamp(reviewSection, newReview) {
             reviewContainer.appendChild(timestampElement);
         }
 
-        timestampElement.textContent = new Date(newReview.timestamp).toLocaleString();
+        timestampElement.textContent = new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false // Use 24-hour format
+        }).format(new Date(newReview.timestamp));
     } else {
         if (timestampElement) {
             reviewContainer.removeChild(timestampElement);
@@ -211,8 +219,6 @@ function updateCharCountAndResize(maxLength) {
     textarea.style.height = textarea.scrollHeight + "px";
 }
 
-function resizeTextArea() {
-    const textarea = document.querySelector("#review");
+function resizeTextArea(textarea) {
     textarea.style.height = textarea.scrollHeight + "px";
 }
-
