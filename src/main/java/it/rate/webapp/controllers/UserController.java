@@ -116,9 +116,7 @@ public class UserController extends BaseThymeleafController {
 
   @GetMapping("/users/{username}/interests/{interestId}")
   public String interestDetail(
-      @PathVariable String username,
-      @PathVariable Long interestId,
-      Model model) {
+      @PathVariable String username, @PathVariable Long interestId, Model model) {
 
     AppUser user =
         userService.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);

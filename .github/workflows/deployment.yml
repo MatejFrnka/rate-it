@@ -1,0 +1,114 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Deploy to production
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        with:
+          arguments: build
+
+      - name: Replace placeholders in properties files with secrets
+        run: |
+          sed -i 's|${RATESPOT_EMAIL_USERNAME}|'"${{ secrets.RATESPOT_EMAIL_USERNAME }}"'|' build/resources/main/application.properties
+          sed -i 's|${RATESPOT_EMAIL_PASSWORD}|'"${{ secrets.RATESPOT_EMAIL_PASSWORD }}"'|' build/resources/main/application.properties
+          sed -i 's|${RATESPOT_GMAIL_USERNAME}|'"${{ secrets.RATESPOT_GMAIL_USERNAME }}"'|' build/resources/main/application.properties
+          sed -i 's|${RATESPOT_DB_URL}|'"${{ secrets.RATESPOT_DB_URL }}"'|' build/resources/main/application-production.properties
+          sed -i 's|${RATESPOT_DB_USERNAME}|'"${{ secrets.RATESPOT_DB_USERNAME }}"'|' build/resources/main/application-production.properties
+          sed -i 's|${RATESPOT_DB_PASSWORD}|'"${{ secrets.RATESPOT_DB_PASSWORD }}"'|' build/resources/main/application-production.properties
+
+
+      - name: Stop Spring Boot application
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            pkill -f 'java -jar'
+
+          # Move old application .jar file to version archive directory
+      - name: Move current .jar to archive
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            mv ~/*.jar ~/archive/
+
+          # Move plain .jar to different dir to prevent unnecessary upload
+      - name: Move .jar files containing 'plain' to a different directory
+        run: |
+          mkdir plain_files
+          mv build/libs/*plain*.jar plain_files/
+          
+          
+          # Upload new .jar application file to the server
+      - name: Upload .jar file to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          source: "build/libs/*.jar"
+          target: "~/"
+          strip_components: 2
+
+
+          # Move plain dev properties files to prevent unnecessary upload
+      - name: Move .jar files containing 'plain' to a different directory
+        run: |
+          mkdir dev_files
+          mv build/resources/main/*dev*.properties dev_files/
+
+
+        # Upload new properties file to the server
+      - name: Upload properties files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          source: "build/resources/main/*.properties"
+          target: "~/config/"
+          strip_components: 3
+
+          # Run newly uploaded .jar application file
+      - name: Run jar file on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE }}
+          script: |
+            nohup java -jar ~/*.jar > /dev/null 2>&1 &

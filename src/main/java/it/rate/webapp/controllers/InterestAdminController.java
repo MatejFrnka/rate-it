@@ -45,6 +45,11 @@ public class InterestAdminController extends BaseThymeleafController {
   public String editInterest(@PathVariable Long interestId, InterestInDTO interestDTO) {
 
     Interest interest = interestService.getById(interestId);
+
+    if (interest.isExclusive() && !interestDTO.exclusive()) {
+      roleService.removeAllVoterRoles(interestId);
+    }
+
     interest = interestService.update(interest, interestDTO);
     criterionService.updateAll(interest, interestDTO.criteriaNames());
 

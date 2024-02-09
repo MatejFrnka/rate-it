@@ -44,7 +44,7 @@ public class SecurityConfig {
                         "/api/v1/interests/suggestions",
                         "/api/v1/interests/{id}/places",
                         "/api/v1/interests/{id}",
-                        "/api/v1/images/{id}",
+                        "/api/v1/images/**",
                         "/api/v1/emails/contact-us")
                     .permitAll()
                     .anyRequest()

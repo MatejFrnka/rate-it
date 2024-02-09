@@ -8,11 +8,10 @@ import it.rate.webapp.repositories.CriterionRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.*;
 
 @Service
 @Validated
@@ -91,5 +90,9 @@ public class RatingService {
     return criterionRepository
         .findById(criterionId)
         .orElseThrow(InvalidCriterionDetailsException::new);
+  }
+
+  public boolean existsByUserAndPlace(AppUser appUser, Place place) {
+    return ratingRepository.existsByAppUserAndPlaceAndCriterionDeletedFalse(appUser, place);
   }
 }
