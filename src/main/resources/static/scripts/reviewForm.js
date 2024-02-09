@@ -116,7 +116,6 @@ function updateReviewTimestamp(reviewSection, newReview) {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit',
             hour12: false // Use 24-hour format
         }).format(new Date(newReview.timestamp));
     } else {
@@ -223,4 +222,3 @@ function updateCharCountAndResize(maxLength) {
 function resizeTextArea(textarea) {
     textarea.style.height = textarea.scrollHeight + "px";
 }
-
