@@ -83,4 +83,6 @@ public class AppUser {
 
   @OneToOne(mappedBy = "user")
   private PasswordReset passwordReset;
+
+  private String imageName;
 }

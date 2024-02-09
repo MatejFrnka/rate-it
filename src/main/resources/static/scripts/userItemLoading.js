@@ -1,21 +1,12 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const ratingSpans = document.querySelectorAll('.rating');
-
-    ratingSpans.forEach(ratingSpan => {
-        const rating = parseFloat(ratingSpan.textContent);
-        if (!isNaN(rating)) {
-            ratingSpan.textContent = rating.toFixed(1);
-        }
-    });
-});
-
 function toggleExtension(toggleDiv) {
     const isExtended = toggleDiv.classList.toggle('extended');
 
-    if (isExtended && toggleDiv.classList.contains("user-interest")) {
-        loadAndFormatItems(toggleDiv, 3);
-    } else if (isExtended && toggleDiv.classList.contains("user-detail-place")) {
-        loadAndFormatItems(toggleDiv, 0);
+    if (isExtended) {
+        if (toggleDiv.classList.contains("user-interest")) {
+            loadAndFormatItems(toggleDiv, 3);
+        } else if (toggleDiv.classList.contains("user-detail-place")) {
+            loadAndFormatItems(toggleDiv, null); // Indicates loading all items
+        }
     }
 }
 
@@ -23,26 +14,14 @@ function loadAndFormatItems(toggleDiv, maxItems) {
     const extensionContainer = toggleDiv.querySelector('.extension-list');
 
     if (extensionContainer) {
-
         const ulElements = extensionContainer.querySelectorAll('.user-interest-place');
-        let limit;
-
-        if (maxItems === 3) {
-            limit = Math.min(ulElements.length, 3)
-        } else if (maxItems === 0) {
-            limit = ulElements.length;
-        }
-
-        for (let i = 0; i < limit; i++) {
-            const ulElement = ulElements[i];
-            const avgRatingSpan = ulElement.querySelector('.place-rating-average');
-            const avgRating = parseFloat(avgRatingSpan.textContent);
-
-            if (!isNaN(avgRating)) {
-                avgRatingSpan.textContent = avgRating.toFixed(1);
-            }
-
+        let itemsProcessed = 0;
+        for (const ulElement of ulElements) {
             ulElement.style.display = 'flex';
+            itemsProcessed++;
+            if (maxItems !== null && itemsProcessed >= maxItems) {
+                break;
+            }
         }
     }
 }

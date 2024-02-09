@@ -51,4 +51,8 @@ public class RoleService {
 
     roleRepository.deleteById(role.getId());
   }
+
+  public void removeAllVoterRoles(@NotNull Long interestId) {
+    roleRepository.deleteAllByInterestIdAndRoleType(interestId, Role.RoleType.VOTER);
+  }
 }

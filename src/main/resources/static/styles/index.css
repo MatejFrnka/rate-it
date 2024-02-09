@@ -184,7 +184,7 @@ h3 {
     margin-top: 0.5rem;
     font-weight: 600;
     font-size: 1rem;
-    color: #568D73;
+    color: var(--green-text-color);
 }
 
 .button {
@@ -333,6 +333,20 @@ h3 {
 .place-button-bar .pending {
     background-color: #575757;
 }
+
+#rate-confirmation {
+    position: absolute;
+    margin-top: 3.5rem;
+}
+
+.success {
+    color: #568D73;
+}
+
+.fail {
+    color: red;
+}
+
 
 .location-button-bar {
     display: flex;
@@ -591,6 +605,7 @@ h3 {
     flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 1rem;
+    user-select: none;
 }
 
 .sort-checkbox {
@@ -615,9 +630,9 @@ h3 {
 }
 
 .sort-container > .sort-checkbox:checked + span {
-    color: #478363;
+    color: var(--green-text-color);
     -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #478363;
+    -webkit-text-stroke-color: var(--green-text-color);
     background-color: rgba(86, 141, 115, 0.1);
 }
 
@@ -766,10 +781,10 @@ h4 {
     width: 50%;
     height: 100%;
     border-radius: 20px;
-    background: #e0e9e4;
+    background: rgba(86, 141, 115, 0.1);
     transition: all 0.3s;
-    color: #568D73;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: var(--green-text-color);
+    box-shadow: 0 0 8px rgba(86, 141, 115, 0.5);
 }
 
 .toggle-container span {
@@ -789,11 +804,11 @@ h4 {
 }
 
 .toggle-checkbox:checked + .toggle-container span:last-child {
-    color: #568D73;
+    color: var(--green-text-color);
 }
 
 .toggle-checkbox + .toggle-container span:first-child {
-    color: #568D73;
+    color: var(--green-text-color);
 }
 
 .toggle-checkbox + .toggle-container span:last-child {
@@ -1021,6 +1036,7 @@ h4 {
 
 :root {
     --form-container-height: 75vh;
+    --green-text-color: #478363
 }
 
 .form-container {
@@ -1028,6 +1044,8 @@ h4 {
     margin: auto;
     height: var(--form-container-height);
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .left-container,
@@ -1158,6 +1176,16 @@ h4 {
     font-weight: bold;
     font-size: x-large;
     margin-bottom: 0;
+}
+
+@media only screen and (max-width: 440px) and (max-height: 750px){
+    .form-container {
+        height: 34rem;
+    }
+
+    .top-container {
+        height: 31rem;
+    }
 }
 
 .rs-logo {
@@ -1309,8 +1337,12 @@ h4 {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    color: #568D73;
+    color: var(--green-text-color);
     font-weight: 600;
+}
+
+.user-follow p {
+    margin: 0;
 }
 
 .user-page-layout {
@@ -1342,6 +1374,7 @@ h4 {
 .user-interest-image {
     flex-shrink: 0;
     width: 20%;
+    max-height: 4.3rem;
 }
 
 .user-interest-image img {
@@ -1435,7 +1468,7 @@ h4 {
 }
 
 .user-back-link {
-    color: #568d73;
+    color: var(--green-text-color);
     text-decoration: none;
     font-size: 1.5rem;
     font-weight: 600;
@@ -1507,6 +1540,7 @@ h4 {
     display: flex;
     justify-content: center;
     width: 4rem;
+    height: 3.5rem;
 }
 
 .user-icon-rating {
@@ -1623,4 +1657,50 @@ h4 {
     overflow: hidden;
     padding: 0.3rem 1rem;
     width: 100%;
+}
+
+/*Loading spinner*/
+.loader {
+    align-self: center;
+    width: 48px;
+    height: 48px;
+    border: 3px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+.loader::after {
+    content: '';
+    position: absolute;
+    box-sizing: border-box;
+    left: 20px;
+    top: 31px;
+    border: 10px solid transparent;
+    border-right-color: #FFF;
+    transform: rotate(-40deg);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*User profile image in header*/
+#user-profile-img {
+    border-radius: 50%;
+}
+
+.cropper-view-box {
+    border-radius: 50%;
+}
+
+.user-picture .uppy-Dashboard-Item-previewImg {
+    border-radius: 50% !important;
 }

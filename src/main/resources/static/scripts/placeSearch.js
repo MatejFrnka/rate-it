@@ -2,12 +2,15 @@ let data = [];
 let usersCoords;
 
 document.addEventListener('DOMContentLoaded', async () => {
+    document.querySelector('.loader').style.display = 'block';
     try {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
+            document.querySelector('.loader').style.display = 'none';
         } else {
             console.log("Geolocation is not supported");
             await fetchData();
+            document.querySelector('.loader').style.display = 'none';
         }
     } catch (error) {
         console.error('Error fetching suggestions:', error);
@@ -30,13 +33,17 @@ async function error() {
 
 async function fetchData() {
     try {
+        const fetchInterest = `/api/v1/interests/${interestId}`;
+        const interestResponse = await fetch(fetchInterest);
+        const interest = await interestResponse.json();
+
         const fetchUrl = `/api/v1/interests/${interestId}/places`;
         const response = await fetch(fetchUrl);
         const jsonData = await response.json();
         data = jsonData;
 
         data = await Promise.all(jsonData.map(async (place) => {
-            place.imageUrl = await fetchImageUrl(place);
+            place.imageUrl = await fetchImageUrl(place, interest);
             return place;
         }))
 
@@ -141,8 +148,8 @@ function loadPlaces(query, sortBy) {
         dataSet = dataSet.sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0));
     } else if (sortBy !== '') {
         dataSet = dataSet.sort((a, b) => {
-            const ratingA = a.criteria.find(criterion => criterion.name === sortBy)?.avgRating || 0;
-            const ratingB = b.criteria.find(criterion => criterion.name === sortBy)?.avgRating || 0;
+            const ratingA = a.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
+            const ratingB = b.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
             return ratingB - ratingA;
         });
     } else {
@@ -173,23 +180,39 @@ function loadPlaces(query, sortBy) {
             elements.distanceSpan.textContent = distance(usersCoords[0], usersCoords[1], place.latitude, place.longitude).toFixed(1) + ' km';
         }
 
-        const averageRating = (place.avgRating / 2).toFixed(1);
+        let averageRating;
+        if (isNaN(place.avgRating)) {
+            averageRating = 'No ratings yet';
+        } else {
+            averageRating = (place.avgRating / 2).toFixed(1);
+        }
+
         elements.rating.textContent = averageRating;
 
         const {bestCriterion, worstCriterion} = getBestAndWorstCriteria(place.criteria);
 
         elements.ratingContainer.innerHTML = '';
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterion.avgRating / 2).toFixed(1), bestCriterion.name));
-        elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterion.avgRating / 2).toFixed(1), worstCriterion.name));
+
+        if ((bestCriterion === null && worstCriterion === null)) {
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', '---', averageRating));
+        } else if (place.criteria.length === 1){
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, place.criteria[0].name));
+        } else {
+            let bestCriterionAvgRating = (bestCriterion.avgRating / 2).toFixed(1);
+            let worstCriterionAvgRating = (worstCriterion.avgRating / 2).toFixed(1);
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, 'Overall'));
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star yellow', (bestCriterionAvgRating), bestCriterion.name));
+            elements.ratingContainer.appendChild(createRatingItem('fas fa-star', (worstCriterionAvgRating), worstCriterion.name));
+        }
 
         container.appendChild(clone);
     });
 }
 
 function getBestAndWorstCriteria(criteria) {
-    const bestCriterion = criteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
-    const worstCriterion = criteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
+    const validCriteria = criteria.filter(cr => !isNaN(cr.avgRating));
+    const bestCriterion = validCriteria.reduce((max, cr) => (!max || cr.avgRating > max.avgRating ? cr : max), null);
+    const worstCriterion = validCriteria.reduce((min, cr) => (!min || cr.avgRating < min.avgRating ? cr : min), null);
     return {bestCriterion, worstCriterion};
 }
 

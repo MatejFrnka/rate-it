@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,6 +20,10 @@ public class Rating {
   @Range(min = 1, max = 10)
   @Column(nullable = false)
   private Integer rating;
+
+  @NotNull
+  @Column(nullable = false)
+  private final Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
   @ManyToOne
   @MapsId("userId")

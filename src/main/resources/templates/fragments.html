@@ -65,8 +65,13 @@
 
 <div th:fragment="login-menu" class="header-right col-2">
     <div class="top-bar-menu dropdown">
-        <img role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-             th:src="@{/icons/user.svg}" alt="User Profile">
+
+        <img th:if="${loggedUser != null && loggedUser.getImageName() != null}" role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+             th:src="@{'/api/v1/images/' + ${loggedUser.getImageName()}}" alt="User Profile" id="user-profile-img">
+
+        <img th:if="${loggedUser == null || loggedUser.getImageName() == null}" role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+             th:src="@{/icons/user.svg}" alt="User Profile" id="default-profile-img">
+
         <ul class="dropdown-menu">
             <li th:if="${loggedUser}" class="dropdown-header">
                 <a class="dropdown-item" th:href="@{/users/{username}(username=${loggedUser.getUsername()})}"
@@ -132,6 +137,8 @@
             <a th:href="@{/about/privacy-policy}">Privacy policy</a>
     </div>
     <span>© 2024 RateSpot</span>
+    <!-- ============== PROJECT VERSION: ============== --> 
+    <p style="display: none" th:text="${projectVersion}"></p>
 </footer>
 
 <div th:fragment="like-button" class="header-right col-2">
@@ -152,5 +159,7 @@
 <script th:fragment="leaflet-script" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
+
+
 
 </html>

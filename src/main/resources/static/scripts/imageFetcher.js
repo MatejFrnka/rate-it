@@ -26,7 +26,7 @@ function fetchInterestImageUrl(interest) {
 
     if (imageName == null || imageName === '') {
         console.error('No imageNames found');
-        return 'https://picsum.photos/400/300';
+        return fetchDefaultInterestImage(interest);
     } else {
         const apiUrl = '/api/v1/images/' + imageName;
 
@@ -40,14 +40,13 @@ function fetchInterestImageUrl(interest) {
             .then(blob => URL.createObjectURL(blob))
             .catch(error => {
                 console.error('Error fetching image:', error);
-                return 'https://picsum.photos/400/300';
+                return fetchDefaultInterestImage(interest);
             });
     }
 }
 
 
-
-function fetchImageUrl(place) {
+function fetchImageUrl(place, interest) {
     const imageNames = place.imageNames;
 
     if (imageNames && imageNames.length > 0) {
@@ -64,11 +63,10 @@ function fetchImageUrl(place) {
             .then(blob => URL.createObjectURL(blob))
             .catch(error => {
                 console.error('Error fetching image:', error);
-                return 'https://picsum.photos/400/300';
+                return fetchDefaultInterestImage(interest);
             });
     } else {
         console.error('No imageNames found for the place');
-        return 'https://picsum.photos/400/300';
+        return fetchDefaultInterestImage(interest);
     }
-
 }

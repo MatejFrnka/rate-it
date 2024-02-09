@@ -15,8 +15,9 @@
     </header>
 
     <picture class="interest-image">
-        <img th:if="*{imageName == null || imageName.isEmpty()}" src="https://picsum.photos/500/300"
-             alt="Generic image"/>
+        <img th:if="*{imageName == null || imageName.isEmpty()}"
+             class="default-image" alt="Default image" th:data-interest-id="${interest.id}"/>
+
         <img th:unless="*{imageName == null || imageName.isEmpty()}" id="picture-container"
              th:attr="data-image-id=*{imageName}" alt="Interest image"/>
     </picture>
@@ -120,6 +121,7 @@
                 </a>
             </template>
         </section>
+        <span class="loader"></span>
     </main>
     <footer th:replace="~{fragments.html :: footer}"></footer>
 </div>
@@ -130,6 +132,7 @@
 <script src="/scripts/checkboxesSplide.js"></script>
 <script src="/scripts/placeSearch.js"></script>
 <script src="/scripts/imageFetcher.js"></script>
+<script src="/scripts/defaultImage.js"></script>
 <script th:unless="${loggedUser == null || role != null && role.equals(role.CREATOR)}"
         src="/scripts/interestLike.js"></script>
 

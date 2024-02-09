@@ -1,5 +1,7 @@
 package it.rate.webapp.services;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -7,7 +9,6 @@ import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import it.rate.webapp.BaseTest;
 import it.rate.webapp.config.ServerRole;
 import it.rate.webapp.dtos.*;
@@ -16,22 +17,20 @@ import it.rate.webapp.models.*;
 import it.rate.webapp.repositories.PlaceRepository;
 import it.rate.webapp.repositories.RatingRepository;
 import java.util.*;
+import it.rate.webapp.repositories.ReviewRepository;
+import it.rate.webapp.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 class PlaceServiceTest extends BaseTest {
 
-  @MockBean Authentication authentication;
-  @MockBean SecurityContext securityContext;
-  @MockBean InterestService interestService;
-  @MockBean UserService userService;
   @MockBean PlaceRepository placeRepository;
   @MockBean RatingRepository ratingRepository;
+  @MockBean ReviewRepository reviewRepository;
+  @MockBean
+  UserRepository userRepository;
 
   @Autowired PlaceService placeService;
   Interest i1;
@@ -39,13 +38,14 @@ class PlaceServiceTest extends BaseTest {
   AppUser u2;
   Place p1;
 
-  @BeforeEach
-  void setupAuthentication() {
-    when(securityContext.getAuthentication()).thenReturn(authentication);
-    when(authentication.getName()).thenReturn("joe");
-
-    SecurityContextHolder.setContext(securityContext);
-  }
+  Rating r1;
+  Rating r2;
+  Rating r3;
+  Rating r4;
+  Review rev1;
+  List<Criterion> criteria;
+  List<Rating> ratings;
+  List<Review> reviews;
 
   @BeforeEach
   void setUp() {
@@ -74,6 +74,21 @@ class PlaceServiceTest extends BaseTest {
             .latitude(1.0)
             .longitude(1.0)
             .build();
+
+    criteria =
+        List.of(
+            Criterion.builder().id(1L).name("Criterion1").build(),
+            Criterion.builder().id(2L).name("Criterion2").build());
+
+    r1 = new Rating(u1, p1, criteria.get(0), 3);
+    r2 = new Rating(u1, p1, criteria.get(1), 4);
+    r3 = new Rating(u2, p1, criteria.get(0), 5);
+    r4 = new Rating(u2, p1, criteria.get(1), 6);
+
+    ratings = List.of(r1, r2, r3, r4);
+
+    rev1 = new Review(u1, p1, "Review1");
+    reviews = List.of(rev1);
   }
 
   @Test
@@ -102,18 +117,6 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getPlaceInfoDTOSHappyCase() {
-    List<Criterion> criteria =
-        Arrays.asList(
-            Criterion.builder().id(1L).name("Criterion1").build(),
-            Criterion.builder().id(2L).name("Criterion2").build());
-
-    List<Rating> ratings =
-        Arrays.asList(
-            new Rating(u1, p1, criteria.get(0), 3),
-            new Rating(u1, p1, criteria.get(1), 4),
-            new Rating(u2, p1, criteria.get(0), 5),
-            new Rating(u2, p1, criteria.get(1), 6));
-
     CriterionAvgRatingDTO criterionAvgRatingOne =
         new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D);
     CriterionAvgRatingDTO criterionAvgRatingTwo =
@@ -127,10 +130,10 @@ class PlaceServiceTest extends BaseTest {
     List<PlaceInfoDTO> expectedResult =
         List.of(new PlaceInfoDTO(p1, Set.of(criterionAvgRatingOne, criterionAvgRatingTwo)));
 
-    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), p1))
+    when(ratingRepository.findAllByCriterionAndPlaceAndCriterionDeletedFalse(criteria.get(0), p1))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
 
-    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(1), p1))
+    when(ratingRepository.findAllByCriterionAndPlaceAndCriterionDeletedFalse(criteria.get(1), p1))
         .thenReturn(Arrays.asList(ratings.get(1), ratings.get(3)));
 
     List<PlaceInfoDTO> actualResult = placeService.getPlaceInfoDTOS(i1);
@@ -151,15 +154,6 @@ class PlaceServiceTest extends BaseTest {
 
   @Test
   void getCriteriaOfPlaceDtoHappyCase() {
-    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
-
-    List<Rating> ratings =
-        Arrays.asList(
-            new Rating(u1, p1, criteria.get(0), 3),
-            new Rating(u1, p1, criteria.get(1), 4),
-            new Rating(u2, p1, criteria.get(0), 5),
-            new Rating(u2, p1, criteria.get(1), 6));
-
     p1.setRatings(ratings);
     p1.setInterest(i1);
     i1.setCriteria(criteria);
@@ -170,10 +164,10 @@ class PlaceServiceTest extends BaseTest {
                 new CriterionAvgRatingDTO(criteria.get(0).getId(), criteria.get(0).getName(), 4D),
                 new CriterionAvgRatingDTO(criteria.get(1).getId(), criteria.get(1).getName(), 5D)));
 
-    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), p1))
+    when(ratingRepository.findAllByCriterionAndPlaceAndCriterionDeletedFalse(criteria.get(0), p1))
         .thenReturn(Arrays.asList(ratings.get(0), ratings.get(2)));
 
-    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(1), p1))
+    when(ratingRepository.findAllByCriterionAndPlaceAndCriterionDeletedFalse(criteria.get(1), p1))
         .thenReturn(Arrays.asList(ratings.get(1), ratings.get(3)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(p1);
@@ -188,14 +182,14 @@ class PlaceServiceTest extends BaseTest {
     p1.setInterest(i1);
     i1.setCriteria(criteria);
 
-    when(ratingRepository.findAllByCriterionAndPlace(criteria.get(0), p1))
+    when(ratingRepository.findAllByCriterionAndPlaceAndCriterionDeletedFalse(criteria.get(0), p1))
         .thenReturn(new ArrayList<>());
 
     CriteriaOfPlaceDTO expectedResult =
         new CriteriaOfPlaceDTO(
             List.of(
                 new CriterionAvgRatingDTO(
-                    criteria.get(0).getId(), criteria.get(0).getName(), null)));
+                    criteria.get(0).getId(), criteria.get(0).getName(), Double.NaN)));
 
     CriteriaOfPlaceDTO actualResult = placeService.getCriteriaOfPlaceDTO(p1);
 
@@ -204,67 +198,106 @@ class PlaceServiceTest extends BaseTest {
   }
 
   @Test
-  void getSingleUserRatingDtoHappyCase() {
-    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
-    criteria.get(0).setName("Mnamovatost");
-    criteria.get(1).setName("Pohlednost");
+  void getPlaceReviewDTOsByPlace() {
+    List<PlaceReviewDTO> expectedResult =
+        List.of(
+            new PlaceReviewDTO(
+                u1.getUsername(),
+                p1.getName(),
+                p1.getId(),
+                rev1.getText(),
+                List.of(new RatingDTO(r1), new RatingDTO(r2)),
+                3.5,
+                rev1.getCreatedAt()),
+            new PlaceReviewDTO(
+                u2.getUsername(),
+                p1.getName(),
+                p1.getId(),
+                null,
+                List.of(new RatingDTO(r3), new RatingDTO(r4)),
+                5.5,
+                r4.getCreatedAt()));
 
-    List<Rating> ratings =
-        Arrays.asList(
-            new Rating(u1, p1, criteria.get(0), 3), new Rating(u1, p1, criteria.get(1), 4));
+    when(userRepository.findAllDistinctByReviews_PlaceOrRatings_Place(p1)).thenReturn(List.of(u1, u2));
+    when(reviewRepository.findById(new ReviewId(p1.getId(), u1.getId())))
+            .thenReturn(Optional.of(rev1));
+    when(reviewRepository.findById(new ReviewId(p1.getId(), u2.getId())))
+        .thenReturn(Optional.empty());
+    when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u1, p1))
+        .thenReturn(List.of(r1, r2));
+    when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u2, p1))
+        .thenReturn(List.of(r3, r4));
 
-    p1.setRatings(ratings);
+    assertThat(placeService.getPlaceReviewDTOs(p1), containsInAnyOrder(expectedResult.toArray()));
 
-    Map<String, Double> criterionRatingsResult = new HashMap<>();
-    criterionRatingsResult.put("Mnamovatost", 1.5);
-    criterionRatingsResult.put("Pohlednost", 2.0);
-
-    PlaceUserRatingDTO expectedResult =
-        new PlaceUserRatingDTO("Lojza", criterionRatingsResult, 1.8);
-
-    PlaceUserRatingDTO actualResult = placeService.getSingleUserRatingDTO(u1, ratings);
-
-    assertNotNull(actualResult);
-    assertEquals(actualResult, expectedResult);
+    verify(userRepository, times(1)).findAllDistinctByReviews_PlaceOrRatings_Place(any(Place.class));
+    verify(reviewRepository, times(2)).findById(any(ReviewId.class));
+    verify(ratingRepository, times(2))
+        .findAllByAppUserAndPlaceAndCriterionDeletedFalse(any(AppUser.class), any(Place.class));
   }
 
   @Test
-  void getPlaceUserRatingDtoWithMultipleUsersAndRatings() {
+  void getPlaceReviewDTOsyByInterestAndUser1() {
+    List<PlaceReviewDTO> expectedResult =
+        List.of(
+            new PlaceReviewDTO(
+                u1.getUsername(),
+                p1.getName(),
+                p1.getId(),
+                rev1.getText(),
+                List.of(new RatingDTO(r1), new RatingDTO(r2)),
+                3.5,
+                rev1.getCreatedAt()));
 
-    List<Criterion> criteria = Arrays.asList(new Criterion(), new Criterion());
-    criteria.get(0).setName("Mnamovatost");
-    criteria.get(1).setName("Pohlednost");
+    when(placeRepository.findAllDistinctByAppUserAndInterest(u1, i1)).thenReturn(List.of(p1));
+    when(reviewRepository.findById(new ReviewId(p1.getId(), u1.getId())))
+        .thenReturn(Optional.of(rev1));
+    when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u1, p1))
+        .thenReturn(List.of(r1, r2));
 
-    List<Rating> ratings =
-        Arrays.asList(
-            new Rating(u1, p1, criteria.get(0), 3),
-            new Rating(u1, p1, criteria.get(1), 4),
-            new Rating(u2, p1, criteria.get(0), 2),
-            new Rating(u2, p1, criteria.get(1), 8));
+    Comparator<PlaceReviewDTO> comparator =
+        Comparator.comparing(PlaceReviewDTO::timestamp).reversed();
 
-    p1.setRatings(ratings);
+    assertThat(
+        placeService.getPlaceReviewDTOs(u1, i1, comparator),
+        containsInAnyOrder(expectedResult.toArray()));
 
-    Map<String, Double> criterionRatingsResultUserOne = new HashMap<>();
-    criterionRatingsResultUserOne.put("Mnamovatost", 1.5);
-    criterionRatingsResultUserOne.put("Pohlednost", 2.0);
+    verify(placeRepository, times(1))
+        .findAllDistinctByAppUserAndInterest(any(AppUser.class), any(Interest.class));
+    verify(reviewRepository, times(1)).findById(any(ReviewId.class));
+    verify(ratingRepository, times(1))
+        .findAllByAppUserAndPlaceAndCriterionDeletedFalse(any(AppUser.class), any(Place.class));
+  }
 
-    Map<String, Double> criterionRatingsResultUserTwo = new HashMap<>();
-    criterionRatingsResultUserTwo.put("Mnamovatost", 1.0);
-    criterionRatingsResultUserTwo.put("Pohlednost", 4.0);
+  @Test
+  void getPlaceReviewDTOsyByInterestAndUser2() {
+    List<PlaceReviewDTO> expectedResult =
+        List.of(
+            new PlaceReviewDTO(
+                u2.getUsername(),
+                p1.getName(),
+                p1.getId(),
+                null,
+                List.of(new RatingDTO(r3), new RatingDTO(r4)),
+                5.5,
+                r4.getCreatedAt()));
+    when(placeRepository.findAllDistinctByAppUserAndInterest(u2, i1)).thenReturn(List.of(p1));
+    when(reviewRepository.findById(new ReviewId(p1.getId(), u2.getId())))
+        .thenReturn(Optional.empty());
+    when(ratingRepository.findAllByAppUserAndPlaceAndCriterionDeletedFalse(u2, p1))
+        .thenReturn(List.of(r3, r4));
 
-    PlaceUserRatingDTO userOneRatingDto =
-        new PlaceUserRatingDTO("Lojza", criterionRatingsResultUserOne, 1.8);
-    PlaceUserRatingDTO userTwoRatingDto =
-        new PlaceUserRatingDTO("Franta", criterionRatingsResultUserTwo, 2.5);
+    Comparator<PlaceReviewDTO> comparator =
+        Comparator.comparing(PlaceReviewDTO::timestamp).reversed();
 
-    List<PlaceUserRatingDTO> expectedListOfUserRatings = List.of(userOneRatingDto, userTwoRatingDto);
+    assertThat(
+        placeService.getPlaceReviewDTOs(u2, i1, comparator),
+        containsInAnyOrder(expectedResult.toArray()));
 
-    PlaceAllUsersRatingsDTO expectedResult = new PlaceAllUsersRatingsDTO(expectedListOfUserRatings);
-
-    PlaceAllUsersRatingsDTO actualResult = placeService.getPlaceUserRatingDto(p1);
-
-    assertNotNull(actualResult);
-    assertEquals(actualResult, expectedResult);
-
+    verify(placeRepository, times(1))
+        .findAllDistinctByAppUserAndInterest(any(AppUser.class), any(Interest.class));
+    verify(reviewRepository, times(1)).findById(any(ReviewId.class));
+    verify(ratingRepository, times(1))
+        .findAllByAppUserAndPlaceAndCriterionDeletedFalse(any(AppUser.class), any(Place.class));
   }
 }

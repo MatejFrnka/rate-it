@@ -15,9 +15,21 @@
     </header>
     <main class="content user-profile">
         <section class="user-info" th:object="${user}">
-            <div class="user-image">
-                <img src="/icons/user.svg" alt="placeholderImg">
+
+            <a th:if="${loggedUser != null && user.username().equals(loggedUser.getUsername())}"
+               class="user-image" id="uppy-modal" style="cursor: pointer">
+                <img th:if="*{imageName() == null}" src="/icons/user.svg" alt="placeholderImg">
+                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}"
+                     alt="profile-picture">
+            </a>
+
+            <div th:if="${loggedUser == null || !user.username().equals(loggedUser.getUsername())}" class="user-image">
+                <img th:if="*{imageName() == null}" src="/icons/user.svg" alt="placeholderImg">
+                <img th:unless="*{imageName() == null}" th:src="@{'/api/v1/images/' + *{imageName()}}"
+                     alt="profile-picture">
             </div>
+
+            <div id="uppy" class="user-picture"></div>
             <div class="user-details">
                 <h2 th:text="*{username}"></h2>
                 <p th:if="${loggedUser == null || loggedUser.id != user.id}" th:text="*{bio}"></p>
@@ -39,7 +51,7 @@
                 <div class="user-interest-default">
                     <div class="user-interest-image">
                         <img th:if="*{imageName == null || imageName.isEmpty()}"
-                             src="https://picsum.photos/400/300" alt="Random image"/>
+                             class="default-image" alt="Default image" th:data-interest-id="${interest.interestId}"/>
                         <img th:unless="*{imageName == null || imageName.isEmpty()}"
                              th:src="@{|/api/v1/images/*{imageName}}"
                              alt="Interest image"/>
@@ -59,7 +71,12 @@
                         <ul class="user-interest-place" th:each="place : ${interest.ratedPlaces}">
                             <li th:object="${place}">
                                 <i class="fas fa-star"></i>
-                                <span class="place-rating-average" th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average"
+
+                                      th:unless="${@thymeMath.isNaN(place.avgRating)}"
+                                      th:text="${#numbers.formatDecimal(@thymeMath.roundRating(place.avgRating), 1, 1, 'POINT')}"></span>
+                                <span class="place-rating-average"
+                                      th:if="${@thymeMath.isNaN(place.avgRating)}">N/A</span>
                                 <span th:text="*{placeName}"></span>
                             </li>
                         </ul>
@@ -80,6 +97,9 @@
     const MAX_BIO_LENGTH = [[${@constraints.MAX_BIO_LENGTH}]];
 </script>
 <script src="/scripts/userItemLoading.js"></script>
+<script src="/scripts/imageFetcher.js"></script>
+<script src="/scripts/defaultImage.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id != user.id}" src="/scripts/userFollow.js"></script>
 <script th:if="${loggedUser != null && loggedUser.id == user.id}" src="/scripts/userBioEdit.js"></script>
+<script type="module" src="/scripts/userUploadImage.js"></script>
 </html>
