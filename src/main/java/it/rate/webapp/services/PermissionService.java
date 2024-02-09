@@ -103,4 +103,18 @@ public class PermissionService {
                     || role.getRoleType().equals(Role.RoleType.CREATOR))
         .orElse(false);
   }
+  
+  public boolean canEditUser(String username) {
+    if (username == null || username.isBlank()) {
+      return false;
+    }
+    return username.equalsIgnoreCase(userService.getAuthenticatedUser().getUsername());
+  }
+
+  public boolean canEditUser(Long userId) {
+    if (userId == null) {
+      return false;
+    }
+    return userId.equals(userService.getAuthenticatedUser().getId());
+  }
 }

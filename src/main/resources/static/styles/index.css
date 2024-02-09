@@ -1540,6 +1540,7 @@ h4 {
     display: flex;
     justify-content: center;
     width: 4rem;
+    height: 3.5rem;
 }
 
 .user-icon-rating {
@@ -1689,4 +1690,17 @@ h4 {
     100% {
         transform: rotate(360deg);
     }
+}
+
+/*User profile image in header*/
+#user-profile-img {
+    border-radius: 50%;
+}
+
+.cropper-view-box {
+    border-radius: 50%;
+}
+
+.user-picture .uppy-Dashboard-Item-previewImg {
+    border-radius: 50% !important;
 }
