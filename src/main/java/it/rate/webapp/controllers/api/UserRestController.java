@@ -40,13 +40,10 @@ public class UserRestController {
   }
 
   @PostMapping("/{userId}/editBio")
-  @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-  public ResponseEntity<?> editBio(
-      @PathVariable Long userId, @RequestBody AppUserDTO editedUser, Principal principal) {
-    AppUser loggedUser = userService.getByEmail(principal.getName());
-
+  @PreAuthorize("@permissionService.canEditUser(#editedUser.id())")
+  public ResponseEntity<?> editBio(@RequestBody AppUserDTO editedUser) {
     try {
-      userService.editUser(loggedUser, editedUser);
+      userService.editUser(editedUser);
       return ResponseEntity.ok().build();
     } catch (ForbiddenOperationException e) {
       return ResponseEntity.status(403).body(e.getMessage());

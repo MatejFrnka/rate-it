@@ -136,12 +136,13 @@ public class UserService {
     userRepository.save(follower);
   }
 
-  public void editUser(@Valid AppUser user, @Valid AppUserDTO editedUser) {
-    if (!user.getId().equals(editedUser.id())) {
-      throw new ForbiddenOperationException("Users cannot edit each other's details!");
+  public void editUser(@Valid AppUserDTO editedUser) {
+    AppUser appUser = getAuthenticatedUser();
+    if (appUser == null) {
+      throw new ForbiddenOperationException();
     }
-    user.setBio(editedUser.bio());
-    userRepository.save(user);
+    appUser.setBio(editedUser.bio());
+    userRepository.save(appUser);
   }
 
   public void initPasswordReset(@Valid AppUser user) {
