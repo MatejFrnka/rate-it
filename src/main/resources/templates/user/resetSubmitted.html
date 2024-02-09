@@ -12,6 +12,7 @@
             <img src="/icons/R-logo.png" alt="Logo">
         </div>
         <p th:text="'Your request was submitted. If the email address ' + ${email} + ' is correct, you should receive an email shortly with further instructions.'"></p>
+        <p th:text="'The reset token is valid for ' + ${tokenExpiry} + '.'"></p>
         <p>If the email hasn't arrived within next few minutes, please check your spam folder or try again.</p>
         <div class="row col-7" id="error-homepage-button">
             <a class="button" th:href="@{/}">Go to Homepage</a>

@@ -19,6 +19,9 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
+
+import java.time.LocalDateTime;
+import java.util.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -150,7 +153,7 @@ public class UserService {
     Optional<PasswordReset> optReset = passwordResetRepository.findByUser(user);
     if (optReset.isPresent()) {
       PasswordReset pwReset = optReset.get();
-      pwReset.setToken(passwordEncoder.encode(uuid.toString()));
+      pwReset.updateToken(passwordEncoder.encode(uuid.toString()));
       passwordResetRepository.save(pwReset);
     } else {
       passwordResetRepository.save(
@@ -163,10 +166,13 @@ public class UserService {
     PasswordReset pwReset =
         passwordResetRepository
             .findByUser_Id(ref)
-            .orElseThrow(() -> new InvalidTokenException("Invalid reference"));
+            .orElseThrow(() -> new InvalidTokenException("Invalid token"));
 
     if (!passwordEncoder.matches(token, pwReset.getToken())) {
       throw new InvalidTokenException("Invalid token");
+    }
+    if (pwReset.getExpiration().isBefore(LocalDateTime.now())) {
+      throw new InvalidTokenException("Token has expired. Please request new password reset");
     }
     return pwReset;
   }
