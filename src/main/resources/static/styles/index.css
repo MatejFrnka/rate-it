@@ -1175,7 +1175,7 @@ h4 {
     align-items: center;
 }
 
-.left-container.back-container  {
+.left-container.back-container {
     display: flex;
     justify-content: flex-end;
 }
@@ -1740,4 +1740,30 @@ h4 {
 
 .user-picture .uppy-Dashboard-Item-previewImg {
     border-radius: 50% !important;
+}
+
+.about h1 {
+    color: #568D73;
+}
+
+.about-developers h2 {
+    margin-bottom: 0;
+}
+
+.about-developers .review-box-main-right {
+    flex: none;
+    justify-content: center;
+}
+
+.about-developers .linked-in {
+    margin: auto 28px auto auto;
+    height: 28px;
+}
+
+.about-developers .linked-in img {
+    height: 100%;
+}
+
+.about-developers .review-box {
+    margin: 10px 0;
 }
