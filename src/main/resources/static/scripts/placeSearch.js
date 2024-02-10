@@ -128,6 +128,7 @@ function getCheckedSorting() {
 
 function loadPlaces(query, sortBy) {
     if (data.length < 1) {
+        document.querySelector('.loader').style.display = 'none';
         return;
     }
     const container = document.querySelector('#suggestionList');
