@@ -112,14 +112,7 @@ public class PlaceService {
     Double avgRating = calculateAverageRating(ratings);
     Timestamp latestTimestamp = findLatestTimestamp(optReview, ratings);
 
-    return new PlaceReviewDTO(
-        user.getUsername(),
-        place.getName(),
-        place.getId(),
-        review,
-        ratingDTOS,
-        avgRating,
-        latestTimestamp);
+    return new PlaceReviewDTO(user, place, review, ratingDTOS, avgRating, latestTimestamp);
   }
 
   private Double calculateAverageRating(List<Rating> ratings) {

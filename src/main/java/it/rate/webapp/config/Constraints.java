@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Constraints {
   public static final int MIN_NAME_LENGTH = 3;
-  public static final int MAX_NAME_LENGTH = 25;
+  public static final int MAX_NAME_LENGTH = 40;
 
   // Description length up to 1000
   public static final int MAX_DESCRIPTION_LENGTH = 1000;

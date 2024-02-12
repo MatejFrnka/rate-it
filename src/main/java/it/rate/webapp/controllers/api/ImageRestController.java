@@ -116,7 +116,7 @@ public class ImageRestController {
     if (user.isEmpty()) {
       return ResponseEntity.badRequest().body("User does not exist");
     } else if (user.get().getImageName() == null) {
-      return ResponseEntity.badRequest().body("No profile picture set");
+      return ResponseEntity.noContent().build();
     }
 
     try {

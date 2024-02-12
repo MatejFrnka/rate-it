@@ -3,6 +3,7 @@ package it.rate.webapp.controllers;
 import it.rate.webapp.dtos.InterestInDTO;
 import it.rate.webapp.enums.InviteBy;
 import it.rate.webapp.exceptions.badrequest.BadRequestException;
+import it.rate.webapp.exceptions.badrequest.InvalidInterestDetailsException;
 import it.rate.webapp.models.AppUser;
 import it.rate.webapp.models.Interest;
 import it.rate.webapp.models.Role;
@@ -44,7 +45,7 @@ public class InterestAdminController extends BaseThymeleafController {
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String editInterest(@PathVariable Long interestId, InterestInDTO interestDTO) {
 
-    Interest interest = interestService.getById(interestId);
+    Interest interest = interestService.findById(interestId).orElseThrow(InvalidInterestDetailsException::new);
 
     if (interest.isExclusive() && !interestDTO.exclusive()) {
       roleService.removeAllVoterRoles(interestId);
@@ -67,13 +68,20 @@ public class InterestAdminController extends BaseThymeleafController {
   @DeleteMapping("/users/{userId}")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String removeUser(@PathVariable Long interestId, @PathVariable Long userId) {
-
     roleService.removeRole(interestId, userId);
 
     return "redirect:/interests/{interestId}/admin/users";
   }
 
-  @PutMapping("/users/{userId}")
+  @DeleteMapping("/invite/{userId}")
+  @PreAuthorize("@permissionService.manageCommunity(#interestId)")
+  public String denyApplication(@PathVariable Long interestId, @PathVariable Long userId) {
+    roleService.removeRole(interestId, userId);
+
+    return "redirect:/interests/{interestId}/admin/invite";
+  }
+
+  @PutMapping("/invite/{userId}")
   @PreAuthorize("@permissionService.manageCommunity(#interestId)")
   public String acceptUser(@PathVariable Long interestId, @PathVariable Long userId) {
 
@@ -81,7 +89,7 @@ public class InterestAdminController extends BaseThymeleafController {
     Interest interest = interestService.getById(interestId);
     roleService.setRole(interest, user, Role.RoleType.VOTER);
 
-    return "redirect:/interests/{interestId}/admin/users";
+    return "redirect:/interests/{interestId}/admin/invite";
   }
 
   @GetMapping("/invite")
