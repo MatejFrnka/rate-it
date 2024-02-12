@@ -7,6 +7,7 @@ import java.util.List;
 
 public record PlaceReviewDTO(
     String userName,
+    Long userId,
     String placeName,
     Long placeId,
     Long interestId,
@@ -24,6 +25,7 @@ public record PlaceReviewDTO(
       Timestamp timestamp) {
     this(
         appUser.getUsername(),
+        appUser.getId(),
         place.getName(),
         place.getId(),
         place.getInterest().getId(),
