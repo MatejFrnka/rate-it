@@ -200,6 +200,13 @@ h3 {
     border: none;
     text-decoration: none;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.follow {
+    width: 9rem;
 }
 
 .button:hover {
@@ -395,15 +402,13 @@ h3 {
 }
 
 .img-wrapper {
-    border-radius: 1rem 1rem 0 0;
     height: 7rem;
-    width: auto;
 }
 
 .img-wrapper img {
     height: 100%;
     width: 100%;
-    border-radius: 1rem;
+    border-radius: 0.8rem;
     object-fit: cover;
 }
 
@@ -431,7 +436,7 @@ h3 {
 .interest-card-link {
     all: unset;
     cursor: pointer;
-    margin: 0.2rem;
+    margin: 0.25rem;
 }
 
 .interest-title {
@@ -582,6 +587,10 @@ h3 {
     font-size: 0.8rem;
 }
 
+.single-line {
+    bottom: 2rem;
+}
+
 @media only screen and (max-width: 420px) {
     .interest-place {
         flex-direction: column;
@@ -594,6 +603,10 @@ h3 {
 
     .interest-place-ratings {
         position: relative;
+    }
+
+    .single-line {
+        bottom: 0;
     }
 }
 
@@ -703,12 +716,15 @@ h3 {
 
 .interest-button-bar {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
+    gap: 0.5rem;
 }
 
 .interest-button-bar .button {
     min-width: 10rem;
     text-align: center;
+
 }
 
 .interest-button-bar .pending {
@@ -940,7 +956,8 @@ h4 {
 .error {
     color: #d74141;
     font-weight: 600;
-    padding: 1.2rem
+    padding: 1.2rem;
+    margin: auto;
 }
 
 .successful {
@@ -1352,6 +1369,8 @@ h4 {
 
 .user-follow p {
     margin: 0;
+    text-align: center;
+    width: 7rem;
 }
 
 .user-page-layout {
@@ -1742,6 +1761,12 @@ h4 {
     border-radius: 50% !important;
 }
 
+.button-wrap {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+  
 .about h1 {
     color: #568D73;
 }

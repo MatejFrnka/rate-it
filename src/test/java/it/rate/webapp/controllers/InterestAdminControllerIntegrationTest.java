@@ -397,7 +397,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     Long userId = 4L;
     mockMvc
-        .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .perform(put("/interests/" + interestId + "/admin/invite/" + userId))
         .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
@@ -411,7 +411,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     Long userId = 4L;
     mockMvc
-        .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .perform(put("/interests/" + interestId + "/admin/invite/" + userId))
         .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
@@ -425,7 +425,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     Long userId = 1L;
     mockMvc
-        .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .perform(put("/interests/" + interestId + "/admin/invite/" + userId))
         .andExpect(status().isForbidden())
         .andExpect(view().name("error/page"))
         .andReturn();
@@ -439,7 +439,7 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 2L;
     Long userId = 2L;
     mockMvc
-        .perform(put("/interests/" + interestId + "/admin/users/" + userId))
+        .perform(put("/interests/" + interestId + "/admin/invite/" + userId))
         .andExpect(view().name("error/page"))
         .andExpect(status().isForbidden())
         .andReturn();
@@ -453,8 +453,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     Long userId = 4L;
     mockMvc
-        .perform(put("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(view().name("redirect:/interests/{interestId}/admin/users"))
+        .perform(put("/interests/" + interestId + "/admin/invite/" + userId))
+        .andExpect(view().name("redirect:/interests/{interestId}/admin/invite"))
         .andExpect(status().is3xxRedirection())
         .andReturn();
   }
@@ -467,8 +467,8 @@ class InterestAdminControllerIntegrationTest extends BaseIntegrationTest {
     Long interestId = 1L;
     Long userId = 4L;
     mockMvc
-        .perform(put("/interests/" + interestId + "/admin/users/" + userId))
-        .andExpect(view().name("redirect:/interests/{interestId}/admin/users"))
+        .perform(put("/interests/" + interestId + "/admin/invite/" + userId))
+        .andExpect(view().name("redirect:/interests/{interestId}/admin/invite"))
         .andExpect(status().is3xxRedirection())
         .andReturn();
   }

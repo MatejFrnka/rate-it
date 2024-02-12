@@ -6,11 +6,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(success, error);
-            document.querySelector('.loader').style.display = 'none';
         } else {
             console.log("Geolocation is not supported");
             await fetchData();
-            document.querySelector('.loader').style.display = 'none';
         }
     } catch (error) {
         console.error('Error fetching suggestions:', error);
@@ -130,6 +128,7 @@ function getCheckedSorting() {
 
 function loadPlaces(query, sortBy) {
     if (data.length < 1) {
+        document.querySelector('.loader').style.display = 'none';
         return;
     }
     const container = document.querySelector('#suggestionList');
@@ -193,10 +192,12 @@ function loadPlaces(query, sortBy) {
 
         elements.ratingContainer.innerHTML = '';
 
-        if ((bestCriterion === null && worstCriterion === null)) {
+        if (bestCriterion === null && worstCriterion === null) {
             elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', '---', averageRating));
-        } else if (place.criteria.length === 1){
+            elements.ratingContainer.classList.add('single-line');
+        } else if (place.criteria.length === 1) {
             elements.ratingContainer.appendChild(createRatingItem('fas fa-star overall yellow', averageRating, place.criteria[0].name));
+            elements.ratingContainer.classList.add('single-line');
         } else {
             let bestCriterionAvgRating = (bestCriterion.avgRating / 2).toFixed(1);
             let worstCriterionAvgRating = (worstCriterion.avgRating / 2).toFixed(1);
@@ -207,6 +208,7 @@ function loadPlaces(query, sortBy) {
 
         container.appendChild(clone);
     });
+    document.querySelector('.loader').style.display = 'none';
 }
 
 function getBestAndWorstCriteria(criteria) {

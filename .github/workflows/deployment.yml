@@ -111,4 +111,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE }}
           script: |
-            nohup java -jar ~/*.jar > /dev/null 2>&1 &
+            nohup java -jar ~/*.jar --spring.profiles.active=production > /dev/null 2>&1 &

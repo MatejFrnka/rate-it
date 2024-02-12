@@ -1,9 +1,9 @@
 let data = [];
-
+let endpoint;
 window.addEventListener('load', async () => {
     try {
         const interestId = document.getElementById("interest-id").value
-        const endpoint = document.getElementById('api').value
+        endpoint = document.getElementById('api').value
         const response = await fetch(`/api/v1/interests/${interestId}/${endpoint}`);
         const jsonData = await response.json();
         data = jsonData;
@@ -46,7 +46,14 @@ function loadResults(query) {
         }
         let listRecords = clone.querySelectorAll('.list-record');
         let forms = listRecords[listRecords.length - 1].querySelectorAll('form');
-        forms.forEach(form => form.action = `/interests/${record.interestId}/admin/users/${record.userId}`);
+        forms.forEach(form => {
+            if (endpoint === 'applications') {
+                form.action = `/interests/${record.interestId}/admin/invite/${record.userId}`
+            } else if (endpoint === 'users') {
+                form.action = `/interests/${record.interestId}/admin/users/${record.userId}`
+            }
+        });
+
 
         clone.querySelector('h5').textContent = record.userName;
         section.appendChild(clone);
