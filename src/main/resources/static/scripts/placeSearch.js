@@ -144,28 +144,30 @@ function loadPlaces(query, sortBy) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    if (sortBy === 'Nearest') {
-        dataSet = dataSet.sort((a, b) => {
+    dataSet.sort((a, b) => {
+        if (sortBy === 'Nearest') {
             const distanceA = distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude);
             const distanceB = distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude);
             return distanceA - distanceB;
-        });
-    } else if (sortBy === 'Top Rated') {
-        dataSet = dataSet.sort((a, b) => {
-            // Move NaN values to the end
-            return (isNaN(a.avgRating) ? 1 : (isNaN(b.avgRating) ? -1 : b.avgRating - a.avgRating));
-        });
-    } else if (sortBy !== undefined) {
-        dataSet = dataSet.sort((a, b) => {
-            const ratingA = a.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
-            const ratingB = b.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
-            // Move NaN values to the end
-            return (isNaN(ratingA) ? 1 : (isNaN(ratingB) ? -1 : ratingB - ratingA));
-        });
-    } else {
-        // If no specific sortBy is selected, default to sorting by place ID
-        dataSet = dataSet.sort((a, b) => a.id - b.id);
-    }
+        } else {
+            let ratingA, ratingB;
+            if (sortBy === 'Top Rated') {
+                ratingA = a.avgRating;
+                ratingB = b.avgRating;
+            } else if (sortBy) {
+                const criterionA = a.criteria.find(criterion => criterion.name === sortBy);
+                const criterionB = b.criteria.find(criterion => criterion.name === sortBy);
+                ratingA = criterionA ? criterionA.avgRating : -Infinity;
+                ratingB = criterionB ? criterionB.avgRating : -Infinity;
+            } else {
+                return a.id - b.id;
+            }
+
+            if (isNaN(ratingA)) return 1;
+            if (isNaN(ratingB)) return -1;
+            return ratingB - ratingA;
+        }
+    });
 
     dataSet.forEach((place) => {
 
