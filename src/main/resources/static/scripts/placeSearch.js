@@ -83,7 +83,11 @@ function createSortingButton(container, template, sortBy) {
     title.textContent = sortBy;
 
     checkbox.addEventListener('input', () => {
-        filterPlaces(sortBy);
+        if (checkbox.checked) {
+            filterPlaces(sortBy);
+        } else {
+            filterPlaces(undefined);
+        }
     });
 
     container.appendChild(clone);
@@ -91,14 +95,14 @@ function createSortingButton(container, template, sortBy) {
 
 function filterPlaces(sortBy) {
     let searchBar = document.querySelector('.search');
-    if (typeof sortBy === 'undefined' || sortBy === null) {
+    if (sortBy === undefined) {
         sortBy = getCheckedSorting();
     }
-    if (sortBy !== null) {
+    if (sortBy !== undefined) {
         uncheckOtherCheckboxes(sortBy)
         loadPlaces(searchBar.value, sortBy);
     } else {
-        loadPlaces(searchBar.value, null);
+        loadPlaces(searchBar.value, undefined);
     }
 }
 
@@ -121,7 +125,7 @@ function getCheckedSorting() {
         }
     });
     if (checked === null) {
-        return null;
+        return undefined;
     }
     return checked.parentNode.querySelector('span').textContent;
 }
@@ -140,21 +144,30 @@ function loadPlaces(query, sortBy) {
         dataSet = data.filter(place => place.name.toLowerCase().includes(query.toLowerCase()));
     }
 
-    if (sortBy === 'Nearest') {
-        dataSet = dataSet.sort((a, b) => distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude) -
-            distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude));
-    } else if (sortBy === 'Top Rated') {
-        dataSet = dataSet.sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0));
-    } else if (sortBy !== '') {
-        dataSet = dataSet.sort((a, b) => {
-            const ratingA = a.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
-            const ratingB = b.criteria.find(criterion => criterion.name === sortBy)?.avgRating || NaN;
+    dataSet.sort((a, b) => {
+        if (sortBy === 'Nearest') {
+            const distanceA = distance(usersCoords[0], usersCoords[1], a.latitude, a.longitude);
+            const distanceB = distance(usersCoords[0], usersCoords[1], b.latitude, b.longitude);
+            return distanceA - distanceB;
+        } else {
+            let ratingA, ratingB;
+            if (sortBy === 'Top Rated') {
+                ratingA = a.avgRating;
+                ratingB = b.avgRating;
+            } else if (sortBy) {
+                const criterionA = a.criteria.find(criterion => criterion.name === sortBy);
+                const criterionB = b.criteria.find(criterion => criterion.name === sortBy);
+                ratingA = criterionA ? criterionA.avgRating : -Infinity;
+                ratingB = criterionB ? criterionB.avgRating : -Infinity;
+            } else {
+                return a.id - b.id;
+            }
+
+            if (isNaN(ratingA)) return 1;
+            if (isNaN(ratingB)) return -1;
             return ratingB - ratingA;
-        });
-    } else {
-        // If no specific sortBy is selected, default to sorting by place ID
-        dataSet = dataSet.sort((a, b) => a.id - b.id);
-    }
+        }
+    });
 
     dataSet.forEach((place) => {
 
