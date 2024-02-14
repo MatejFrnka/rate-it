@@ -173,7 +173,7 @@
             <div class="review-box-right-bottom">
                 <div class="button-ratings-container">
                     <button class="expand-button"
-                            th:id="'button-show-ratings-' + ${review.userName} + '-' + ${review.placeId}">
+                            th:id="'button-show-ratings-' + ${review.userId} + '-' + ${review.placeId}">
                         <img th:src="@{/icons/right-arrow.svg}" alt="User icon">
                         <i>Details</i>
                     </button>
@@ -183,10 +183,10 @@
         </div>
     </div>
 
-    <div class="user-review-container" th:id="'review_' + ${review.userName} + '-' + ${review.placeId}"
+    <div class="user-review-container" th:id="'review_' + ${review.userId} + '-' + ${review.placeId}"
          style="display: none;">
         <textarea disabled
-                  th:id="'textarea_' + ${review.userName} + '-' + ${review.placeId}"
+                  th:id="'textarea_' + ${review.userId} + '-' + ${review.placeId}"
                   th:unless="${review.review == null}"
                   class="review_textarea_disabled"
                   th:text="${review.review}">
