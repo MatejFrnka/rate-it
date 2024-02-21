@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title='Main Page')}">
+</head>
+
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: hamburger-menu}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+    <main class="content main-page-content">
+        <section>
+            <div class="section-label">
+                <h2>My Interests</h2>
+                <a th:unless="${likedInterests == null || likedInterests.isEmpty()}" th:href="@{/interests/my}"><h3>See
+                    all</h3></a>
+            </div>
+            <section th:unless="${likedInterests == null || likedInterests.isEmpty()}" class="splide"
+                     id="splide-interests" aria-label="Interests">
+                <div class="splide__track">
+                    <div class="splide__list">
+                        <div th:each="interest : ${likedInterests}" id="likedInterests" class="splide__slide">
+                            <div class="interest-card">
+                                <a class="interest-card-link" th:href="@{|/interests/${interest.id}|}">
+                                    <div class="img-wrapper">
+                                        <img th:if="${interest.imageName == null || interest.imageName.isEmpty()}"
+                                             class="default-image" alt="Default image" th:data-interest-id="${interest.id}"/>
+                                        <img th:unless="${interest.imageName == null || interest.imageName.isEmpty()}"
+                                             th:src="@{|/api/v1/images/${interest.imageName}}"
+                                             alt="Interest image"/>
+                                        <div class="like-count">
+                                            <i class="fa-regular fa-heart"></i>
+                                            <p th:text="${interest.countLikes()}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="interest-title">
+                                        <p th:text="${interest.name}"></p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <h3 th:if="${likedInterests == null}"><a th:href="@{/login}">Log-in</a> to see your interests</h3>
+            <h3 th:if="${likedInterests != null && likedInterests.isEmpty()}">No interests yet. Add your FIRST!</h3>
+        </section>
+        <section>
+            <div class="section-label">
+                <h2>Discover new</h2>
+                <a th:if="${loggedUser}" th:href="@{/interests/create}"><h3>Create new</h3></a>
+            </div>
+            <section class="splide" id="splide-checkboxes" aria-label="Categories">
+                <div class="splide__track">
+                    <div class="splide__list">
+                        <div class="splide__slide" th:each="category : ${categories}">
+                            <label class="sort-container">
+                                <input th:value="${category.id}" oninput="filterInterests(this)" type="checkbox"
+                                       class="sort-checkbox"/>
+                                <span th:text="${category.name}"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="search-container">
+                <input type="text" class="search" name="query" oninput="filterInterests()" autocomplete="off"
+                       placeholder="Find interests…">
+                <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
+            </div>
+        </section>
+        <div class="discover-interests" id="suggestionList"></div>
+        <template>
+            <a class="discover-interest">
+                <div class="discover-interest-img">
+                    <img alt="Interest image"/>
+                </div>
+
+                <div class="discover-interest-content">
+                    <header class="discover-interest-header">
+                        <div class="discover-interest-title">
+                            <h3></h3>
+                        </div>
+                        <div class="discover-interest-distance">
+                            <span></span>
+                        </div>
+                    </header>
+                    <div class="discover-interest-values">
+                        <div class="discover-interest-likes">
+                            <i class="fa-regular fa-heart"></i>
+                            <span class="discover-interest-like-value"></span>
+                        </div>
+                        <div class="discover-interest-places">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span class="discover-interest-places-amount"></span>
+                        </div>
+                    </div>
+                    <p></p>
+                </div>
+            </a>
+        </template>
+        <span class="loader"></span>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+<script src="/scripts/imageFetcher.js"></script>
+<script src="/scripts/defaultImage.js"></script>
+<script src="/scripts/index.js"></script>
+<script src="/scripts/checkboxesSplide.js"></script>
+<script th:unless="${likedInterests == null || likedInterests.isEmpty()}" src="/scripts/indexSplide.js"></script>
+</body>
+</html>

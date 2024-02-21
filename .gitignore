@@ -1,10 +1,10 @@
 HELP.md
 .gradle
 build/
-!gradle/wrapper/gradle-wrapper.jar
+!spring-boot-app/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-logs
+spring-boot-app/logs
 
 ### STS ###
 .apt_generated
@@ -19,7 +19,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
+spring-boot-app/.idea
 *.iws
 *.iml
 *.ipr
@@ -36,4 +36,4 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/credentials.json
+/spring-boot-app/src/main/resources/credentials.json

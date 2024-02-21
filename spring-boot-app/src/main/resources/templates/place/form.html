@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title=${place.id == null} ? 'New Place' : 'Editing ' + ${place.name})}">
+</head>
+
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+
+    <div class="content">
+        <form th:method="${method}"
+              th:action="${action}"
+              th:object="${place}">
+            <h2 th:if="${place.id == null}"
+                th:text="'New Place'">
+            </h2>
+            <h2 th:unless="${place.id == null}"
+                th:text="'Editing ' + ${place.name}">
+            </h2>
+
+            <section class="input-param">
+                <h4>Name</h4>
+                <label>
+                    <input class="input-text-field"
+                           type="text"
+                           name="name"
+                           th:field="*{name}"
+                           required
+                           autocomplete="off" th:maxlength="${@constraints.MAX_NAME_LENGTH}">
+                </label>
+            </section>
+
+            <section class="input-param">
+                <h4>Address</h4>
+                <label>
+                    <input class="input-text-field"
+                           type="text"
+                           id="address"
+                           name="address"
+                           th:field="*{address}"
+                           autocomplete="off" th:maxlength="${@constraints.MAX_VARCHAR_LENGTH}">
+                </label>
+                <div class="place-button-bar">
+                    <button class="button" type="button" onclick="clearAddress()">Clear</button>
+                    <button class="button" type="button" onclick="handleCoordinatesSearch()">Search</button>
+                </div>
+            </section>
+
+            <section class="input-param">
+                <h4>Map Location</h4>
+                <div class="place-map-container">
+                    <div id="map"></div>
+                </div>
+                <input type="number"
+                       inputmode="decimal"
+                       step="0.000001"
+                       id="place-latitude"
+                       th:field="*{latitude}"
+                       required
+                       hidden>
+                <input type="number"
+                       inputmode="decimal"
+                       step="0.000001"
+                       id="place-longitude"
+                       th:field="*{longitude}"
+                       required
+                       hidden>
+                <div class="location-button-bar">
+                    <span id="locationAccuracy"></span>
+                    <button class="button" type="button" onclick="locate()">Get Current location</button>
+                </div>
+            </section>
+
+            <section class="input-param">
+                <h4>Description</h4>
+                <label>
+                    <textarea class="input-text-field"
+                              id="description"
+                              name="description"
+                              th:field="*{description}" th:maxlength="${@constraints.MAX_DESCRIPTION_LENGTH}"
+                              th:oninput="'updateCharCountAndResize(' + ${@constraints.MAX_DESCRIPTION_LENGTH} + ')'">
+                    </textarea>
+                </label>
+                <p id="charCount"></p>
+            </section>
+
+            <button class="button" type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+<script th:replace="~{fragments :: leaflet-script}"></script>
+<script th:inline="javascript">
+    const placeLat = [[${place.latitude}]];
+    const placeLng = [[${place.longitude}]];
+</script>
+<script src="/scripts/placeFormMap.js"></script>
+<script src="/scripts/inputForm.js"></script>
+
+</body>
+</html>

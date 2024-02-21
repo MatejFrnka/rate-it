@@ -1,0 +1,21 @@
+package it.rate.webapp.dtos;
+
+import it.rate.webapp.models.AppUser;
+import it.rate.webapp.models.Interest;
+import it.rate.webapp.models.Role;
+
+public record LikedInterestsDTO(Long id, String name, String creator, Long followers) {
+
+  public LikedInterestsDTO(Interest interest) {
+    this(
+        interest.getId(),
+        interest.getName(),
+        interest.getRoles().stream()
+            .filter(role -> role.getRoleType().equals(Role.RoleType.CREATOR))
+            .findFirst()
+            .map(Role::getAppUser)
+            .map(AppUser::getUsername)
+            .orElse("Unknown creator"),
+        (long) interest.countLikes());
+  }
+}
