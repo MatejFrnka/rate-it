@@ -6,8 +6,6 @@ build/
 !**/src/test/**/build/
 spring-boot-app/logs
 
-reactNativeApp/node_modules/
-
 ### STS ###
 .apt_generated
 .classpath
