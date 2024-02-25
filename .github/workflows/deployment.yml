@@ -18,6 +18,10 @@ permissions:
 jobs:
   build:
 
+    defaults:
+      run:
+        working-directory: ./SpringBootApp
+
     runs-on: ubuntu-latest
 
     steps:
