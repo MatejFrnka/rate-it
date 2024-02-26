@@ -1,10 +1,9 @@
 HELP.md
 .gradle
 build/
-!spring-boot-app/gradle/wrapper/gradle-wrapper.jar
+!SpringBootApp/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-spring-boot-app/logs
 SpringBootApp/logs/
 
 ### STS ###
@@ -37,4 +36,4 @@ out/
 
 ### VS Code ###
 .vscode/
-/spring-boot-app/src/main/resources/credentials.json
+/SpringBootApp/src/main/resources/credentials.json
