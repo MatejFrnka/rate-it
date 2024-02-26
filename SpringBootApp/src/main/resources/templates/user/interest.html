@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title=${interest.name} + ' by ' + ${user.username})}">
+</head>
+
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+    <main class="content user-profile">
+        <a th:href="@{/users/{username}(username=${user.username})}" th:text="${user.username}"
+           class="user-back-link"></a>
+        <h2 th:text="${interest.name}"></h2>
+        <section class="place-reviews">
+            <div th:each="placeReview : ${placesReviews}">
+                <div th:replace="~{fragments.html :: review-box(review=${placeReview}, placePage=false)}"></div>
+            </div>
+        </section>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+
+<script th:if="${placesReviews}" src="/scripts/placeReviewsExpand.js"></script>
+
+</body>
+</html>

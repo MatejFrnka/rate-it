@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title='Contact')}">
+</head>
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+    <main class="content">
+        <h2>Contact Us</h2>
+        <form th:action="@{/api/v1/emails/contact-us}" method="post" id="contactForm" onsubmit="submitForm(); return false;">
+            <section class="input-param">
+                <h4>Your email</h4>
+                <input class="input-text-field" type="email" name="from" required>
+            </section>
+            <section class="input-param">
+                <h4>Subject</h4>
+                <input class="input-text-field" type="text" name="subject" min="3" required>
+            </section>
+            <section class="input-param">
+                <h4>Message</h4>
+                <textarea class="input-text-field" name="text" required></textarea>
+            </section>
+            <button type="submit" class="button">Send</button>
+            <p class="successful"></p>
+            <p class="error"></p>
+        </form>
+
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+</body>
+<script src="/scripts/contactUs.js"></script>
+</html>

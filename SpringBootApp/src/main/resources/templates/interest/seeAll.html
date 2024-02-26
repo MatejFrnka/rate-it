@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title='My Interests')}">
+</head>
+
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+    <main class="content">
+        <div class="section-label">
+            <h2>My Interests</h2>
+        </div>
+        <div class="search-container" id="list-search">
+            <input type="text" class="search" name="query" oninput="loadResults(this.value)" autocomplete="off"
+                   placeholder="Find interests…">
+            <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
+        </div>
+        <div class="items-list" id="my-interests-container"></div>
+        <template>
+            <div class="interest-list-entry">
+                <h5></h5>
+                <div class="interest-creator-likes">
+                    <h6><img src="/icons/star.svg" alt="following"></h6>
+                    <h6><img src="/icons/interest-user.svg" alt="Interest creator"></h6>
+                </div>
+            </div>
+        </template>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+<script src="/scripts/myInterests.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title='Applications | ' + ${interest.name})}">
+</head>
+
+<body>
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="~{fragments.html :: login-menu}"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+    <main class="content">
+        <div class="section-label">
+            <a th:href="@{/interests/{interestId}(interestId=${interest.id})}"><h2 th:text="${interest.name}"></h2></a>
+            <a th:href="@{/interests/{interestId}/admin/users(interestId=${interest.id})}"><h3>Manage Users</h3></a>
+        </div>
+        <div class="section-label">
+            <h1>Invite</h1>
+        </div>
+        <section class="input-param">
+            <form th:action="@{/interests/{interestId}/admin/invite(interestId=${interest.id})}" th:method="post"
+                  id="invite-form">
+                <input type="checkbox" id="toggle" class="toggle-checkbox" onchange="getInviteType()"
+                       th:checked="${isChecked}"/>
+                <label for="toggle" class="toggle-container">
+                    <span>E-mail</span>
+                    <span>Username</span>
+                </label>
+                <div class="send-invite">
+                    <input type="hidden" id="type" name="inviteBy">
+                    <input class="input-text-field" th:value="${user}" name="user" id="invite-input" type="text"
+                           placeholder="Invite more people…" autocomplete="off" required>
+                    <button id="send-invite-button" type="submit">SEND</button>
+                </div>
+                <div th:if="${status}" th:class="${statusClass}" th:text="${status}"></div>
+            </form>
+        </section>
+
+        <div class="section-label">
+            <h1>Applications</h1>
+        </div>
+        <div class="search-container" id="list-search">
+            <input type="text" class="search" name="query" oninput="loadResults(this.value)" autocomplete="off"
+                   placeholder="Find user…">
+            <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
+        </div>
+        <div class="items-list" id="interest-users-container"></div>
+        <template>
+            <div class="list-record">
+                <div class="user-list-entry col-8">
+                    <img src="/icons/list-user.svg" alt="User">
+                    <h5></h5>
+                </div>
+                <div class="role-section">
+                    <form method="post">
+                        <input type="hidden" name="_method" value="put">
+                        <button class="role-option-button accept-button" type="submit">
+                            <img src="/icons/accept.svg" alt="Accept">
+                        </button>
+                    </form>
+                    <form method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <button class="role-option-button kick-button" type="submit">
+                            <img src="/icons/cross.svg" alt="Deny">
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </template>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+<input type="hidden" id="interest-id" th:value="${interest.id}">
+<input type="hidden" id="api" value="applications">
+<script th:src="@{/scripts/interestUsers.js}"></script>
+</body>
+</html>

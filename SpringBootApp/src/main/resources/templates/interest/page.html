@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments.html :: head(title=${interest.name})}">
+</head>
+
+<body th:object="${interest}">
+<div class="container-fluid">
+    <header class="header">
+        <div th:replace="~{fragments.html :: back-button}"></div>
+        <div th:replace="~{fragments.html :: logo}"></div>
+        <div th:replace="${loggedUser == null} ? ~{fragments.html :: login-menu} :
+        (${role != null && role.equals(role.CREATOR)} ? ~{fragments.html :: interest-admin-menu} : ~{fragments.html :: like-button})"></div>
+        <script th:replace="~{fragments.html :: topbar-script}"></script>
+    </header>
+
+    <picture class="interest-image">
+        <img th:if="*{imageName == null || imageName.isEmpty()}"
+             class="default-image" alt="Default image" th:data-interest-id="${interest.id}"/>
+
+        <img th:unless="*{imageName == null || imageName.isEmpty()}" id="picture-container"
+             th:attr="data-image-id=*{imageName}" alt="Interest image"/>
+    </picture>
+
+    <main class="content content-interest">
+        <div class="d-flex justify-content-around interest-button-bar">
+            <a class="button" th:href="@{/interests/{id}/map(id=*{id})}">Map</a>
+            <span class="button pending"
+                  th:if="${loggedUser != null && interest.isExclusive() && role != null && role.equals(role.APPLICANT)}">Pending Request</span>
+            <a class="button"
+               th:if="${loggedUser != null && (!interest.isExclusive() || ratingPermission == true)}"
+               th:href="@{/interests/{id}/places/new(id=${interest.id})}">Add Place</a>
+            <form th:if="${loggedUser != null && interest.isExclusive() && ratingPermission != true && (role == null || !role.equals(role.APPLICANT))}"
+                  th:action="@{/interests/{id}/request(id=*{id})}"
+                  th:method="post">
+                <button class="button" type="submit">Request Rating Authority</button>
+            </form>
+            <a class="button"
+               th:if="${loggedUser == null}"
+               th:href="@{/login}">Login</a>
+        </div>
+
+        <div class="content-header">
+            <h1 th:text="*{name}"></h1>
+        </div>
+
+        <div>
+            <p th:text="*{description}"></p>
+        </div>
+
+        <div>
+            <h2>Criteria</h2>
+        </div>
+        <ul>
+            <li th:each="criterion : ${interest.getCriteria()}" th:text="${criterion.name}"></li>
+        </ul>
+        <section class="interest-places-section"
+                 th:unless="${places.isEmpty()}">
+            <h2>Places</h2>
+            <section class="splide" id="splide-checkboxes" aria-label="Sort By">
+                <div class="splide__track">
+                    <div class="splide__list">
+                        <template id="sort-button-template">
+                            <div class="splide__slide">
+                                <label class="sort-container">
+                                    <input type="checkbox" class="sort-checkbox"/>
+                                    <span></span>
+                                </label>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </section>
+
+            <div class="search-container">
+                <input type="text" class="search" name="query" oninput="filterPlaces()" autocomplete="off"
+                       placeholder="Find places…">
+                <img class="search-icon" th:src="@{/icons/search.svg}" alt="Search">
+            </div>
+
+            <div class="interest-places" id="suggestionList"></div>
+            <template id="place-template">
+                <a class="interest-place">
+
+                    <div class="interest-place-img">
+                        <img alt="Place image"/>
+                    </div>
+
+                    <div class="interest-place-content">
+                        <header class="interest-place-header">
+                            <div class="interest-place-title">
+                                <h3></h3>
+                                <h4></h4>
+                            </div>
+
+                            <div class="interest-place-distance">
+                                <span></span>
+                            </div>
+                        </header>
+
+                        <ul class="interest-place-ratings">
+                            <li>
+                                <i class="fas fa-star overall yellow"></i>
+                                <strong class="rating"></strong>
+                                <strong class="criterion">Overall</strong>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-star yellow"></i>
+                                <span class="rating"></span>
+                                <span class="criterion"></span>
+                            </li>
+
+                            <li>
+                                <i class="fas fa-star"></i>
+                                <span class="rating"></span>
+                                <span class="criterion"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </a>
+            </template>
+        </section>
+        <span class="loader"></span>
+    </main>
+    <footer th:replace="~{fragments.html :: footer}"></footer>
+</div>
+
+<script th:inline="javascript">
+    const interestId = [[${interest.id}]];
+</script>
+<script src="/scripts/checkboxesSplide.js"></script>
+<script src="/scripts/placeSearch.js"></script>
+<script src="/scripts/imageFetcher.js"></script>
+<script src="/scripts/defaultImage.js"></script>
+<script th:unless="${loggedUser == null || role != null && role.equals(role.CREATOR)}"
+        src="/scripts/interestLike.js"></script>
+
+</body>
+</html>
